@@ -1,5 +1,22 @@
 unit about;
+(*
+ CCA is a tool to evaluate the color visibility and contrast of foreground/background color combinations.
+Copyright (C) 2014 The Paciello Group
 
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*)
 interface
 
 uses
@@ -32,8 +49,6 @@ uses Main;
 
 {$R *.dfm}
 
-
-
 procedure TAboutForm.FormCreate(Sender: TObject);
 var
     ini: TIniFile;
@@ -55,15 +70,15 @@ begin
         Lang := ini.ReadString('HTML', 'Lang', 'en');
         EN := ini.ReadString('Translations', 'en_ver', 'Steven Faulkner (English version):');
         JP := ini.ReadString('Translations', 'jp_ver', 'Jun (Japanese version):');
-        EN_Mail := ini.ReadString('Translations', 'en_mail', 'sfaulkner@paciellogroup.com');
-        JP_Mail := ini.ReadString('Translations', 'jp_mail', '');
-        EN_Address := ini.ReadString('Translations', 'en_website', 'http://www.paciellogroup.com/');
-        JP_Address := ini.ReadString('Translations', 'jp_website', '');
+        EN_Mail := ini.ReadString('Translations', 'en_mail', 'steven.faulkner@nils.org.au');
+        JP_Mail := ini.ReadString('Translations', 'jp_mail', 'jun@idena.jp');
+        EN_Address := ini.ReadString('Translations', 'en_website', 'http://www.accessibleinfo.org.au/');
+        JP_Address := ini.ReadString('Translations', 'jp_website', 'http://idena.jp/');
         Caption := ini.ReadString('Translations', 'aboutwnd', 'About');
         T_Name := ini.ReadString('Translations', 'translator_name', '');
         T_Site := ini.ReadString('Translations', 'translator_site', '');
         T_Mail := ini.ReadString('Translations', 'translator_mail', '');
-        VTxt := ini.ReadString('Translations', 'versiontext', 'Colour Contrast Analyser version 2.2');
+        VTxt := ini.ReadString('Translations', 'versiontext', 'Colour Contrast Analyser version 1.2');
         Add := ini.ReadString('Translations', 'address_group', 'E-Mail & Web site address');
         Note := ini.ReadString('Translations', 'abouttext', 'The Colour Contrast Analyser was developed by Jun in collaboration with Steve Faulkner.');
         RS := TResourceStream.Create(hInstance,'ABOUT',PChar('TEXT'));
@@ -83,8 +98,7 @@ begin
             s := s + #13#10 + '<dl>';
             s := s + #13#10 + '<dt>' + EN + '</dt><dd>' + 'Mail: <a href="mailto:' + EN_Mail + '">' + EN_Mail + '</a></dd>';
             s := s + '<dd>' + 'Website: <a href="' + EN_Address + '">' + EN_Address + '</a></dd>';
-            if (JP_Mail <> '') or  (JP_Address <> '') then
-                s := s + #13#10 + '<dt>' + JP + '</dt>';
+            s := s + #13#10 + '<dt>' + JP + '</dt>';
             if JP_Mail <> '' then
                 s := s + '<dd>' + 'Mail: <a href="mailto:' + JP_Mail + '">' + JP_Mail + '</a></dd>';
             if JP_Address <> '' then

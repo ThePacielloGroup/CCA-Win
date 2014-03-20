@@ -1,5 +1,22 @@
 unit ConvWnd;
+(*
+ CCA is a tool to evaluate the color visibility and contrast of foreground/background color combinations.
+Copyright (C) 2014 The Paciello Group
 
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*)
 interface
 
 uses
@@ -82,8 +99,7 @@ end;
 
 procedure TConvWndForm.WMExitSizeMove(var msg:TMessage);
 var
-    SC_hdc: HDC;
-    iw, ih, Mode: Integer;
+	Mode: integer;
 begin
 
     MoveFlag := False;
@@ -171,8 +187,7 @@ end;
 
 procedure TConvWndForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
-var
-    TP: TPoint;
+
 begin
     if (Key = VK_ESCAPE) then
         Close;
@@ -181,7 +196,7 @@ end;
 procedure TConvWndForm.FormShow(Sender: TObject);
 var
     SC_hdc: HDC;
-    iw, ih, Mode: Integer;
+    iw, ih: Integer;
 begin
     SetRGN;
     if MainForm.SS_hdc <> 0 then
