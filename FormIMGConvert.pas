@@ -21,7 +21,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, {MSGSnatchers, OleDnD,} ExtCtrls, StdCtrls, PBNumEdit, PBSuperSpin, JPEG, iniFiles, ComObj, ShlObj;
+  Dialogs, {MSGSnatchers, OleDnD,} ExtCtrls, StdCtrls, JPEG, iniFiles, ComObj, ShlObj;
 
 type
   TBMPs = record
@@ -38,10 +38,6 @@ type
     gbSimulation: TGroupBox;
     btnSave: TButton;
     btnPreview: TButton;
-    gbJPEG: TGroupBox;
-    lblC_Quality: TLabel;
-    edtC_Quality: TPBSuperSpin;
-    chkSmooth: TCheckBox;
     btnClose: TButton;
     gbSelIMG: TGroupBox;
     edtFileName: TEdit;
@@ -176,9 +172,9 @@ begin
         begin
             JPG := TJPEGImage.Create;
             try
-                JPG.Smoothing := chkSmooth.Checked;
+                JPG.Smoothing := True;//chkSmooth.Checked;
                 JPG.Assign(Image1.Picture.Bitmap);
-                JPG.CompressionQuality := edtC_Quality.AsInteger;
+                JPG.CompressionQuality := 75;//edtC_Quality.AsInteger;
 
                 JPG.SaveToFile(FN);
                 Application.ProcessMessages;
@@ -383,8 +379,8 @@ begin
     SPath := IncludeTrailingPathDelimiter(GetMyDocPath) + 'CCA.ini';
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
-        edtC_Quality.Value := ini.ReadInteger('JPEG', 'Compression', 75);
-        chkSmooth.Checked := ini.ReadBool('JPEG', 'Smooth', False);
+        //edtC_Quality.Value := ini.ReadInteger('JPEG', 'Compression', 75);
+        //chkSmooth.Checked := ini.ReadBool('JPEG', 'Smooth', False);
         Left := ini.ReadInteger('Window', 'SelImg_Left', (Screen.WorkAreaWidth div 2) - (Width div 2));
         Top := ini.ReadInteger('Window', 'SelImg_Top', (Screen.WorkAreaHeight div 2) - (Height div 2));
         Width := ini.ReadInteger('Window', 'SelImg_Width', 800);
@@ -396,11 +392,11 @@ begin
     gbSelIMG.Caption := MainForm.GetTranslation('sel_img', 'Select image file');
     btnBrowse.Caption := MainForm.GetTranslation('browse', '&Browse');
     gbSimulation.Caption := MainForm.GetTranslation('simulation', 'Simulation');
-    gbJPEG.Caption := MainForm.GetTranslation('jpeg_options', 'JPEG options');
+    //gbJPEG.Caption := MainForm.GetTranslation('jpeg_options', 'JPEG options');
     btnSave.Caption := MainForm.GetTranslation('save', '&Save');
     btnPreview.Caption := MainForm.GetTranslation('preview', '&Preview');
-    lblC_Quality.Caption := MainForm.GetTranslation('compression_quality', 'Compression Quality:');
-    chkSmooth.Caption := MainForm.GetTranslation('smoothing', 'S&moothing');
+    //lblC_Quality.Caption := MainForm.GetTranslation('compression_quality', 'Compression Quality:');
+    //chkSmooth.Caption := MainForm.GetTranslation('smoothing', 'S&moothing');
     btnClose.Caption := MainForm.GetTranslation('close', '&Close');
     RadioButton1.Caption := MainForm.GetTranslation('protanopia', 'Protanopia');
     RadioButton2.Caption := MainForm.GetTranslation('deuteranopia', 'Deuteranopia');
@@ -419,8 +415,8 @@ var
 begin
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
-        ini.WriteInteger('JPEG', 'Compression', edtC_Quality.AsInteger);
-        ini.WriteBool('JPEG', 'Smooth', chkSmooth.Checked);
+        //ini.WriteInteger('JPEG', 'Compression', edtC_Quality.AsInteger);
+        //ini.WriteBool('JPEG', 'Smooth', chkSmooth.Checked);
         ini.WriteInteger('Window', 'SelImg_Left', Left);
         ini.WriteInteger('Window', 'SelImg_Top', Top);
         ini.WriteInteger('Window', 'SelImg_Width', Width);

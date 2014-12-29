@@ -128,54 +128,14 @@ object frmIMGConvert: TfrmIMGConvert
         end
       end
     end
-    object gbJPEG: TGroupBox
-      Left = 9
-      Top = 364
-      Width = 200
-      Height = 79
-      Caption = 'JPEG options'
-      TabOrder = 2
-      object lblC_Quality: TLabel
-        Left = 9
-        Top = 22
-        Width = 102
-        Height = 13
-        Caption = 'Compression Quality:'
-      end
-      object edtC_Quality: TPBSuperSpin
-        Left = 130
-        Top = 17
-        Width = 62
-        Height = 22
-        Cursor = crDefault
-        Alignment = taRightJustify
-        Decimals = 0
-        MaxValue = 100.000000000000000000
-        MinValue = 1.000000000000000000
-        NumberFormat = Standard
-        TabOrder = 0
-        Value = 75.000000000000000000
-        Increment = 1.000000000000000000
-        RoundValues = False
-        Wrap = False
-      end
-      object chkSmooth: TCheckBox
-        Left = 9
-        Top = 52
-        Width = 183
-        Height = 18
-        Caption = 'S&moothing'
-        TabOrder = 1
-      end
-    end
     object btnClose: TButton
-      Left = 130
-      Top = 451
+      Left = 131
+      Top = 362
       Width = 79
       Height = 27
       Cancel = True
       Caption = '&Close'
-      TabOrder = 3
+      TabOrder = 2
       OnClick = btnCloseClick
     end
     object gbSelIMG: TGroupBox

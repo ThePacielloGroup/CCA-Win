@@ -2,11 +2,11 @@ object frmSelList: TfrmSelList
   Left = 191
   Top = 223
   Caption = 'Window list'
-  ClientHeight = 562
-  ClientWidth = 784
+  ClientHeight = 468
+  ClientWidth = 749
   Color = clBtnFace
-  Constraints.MinHeight = 260
-  Constraints.MinWidth = 277
+  Constraints.MinHeight = 500
+  Constraints.MinWidth = 696
   ParentFont = True
   Icon.Data = {
     0000010001001010000001001800680300001600000028000000100000002000
@@ -43,10 +43,10 @@ object frmSelList: TfrmSelList
   PixelsPerInch = 96
   TextHeight = 13
   object ScrollBox1: TScrollBox
-    Left = 167
-    Top = 0
-    Width = 617
-    Height = 562
+    Left = 0
+    Top = 73
+    Width = 749
+    Height = 395
     Align = alClient
     TabOrder = 1
     object Image1: TImage
@@ -60,182 +60,89 @@ object frmSelList: TfrmSelList
   object ScrollBox2: TScrollBox
     Left = 0
     Top = 0
-    Width = 167
-    Height = 562
+    Width = 749
+    Height = 73
     VertScrollBar.Increment = 35
-    Align = alLeft
+    Align = alTop
     TabOrder = 0
     TabStop = True
-    object ListView1: TListView
-      Left = 3
-      Top = 21
-      Width = 160
-      Height = 125
-      Columns = <
-        item
-          Caption = 'Title'
-          Width = 104
-        end
-        item
-          AutoSize = True
-          Caption = 'Handle'
-        end>
-      HideSelection = False
-      ReadOnly = True
-      RowSelect = True
-      TabOrder = 0
-      ViewStyle = vsReport
-      OnSelectItem = ListView1SelectItem
-    end
-    object gbSimulation: TGroupBox
-      Left = 3
-      Top = 153
-      Width = 160
-      Height = 208
+    object gbSimulation: TAccGroupBox
+      Left = 376
+      Top = 13
+      Width = 366
+      Height = 52
       Caption = 'Simulation'
-      TabOrder = 1
-      object btnSave: TButton
-        Left = 7
-        Top = 180
+      TabOrder = 0
+      TabStop = True
+      AccName = 'Simuration Groupbox'
+      CtrlLeft = gbWndList
+      CtrlFirstChild = ComboBox2
+      CtrlLastChicl = btnPreview
+      object btnSave: TAccButton
+        Left = 215
+        Top = 18
         Width = 70
         Height = 22
         Caption = '&Save'
         Enabled = False
         TabOrder = 1
         OnClick = btnSaveClick
+        AccName = 'Save Button'
+        CtrlNext = btnPreview
+        CtrlPrev = ComboBox2
+        CtrlRight = btnSave
+        CtrlLeft = ComboBox2
       end
-      object btnPreview: TButton
-        Left = 83
-        Top = 180
+      object btnPreview: TAccButton
+        Left = 291
+        Top = 18
         Width = 70
         Height = 22
         Caption = '&Preview'
         TabOrder = 2
         OnClick = btnPreviewClick
+        AccName = 'Preview Button'
+        CtrlPrev = btnSave
+        CtrlLeft = btnSave
       end
-      object GroupBox1: TGroupBox
-        Left = 7
-        Top = 14
-        Width = 146
-        Height = 160
+      object ComboBox2: TAccComboBox
+        Left = 3
+        Top = 16
+        Width = 206
+        Height = 21
+        Style = csDropDownList
         TabOrder = 0
-        object RadioButton1: TRadioButton
-          Left = 7
-          Top = 14
-          Width = 133
-          Height = 15
-          Caption = 'RadioButton1'
-          TabOrder = 0
-        end
-        object RadioButton2: TRadioButton
-          Left = 7
-          Top = 35
-          Width = 133
-          Height = 14
-          Caption = 'RadioButton1'
-          TabOrder = 1
-        end
-        object RadioButton3: TRadioButton
-          Left = 7
-          Top = 55
-          Width = 133
-          Height = 15
-          Caption = 'RadioButton1'
-          TabOrder = 2
-        end
-        object RadioButton4: TRadioButton
-          Left = 7
-          Top = 76
-          Width = 133
-          Height = 15
-          Caption = 'RadioButton1'
-          TabOrder = 3
-        end
-        object RadioButton5: TRadioButton
-          Left = 7
-          Top = 97
-          Width = 133
-          Height = 15
-          Caption = 'RadioButton1'
-          TabOrder = 4
-        end
-        object RadioButton6: TRadioButton
-          Left = 7
-          Top = 118
-          Width = 133
-          Height = 15
-          Caption = 'RadioButton1'
-          TabOrder = 5
-        end
-        object RadioButton7: TRadioButton
-          Left = 7
-          Top = 139
-          Width = 133
-          Height = 14
-          Caption = 'RadioButton1'
-          TabOrder = 6
-        end
+        AccName = 'Simuration Combobox'
+        CtrlNext = btnSave
+        CtrlPrev = ComboBox1
+        CtrlRight = btnSave
+        CtrlLeft = ComboBox1
       end
     end
-    object gbJPEG: TGroupBox
-      Left = 3
-      Top = 367
-      Width = 160
-      Height = 64
-      Caption = 'JPEG options'
-      TabOrder = 2
-      object lblC_Quality: TLabel
-        Left = 7
-        Top = 17
-        Width = 102
-        Height = 13
-        Caption = 'Compression Quality:'
-      end
-      object edtC_Quality: TPBSuperSpin
-        Left = 111
-        Top = 14
-        Width = 42
-        Height = 22
-        Cursor = crDefault
-        Alignment = taRightJustify
-        Decimals = 0
-        MaxValue = 100.000000000000000000
-        MinValue = 1.000000000000000000
-        NumberFormat = Standard
+    object gbWndList: TAccGroupBox
+      Left = 8
+      Top = 13
+      Width = 363
+      Height = 52
+      Caption = 'gbWndList'
+      TabOrder = 1
+      TabStop = True
+      AccName = 'WindowList Groupbox'
+      CtrlNext = gbSimulation
+      CtrlRight = gbSimulation
+      CtrlFirstChild = ComboBox1
+      CtrlLastChicl = ComboBox1
+      object ComboBox1: TAccComboBox
+        Left = 3
+        Top = 18
+        Width = 350
+        Height = 21
+        Style = csDropDownList
         TabOrder = 0
-        Value = 75.000000000000000000
-        Increment = 1.000000000000000000
-        RoundValues = False
-        Wrap = False
+        AccName = 'WindowList Combobox'
+        CtrlNext = ComboBox2
+        CtrlRight = ComboBox2
       end
-      object chkSmooth: TCheckBox
-        Left = 7
-        Top = 42
-        Width = 146
-        Height = 14
-        Caption = 'S&moothing'
-        TabOrder = 1
-      end
-    end
-    object btnClose: TButton
-      Left = 97
-      Top = 437
-      Width = 63
-      Height = 21
-      Cancel = True
-      Caption = '&Close'
-      TabOrder = 3
-      OnClick = btnCloseClick
-    end
-    object Label1: TPanel
-      Left = 3
-      Top = 5
-      Width = 125
-      Height = 15
-      Alignment = taLeftJustify
-      BevelOuter = bvNone
-      Caption = 'Label1'
-      TabOrder = 4
     end
   end
   object SaveDialog1: TSaveDialog

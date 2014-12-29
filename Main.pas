@@ -20,10 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Math,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Vcl.Forms, Math,
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorConvert,
-  ImgList, Buttons, IniFiles, ActnList, JColorSelect2, ShellAPI, Menus,
-  Mask, JPEG, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, System.Actions;
+  ImgList, Buttons, IniFiles, ActnList, JColorSelect2, ShellAPI, Menus, MultiMon,
+  Mask, JPEG, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, System.Actions, TransCheckBox;
 resourcestring
   B_Difference = 'brightness difference :';
   C_Difference = 'colour difference :';
@@ -45,20 +45,23 @@ resourcestring
   Fail_WndSize = 'Please change the window to a visible state.';
   Wnd_Move = '''M'' key is window move mode. The window can be moved by pushing the arrow key.';
 type
+
+
+
   TMainForm = class(TForm)
-    gbFore: TGroupBox;
-    gbBack: TGroupBox;
-    gbResNormal: TGroupBox;
+    gbFore: TAccGroupBox;
+    gbBack: TAccGroupBox;
+    gbResNormal: TAccGroupBox;
     ImageList1: TImageList;
-    gbResBlind: TGroupBox;
-    edtProta: TLabeledEdit;
-    edtDeutera: TLabeledEdit;
-    edtTrita: TLabeledEdit;
+    gbResBlind: TAccGroupBox;
+    edtProta: TAccLabeledEdit;
+    edtDeutera: TAccLabeledEdit;
+    edtTrita: TAccLabeledEdit;
     Image2: TImage;
     Image3: TImage;
     Image4: TImage;
     FontDialog1: TFontDialog;
-    edtNormal2: TLabeledEdit;
+    edtNormal2: TAccLabeledEdit;
     Image5: TImage;
     ActionList1: TActionList;
     acrFColorDrop: TAction;
@@ -75,8 +78,8 @@ type
     mnuHelp1: TMenuItem;
     mnuAbout: TMenuItem;
     mnuHex: TMenuItem;
-    Edit1: TMaskEdit;
-    Edit2: TMaskEdit;
+    Edit1: TAccMaskEdit;
+    Edit2: TAccMaskEdit;
     mnuIMG: TMenuItem;
     mnuSelList: TMenuItem;
     SaveDialog1: TSaveDialog;
@@ -85,19 +88,19 @@ type
     mnuSelIMG: TMenuItem;
     mnuScreen: TMenuItem;
     Panel1: TPanel;
-    FREdit: TEdit;
-    FGEdit: TEdit;
-    FBEdit: TEdit;
+    FREdit: TAccEdit;
+    FGEdit: TAccEdit;
+    FBEdit: TAccEdit;
     Panel2: TPanel;
-    BREdit: TEdit;
-    BGEdit: TEdit;
-    BBEdit: TEdit;
-    tbFR: TTrackBar;
-    tbFG: TTrackBar;
-    tbFB: TTrackBar;
-    tbBR: TTrackBar;
-    tbBG: TTrackBar;
-    tbBB: TTrackBar;
+    BREdit: TAccEdit;
+    BGEdit: TAccEdit;
+    BBEdit: TAccEdit;
+    tbFR: TAccTrackBar;
+    tbFG: TAccTrackBar;
+    tbFB: TAccTrackBar;
+    tbBR: TAccTrackBar;
+    tbBG: TAccTrackBar;
+    tbBB: TAccTrackBar;
     PopupMenu1: TPopupMenu;
     mnufg1px: TMenuItem;
     mnufg2px: TMenuItem;
@@ -108,8 +111,8 @@ type
     mnubg2px: TMenuItem;
     mnubg3px: TMenuItem;
     mnubg4px: TMenuItem;
-    Memo1: TMemo;
-    btnCopyRes: TButton;
+    Memo1: TAccMemo;
+    btnCopyRes: TAccButton;
     actExpandAll: TAction;
     actExpandFore: TAction;
     actExpandBack: TAction;
@@ -120,10 +123,10 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
-    btnFore: TBitBtn;
-    btnBack: TBitBtn;
-    bbDD1: TBitBtn;
-    bbDD2: TBitBtn;
+    btnFore: TAccBitBtn;
+    btnBack: TAccBitBtn;
+    bbDD1: TAccBitBtn;
+    bbDD2: TAccBitBtn;
     mnufg6px: TMenuItem;
     mnufg8px: TMenuItem;
     mnubg6px: TMenuItem;
@@ -134,30 +137,30 @@ type
     mnufg7px: TMenuItem;
     mnuShowBlind: TMenuItem;
     mnuSlider: TMenuItem;
-    chkExpand: TCheckBox;
-    chkExpand2: TCheckBox;
-    gbText: TGroupBox;
-    gbLText: TGroupBox;
+    chkExpand: TTransCheckBox;
+    chkExpand2: TTransCheckBox;
+    gbText: TAccGroupBox;
+    gbLText: TAccGroupBox;
     Image1: TImage;
-    edtNormal_T: TEdit;
+    edtNormal_T: TAccEdit;
     Image7: TImage;
-    edtNormal_T2: TEdit;
+    edtNormal_T2: TAccEdit;
     Image8: TImage;
     Image9: TImage;
-    edtNormal_LT: TEdit;
-    edtNormal_LT2: TEdit;
+    edtNormal_LT: TAccEdit;
+    edtNormal_LT2: TAccEdit;
     lblFR: TLabel;
     lblFB: TLabel;
     lblFG: TLabel;
     lblBR: TLabel;
     lblBG: TLabel;
     lblBB: TLabel;
-    gbTextFor: TGroupBox;
-    rb_least3: TRadioButton;
-    rb_least5: TRadioButton;
-    rb_least7: TRadioButton;
+    gbTextFor: TAccGroupBox;
+    rb_least3: TAccRadioButton;
+    rb_least5: TAccRadioButton;
+    rb_least7: TAccRadioButton;
     lblRatio: TLabel;
-    chkblind: TCheckBox;
+    chkblind: TTransCheckBox;
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure Edit2KeyPress(Sender: TObject; var Key: Char);
     procedure mnuHexClick(Sender: TObject);
@@ -229,7 +232,7 @@ type
 
   public
     { Public declare }
-    SS_hdc: HDC;
+    arSS_HDC: array of HDC;
     SS_bmp: HBITMAP;
     SelFore: Boolean;
     Dither1, Dither2: byte;
@@ -671,6 +674,7 @@ end;
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 var
     ini: TMemIniFile;
+    i: integer;
 begin
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
@@ -683,8 +687,9 @@ begin
         ini.Free;
     end;
     PickForm.Free;
-    if SS_hdc <> 0 then
-        DeleteDC(SS_hdc);
+    for i := Low(arSS_HDC) to High(arSS_HDC) do
+        	DeleteDC(arSS_HDC[i]);
+
     if SS_bmp <> 0 then
         DeleteObject(SS_bmp);
 end;
@@ -1096,8 +1101,9 @@ begin
     Fore := Calc(FJColor.ActiveColor);
     High := Max(Back, Fore) + 0.05;
     Low := Min(Back, Fore) + 0.05;
+    SetRoundMode(rmUP);
     try
-        eRes := RoundTo(High / Low, -2);
+        eRes := SimpleRoundTo(High / Low, -1);
     except
         eRes := 0.0;
     end;
@@ -1173,7 +1179,7 @@ begin
     High := Max(Back, Fore) + 0.05;
     Low := Min(Back, Fore) + 0.05;
     try
-        eRes := RoundTo(High / Low, -2);
+        eRes := SimpleRoundTo(High / Low, -1);
     except
         eRes := 0.0;
     end;
@@ -1212,7 +1218,7 @@ begin
     High := Max(Back, Fore) + 0.05;
     Low := Min(Back, Fore) + 0.05;
     try
-        eRes := RoundTo(High / Low, -2);
+        eRes := SimpleRoundTo(High / Low, -1);
     except
         eRes := 0.0;
     end;
@@ -1251,7 +1257,7 @@ begin
     High := Max(Back, Fore) + 0.05;
     Low := Min(Back, Fore) + 0.05;
     try
-        eRes := RoundTo(High / Low, -2);
+        eRes := SimpleRoundTo(High / Low, -1);
     except
         eRes := 0.0;
     end;
@@ -1286,7 +1292,7 @@ begin
     High := Max(Back, Fore) + 0.05;
     Low := Min(Back, Fore) + 0.05;
     try
-        eRes := RoundTo(High / Low, -2);
+        eRes := SimpleRoundTo(High / Low, -1);
     except
         eRes := 0.0;
     end;
@@ -1314,9 +1320,9 @@ begin
     if eRes < 3.0 then
     begin
         d := d + #13#10 + Format(lcr, [fail]);
-        d := d + #13#10#13#10 + Format(lcr_l2, [fail]);
-        d := d + #13#10#13#10 + Format(lcr_l3, [fail]);
-        d := d + #13#10#13#10 + Format(lcr_l4, [fail]);
+        d := d + #13#10 + Format(lcr_l2, [fail]);
+        d := d + #13#10 + Format(lcr_l3, [fail]);
+        d := d + #13#10 + Format(lcr_l4, [fail]);
         edtNormal_T.Text := GetTranslation('summary_text_fail_AA', 'Fail(AA)');
         edtNormal_T2.Text := GetTranslation('summary_text_fail_AAA', 'Fail(AAA)');
         edtNormal_LT.Text := GetTranslation('summary_text_fail_AA', 'Fail(AA)');
@@ -1326,9 +1332,9 @@ begin
     begin
 
         d := d + #13#10 + Format(lcr, [fail]);
-        d := d + #13#10#13#10 + Format(lcr_l2, [fail]);
-        d := d + #13#10#13#10 + Format(lcr_l3, [pass]);
-        d := d + #13#10#13#10 + Format(lcr_l4, [fail]);
+        d := d + #13#10 + Format(lcr_l2, [fail]);
+        d := d + #13#10 + Format(lcr_l3, [pass]);
+        d := d + #13#10 + Format(lcr_l4, [fail]);
         edtNormal_T.Text := GetTranslation('summary_text_fail_AA', 'Fail(AA)');
         edtNormal_T2.Text := GetTranslation('summary_text_fail_AAA', 'Fail(AAA)');
         edtNormal_LT.Text := GetTranslation('summary_text_AA', 'Pass(AA)');
@@ -1337,9 +1343,9 @@ begin
     else if (eRes >= 4.5) and (eRes < 7.0) then
     begin
         d := d + #13#10 + Format(lcr, [pass]);
-        d := d + #13#10#13#10 + Format(lcr_l2, [fail]);
-        d := d + #13#10#13#10 + Format(lcr_l3, [pass]);
-        d := d + #13#10#13#10 + Format(lcr_l4, [pass]);
+        d := d + #13#10 + Format(lcr_l2, [fail]);
+        d := d + #13#10 + Format(lcr_l3, [pass]);
+        d := d + #13#10 + Format(lcr_l4, [pass]);
         edtNormal_T.Text := GetTranslation('summary_text_AA', 'Pass(AA)');
         edtNormal_T2.Text := GetTranslation('summary_text_fail_AAA', 'Fail(AAA)');
         edtNormal_LT.Text := GetTranslation('summary_text_AA', 'Pass(AA)');
@@ -1348,9 +1354,9 @@ begin
     else if eRes >= 7.0 then
     begin
         d := d + #13#10 + Format(lcr, [pass]);
-        d := d + #13#10#13#10 + Format(lcr_l2, [pass]);
-        d := d + #13#10#13#10 + Format(lcr_l3, [pass]);
-        d := d + #13#10#13#10 + Format(lcr_l4, [pass]);
+        d := d + #13#10 + Format(lcr_l2, [pass]);
+        d := d + #13#10 + Format(lcr_l3, [pass]);
+        d := d + #13#10 + Format(lcr_l4, [pass]);
         edtNormal_T.Text := GetTranslation('summary_text_AA', 'Pass(AA)');
         edtNormal_T2.Text := GetTranslation('summary_text_AAA', 'Pass(AAA)');
         edtNormal_LT.Text := GetTranslation('summary_text_AA', 'Pass(AA)');
@@ -1360,8 +1366,8 @@ begin
     edtNormal2.Font.Color := FJColor.ActiveColor;
     edtNormal2.Text := Format(latio_is, [FormatFloat('0.0#', eRes) + ':1']);
     lblRatio.Caption := Format(ratio_short, [FormatFloat('0.0#', eRes) + ':1']);
-    d := gbFore.Caption + ':' + ColortoHex2(FJColor.ActiveColor) + '  ' + gbBack.Caption + ':' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(latio_is, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
-    Memo1.Text := d + #13#10#13#10 + lcr_note + #13#10#13#10 + lcr_note2 + #13#10#13#10 + lcr_note3;
+    d := gbFore.Caption + ':' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ':' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(latio_is, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
+    Memo1.Text := d;// + #13#10#13#10 + lcr_note + #13#10#13#10 + lcr_note2 + #13#10#13#10 + lcr_note3;
     bSetValue := False;
 end;
 
@@ -1404,37 +1410,6 @@ begin
     finally
         FreeAndNil(frmSelIMG);
     end;
-end;
-
-procedure TMainForm.mnuScreenClick(Sender: TObject);
-var
-    SC_hdc: HDC;
-    iw, ih: Integer;
-    ConvWndForm: TConvWndForm;
-begin
-
-    Hide;
-    Sleep(300);
-    if SS_hdc <> 0 then
-        DeleteDC(SS_hdc);
-    if SS_bmp <> 0 then
-        DeleteObject(SS_bmp);
-    SC_hdc := GetDC(0);
-    SS_hdc := CreateCompatibleDC(SC_hdc);
-
-    iw := GetDeviceCaps (SC_hdc, HORZRES);
-    ih := GetDeviceCaps (SC_hdc, VERTRES);
-    SS_bmp := CreateCompatibleBitmap(SC_hdc, iw, ih);
-    SelectObject(SS_hdc, SS_bmp);
-    BitBlt(SS_hdc, 0, 0, iw, ih, SC_hdc, 0, 0, SRCCOPY);
-    ReleaseDC(0, SC_hdc);
-    ConvWndForm := TConvWndForm.Create(self);
-    ConvWndForm.Exec := False;
-
-    ConvWndForm.ExecCute(1);
-    ConvWndForm.ShowModal;
-    Show;
-
 end;
 
 
@@ -1632,11 +1607,76 @@ begin
         mnubg1px.Checked := true;
 end;
 
+// Callback function
+function EnumMonitorsProc(hm: HMONITOR; dc: HDC; r: PRect; Data: Pointer): Boolean; stdcall;
+begin
+
+  result := true;
+end;
+
+procedure TMainForm.mnuScreenClick(Sender: TObject);
+var
+    SC_hdc: HDC;
+    iw, ih, i: Integer;
+    ConvWndForm: TConvWndForm;
+    monEx: TMonitorInfoEx;
+begin
+    Hide;
+    Sleep(300);
+    {if SS_hdc <> 0 then
+        DeleteDC(SS_hdc);
+    if SS_bmp <> 0 then
+        DeleteObject(SS_bmp);
+
+
+
+    SC_hdc := GetDC(0);
+    SS_hdc := CreateCompatibleDC(SC_hdc);
+
+    iw := GetDeviceCaps (SC_hdc, HORZRES);
+    ih := GetDeviceCaps (SC_hdc, VERTRES);
+    SS_bmp := CreateCompatibleBitmap(SC_hdc, Screen.DesktopWidth, Screen.DesktopHeight);
+    SelectObject(SS_hdc, SS_bmp);
+    BitBlt(SS_hdc, 0, 0, iw, ih, SC_hdc, 0, 0, SRCCOPY);
+    DeleteObject(SS_bmp);
+    ReleaseDC(0, SC_hdc);        }
+    for i := Low(arSS_HDC) to High(arSS_HDC) do
+        	DeleteDC(arSS_HDC[i]);
+        SetLength(arSS_HDC, 0);
+        SetLength(arSS_HDC, Screen.MonitorCount);
+        for i := Low(arSS_HDC) to High(arSS_HDC) do
+        begin
+    			FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
+    			monEx.cbSize := SizeOf(monEx);
+
+    			GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
+
+    			SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
+          arSS_HDC[i] := CreateCompatibleDC(SC_hdc);
+          iw := GetDeviceCaps (SC_hdc, HORZRES);
+        	ih := GetDeviceCaps (SC_hdc, VERTRES);
+        	SS_bmp := CreateCompatibleBitmap(SC_hdc, iw , ih);
+        	SelectObject(arSS_HDC[i], SS_bmp);
+        	BitBlt(arSS_HDC[i], 0,0, iw , ih, SC_hdc, 0, 0, SRCCOPY);
+        	DeleteObject(SS_bmp);
+          DeleteDC(SC_hdc);
+        end;
+
+    ConvWndForm := TConvWndForm.Create(self);
+    ConvWndForm.Exec := False;
+
+    ConvWndForm.ExecCute(1);
+    ConvWndForm.ShowModal;
+    Show;
+
+end;
+
 procedure TMainForm.btnForeClick(Sender: TObject);
 var
     SC_hdc: HDC;
-    iw, ih: Integer;
+    iw, ih, i: Integer;
     pt: TPoint;
+    monEx: TMonitorInfoEx;
 begin
     if (Sender is TBitBtn) then
     begin
@@ -1644,10 +1684,14 @@ begin
             SelFore := True
         else
             SelFore := False;
-        if SS_hdc <> 0 then
-            DeleteDC(SS_hdc);
+        //if SS_hdc <> 0 then
+        //begin
+        {if SS_hdc <> 0 then
+        	DeleteDC(SS_hdc);
+        //end;
         if SS_bmp <> 0 then
             DeleteObject(SS_bmp);
+
         SC_hdc := GetDC(0);
         SS_hdc := CreateCompatibleDC(SC_hdc);
 
@@ -1655,8 +1699,32 @@ begin
         ih := GetDeviceCaps (SC_hdc, VERTRES);
         SS_bmp := CreateCompatibleBitmap(SC_hdc, iw, ih);
         SelectObject(SS_hdc, SS_bmp);
-        BitBlt(SS_hdc, 0, 0, iw, ih, SC_hdc, 0, 0, SRCCOPY);
-        ReleaseDC(0, SC_hdc);
+        BitBlt(SS_hdc, 0,0, Screen.DesktopWidth, Screen.DesktopHeight, SC_hdc, 0, 0, SRCCOPY);
+        DeleteObject(SS_bmp);
+        ReleaseDC(0, SC_hdc);   }
+
+        for i := Low(arSS_HDC) to High(arSS_HDC) do
+        	DeleteDC(arSS_HDC[i]);
+        SetLength(arSS_HDC, 0);
+        SetLength(arSS_HDC, Screen.MonitorCount);
+        for i := Low(arSS_HDC) to High(arSS_HDC) do
+        begin
+    			FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
+    			monEx.cbSize := SizeOf(monEx);
+
+    			GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
+
+    			SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
+          arSS_HDC[i] := CreateCompatibleDC(SC_hdc);
+          iw := GetDeviceCaps (SC_hdc, HORZRES);
+        	ih := GetDeviceCaps (SC_hdc, VERTRES);
+        	SS_bmp := CreateCompatibleBitmap(SC_hdc, iw , ih);
+        	SelectObject(arSS_HDC[i], SS_bmp);
+        	BitBlt(arSS_HDC[i], 0,0, iw , ih, SC_hdc, 0, 0, SRCCOPY);
+        	DeleteObject(SS_bmp);
+          DeleteDC(SC_hdc);
+        end;
+
         GetCursorPos(pt);
         MoveWindow(PickForm.Handle, pt.x - 101, pt.y - 101, 202, 202, TRUE);
         ShowCursor(False);
