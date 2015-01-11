@@ -50,7 +50,7 @@ object MainForm: TMainForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 15
-  object gbResBlind: TGroupBox
+  object gbResBlind: TAccGroupBox
     Left = 8
     Top = 192
     Width = 345
@@ -58,6 +58,7 @@ object MainForm: TMainForm
     Caption = 'Result'
     TabOrder = 3
     Visible = False
+    AccName = 'Result Blindness Group '
     object Image2: TImage
       Left = 8
       Top = 165
@@ -90,7 +91,7 @@ object MainForm: TMainForm
       Transparent = True
       Visible = False
     end
-    object gbTextFor: TGroupBox
+    object gbTextFor: TAccGroupBox
       Left = 8
       Top = 16
       Width = 329
@@ -98,7 +99,7 @@ object MainForm: TMainForm
       Caption = 'Text for'
       TabOrder = 1
       Visible = False
-      object rb_least3: TRadioButton
+      object rb_least3: TAccRadioButton
         Left = 8
         Top = 16
         Width = 313
@@ -110,7 +111,7 @@ object MainForm: TMainForm
         OnClick = rb_least3Click
         OnEnter = rb_least3Enter
       end
-      object rb_least5: TRadioButton
+      object rb_least5: TAccRadioButton
         Left = 8
         Top = 40
         Width = 313
@@ -120,7 +121,7 @@ object MainForm: TMainForm
         OnClick = rb_least3Click
         OnEnter = rb_least3Enter
       end
-      object rb_least7: TRadioButton
+      object rb_least7: TAccRadioButton
         Left = 8
         Top = 64
         Width = 313
@@ -131,7 +132,7 @@ object MainForm: TMainForm
         OnEnter = rb_least3Enter
       end
     end
-    object edtProta: TLabeledEdit
+    object edtProta: TAccLabeledEdit
       Left = 8
       Top = 80
       Width = 329
@@ -144,8 +145,13 @@ object MainForm: TMainForm
       TabOrder = 3
       OnEnter = chkExpandEnter
       OnKeyDown = edtProtaKeyDown
+      AccName = 'Prota Edit'
+      CtrlNext = edtDeutera
+      CtrlPrev = edtNormal2
+      CtrlUp = edtNormal2
+      CtrlDown = edtDeutera
     end
-    object edtDeutera: TLabeledEdit
+    object edtDeutera: TAccLabeledEdit
       Left = 8
       Top = 128
       Width = 329
@@ -158,8 +164,13 @@ object MainForm: TMainForm
       TabOrder = 4
       OnEnter = chkExpandEnter
       OnKeyDown = edtDeuteraKeyDown
+      AccName = 'Deutera Edit'
+      CtrlNext = edtTrita
+      CtrlPrev = edtProta
+      CtrlUp = edtProta
+      CtrlDown = edtTrita
     end
-    object edtTrita: TLabeledEdit
+    object edtTrita: TAccLabeledEdit
       Left = 8
       Top = 168
       Width = 329
@@ -172,8 +183,11 @@ object MainForm: TMainForm
       TabOrder = 5
       OnEnter = chkExpandEnter
       OnKeyDown = edtTritaKeyDown
+      AccName = 'Trita Edit'
+      CtrlPrev = edtDeutera
+      CtrlUp = edtDeutera
     end
-    object edtNormal2: TLabeledEdit
+    object edtNormal2: TAccLabeledEdit
       Left = 8
       Top = 40
       Width = 329
@@ -186,8 +200,11 @@ object MainForm: TMainForm
       TabOrder = 2
       OnEnter = chkExpandEnter
       OnKeyDown = edtNormal2KeyDown
+      AccName = 'Normal Edit'
+      CtrlNext = edtProta
+      CtrlDown = edtProta
     end
-    object chkExpand2: TCheckBox
+    object chkExpand2: TTransCheckBox
       Left = 8
       Top = 21
       Width = 193
@@ -209,13 +226,14 @@ object MainForm: TMainForm
     Panels = <>
     SimplePanel = True
   end
-  object gbBack: TGroupBox
+  object gbBack: TAccGroupBox
     Left = 8
     Top = 64
     Width = 345
     Height = 49
     Caption = 'Background'
     TabOrder = 1
+    AccName = 'Background Group'
     object Label2: TLabel
       Left = 8
       Top = 24
@@ -277,8 +295,12 @@ object MainForm: TMainForm
       Font.Name = 'Tahoma'
       Font.Style = []
       Other = '&Others...'
+      AccName = 'Background Colour'
+      CtrlNext = BREdit
+      CtrlRight = BREdit
+      CtrlUp = FJColor
     end
-    object Edit2: TMaskEdit
+    object Edit2: TAccMaskEdit
       Left = 216
       Top = 20
       Width = 73
@@ -297,6 +319,9 @@ object MainForm: TMainForm
       OnChange = Edit2Change
       OnEnter = chkExpandEnter
       OnKeyPress = Edit2KeyPress
+      AccName = 'Background Hex Edit'
+      CtrlNext = btnBack
+      CtrlRight = btnBack
     end
     object Panel2: TPanel
       Left = 216
@@ -305,7 +330,7 @@ object MainForm: TMainForm
       Height = 25
       BevelOuter = bvNone
       TabOrder = 2
-      object BREdit: TEdit
+      object BREdit: TAccEdit
         Left = 0
         Top = 0
         Width = 25
@@ -315,8 +340,12 @@ object MainForm: TMainForm
         TabOrder = 0
         OnChange = BREditChange
         OnEnter = chkExpandEnter
+        AccName = 'Back Red Colour Edit'
+        CtrlNext = BGEdit
+        CtrlRight = BGEdit
+        CtrlUp = FREdit
       end
-      object BGEdit: TEdit
+      object BGEdit: TAccEdit
         Left = 24
         Top = 0
         Width = 25
@@ -326,8 +355,14 @@ object MainForm: TMainForm
         TabOrder = 1
         OnChange = BREditChange
         OnEnter = chkExpandEnter
+        AccName = 'Back GreenColour Edit'
+        CtrlNext = BBEdit
+        CtrlPrev = BREdit
+        CtrlRight = BBEdit
+        CtrlLeft = BREdit
+        CtrlUp = FGEdit
       end
-      object BBEdit: TEdit
+      object BBEdit: TAccEdit
         Left = 48
         Top = 0
         Width = 25
@@ -337,9 +372,15 @@ object MainForm: TMainForm
         TabOrder = 2
         OnChange = BREditChange
         OnEnter = chkExpandEnter
+        AccName = 'Back Blue Colour Edit'
+        CtrlNext = btnBack
+        CtrlPrev = BGEdit
+        CtrlRight = btnBack
+        CtrlLeft = BGEdit
+        CtrlUp = FBEdit
       end
     end
-    object tbBR: TTrackBar
+    object tbBR: TAccTrackBar
       Left = 64
       Top = 48
       Width = 233
@@ -352,8 +393,9 @@ object MainForm: TMainForm
       TickStyle = tsNone
       Visible = False
       OnChange = tbBRChange
+      AccName = 'Back Red Slider'
     end
-    object tbBG: TTrackBar
+    object tbBG: TAccTrackBar
       Left = 64
       Top = 72
       Width = 233
@@ -366,8 +408,9 @@ object MainForm: TMainForm
       TickStyle = tsNone
       Visible = False
       OnChange = tbBRChange
+      AccName = 'Back Green Slider'
     end
-    object tbBB: TTrackBar
+    object tbBB: TAccTrackBar
       Left = 64
       Top = 96
       Width = 233
@@ -380,8 +423,9 @@ object MainForm: TMainForm
       TickStyle = tsNone
       Visible = False
       OnChange = tbBRChange
+      AccName = 'Back Blue Slider'
     end
-    object btnBack: TBitBtn
+    object btnBack: TAccBitBtn
       Left = 296
       Top = 16
       Width = 25
@@ -416,8 +460,16 @@ object MainForm: TMainForm
       TabOrder = 6
       OnClick = btnForeClick
       OnEnter = chkExpandEnter
+      AccName = 'Back Colour picker'
+      AccActionDesc = 'Button Click'
+      AccShortCut = 'F12'
+      CtrlNext = bbDD2
+      CtrlPrev = BBEdit
+      CtrlRight = bbDD2
+      CtrlLeft = BBEdit
+      CtrlUp = btnFore
     end
-    object bbDD2: TBitBtn
+    object bbDD2: TAccBitBtn
       Left = 322
       Top = 16
       Width = 17
@@ -442,15 +494,21 @@ object MainForm: TMainForm
       TabOrder = 7
       OnClick = bbDD2Click
       OnEnter = chkExpandEnter
+      AccName = 'Back Colour Dropdown'
+      AccShortCut = 'F10'
+      CtrlPrev = btnBack
+      CtrlLeft = btnBack
+      CtrlUp = bbDD1
     end
   end
-  object gbFore: TGroupBox
+  object gbFore: TAccGroupBox
     Left = 8
     Top = 8
     Width = 345
     Height = 49
     Caption = 'Foreground'
     TabOrder = 0
+    AccName = 'Foreground Group'
     object Label1: TLabel
       Left = 8
       Top = 24
@@ -512,8 +570,12 @@ object MainForm: TMainForm
       Font.Name = 'Tahoma'
       Font.Style = []
       Other = '&Others...'
+      AccName = 'Foreground Colour'
+      CtrlNext = FREdit
+      CtrlRight = FREdit
+      CtrlDown = BColor
     end
-    object Edit1: TMaskEdit
+    object Edit1: TAccMaskEdit
       Left = 216
       Top = 20
       Width = 73
@@ -532,6 +594,9 @@ object MainForm: TMainForm
       OnChange = Edit1Change
       OnEnter = chkExpandEnter
       OnKeyPress = Edit1KeyPress
+      AccName = 'Foreground Hex Edit'
+      CtrlNext = btnFore
+      CtrlRight = btnFore
     end
     object Panel1: TPanel
       Left = 216
@@ -540,7 +605,7 @@ object MainForm: TMainForm
       Height = 25
       BevelOuter = bvNone
       TabOrder = 2
-      object FREdit: TEdit
+      object FREdit: TAccEdit
         Left = 0
         Top = 0
         Width = 25
@@ -550,8 +615,12 @@ object MainForm: TMainForm
         TabOrder = 0
         OnChange = FREditChange
         OnEnter = chkExpandEnter
+        AccName = 'Fore Red Value Edit'
+        CtrlNext = FGEdit
+        CtrlRight = FGEdit
+        CtrlDown = BREdit
       end
-      object FGEdit: TEdit
+      object FGEdit: TAccEdit
         Left = 24
         Top = 0
         Width = 25
@@ -561,8 +630,14 @@ object MainForm: TMainForm
         TabOrder = 1
         OnChange = FREditChange
         OnEnter = chkExpandEnter
+        AccName = 'Fore Green Value Edit'
+        CtrlNext = FBEdit
+        CtrlPrev = FREdit
+        CtrlRight = FBEdit
+        CtrlLeft = FREdit
+        CtrlDown = BGEdit
       end
-      object FBEdit: TEdit
+      object FBEdit: TAccEdit
         Left = 48
         Top = 0
         Width = 25
@@ -572,9 +647,15 @@ object MainForm: TMainForm
         TabOrder = 2
         OnChange = FREditChange
         OnEnter = chkExpandEnter
+        AccName = 'Fore Blue Value Edit'
+        CtrlNext = btnFore
+        CtrlPrev = FGEdit
+        CtrlRight = btnFore
+        CtrlLeft = FGEdit
+        CtrlDown = BBEdit
       end
     end
-    object tbFR: TTrackBar
+    object tbFR: TAccTrackBar
       Left = 64
       Top = 48
       Width = 233
@@ -587,8 +668,9 @@ object MainForm: TMainForm
       TickStyle = tsNone
       Visible = False
       OnChange = tbFRChange
+      AccName = 'Fore Red Slider'
     end
-    object tbFG: TTrackBar
+    object tbFG: TAccTrackBar
       Left = 64
       Top = 72
       Width = 233
@@ -601,8 +683,9 @@ object MainForm: TMainForm
       TickStyle = tsNone
       Visible = False
       OnChange = tbFRChange
+      AccName = 'Fore Green Slider'
     end
-    object tbFB: TTrackBar
+    object tbFB: TAccTrackBar
       Left = 64
       Top = 96
       Width = 233
@@ -615,8 +698,9 @@ object MainForm: TMainForm
       TickStyle = tsNone
       Visible = False
       OnChange = tbFRChange
+      AccName = 'Fore Blue Slider'
     end
-    object btnFore: TBitBtn
+    object btnFore: TAccBitBtn
       Left = 296
       Top = 16
       Width = 25
@@ -651,8 +735,16 @@ object MainForm: TMainForm
       TabOrder = 6
       OnClick = btnForeClick
       OnEnter = chkExpandEnter
+      AccName = 'Fore Colour picker'
+      AccActionDesc = 'Button Click'
+      AccShortCut = 'F11'
+      CtrlNext = bbDD1
+      CtrlPrev = FBEdit
+      CtrlRight = bbDD1
+      CtrlLeft = FBEdit
+      CtrlDown = btnBack
     end
-    object bbDD1: TBitBtn
+    object bbDD1: TAccBitBtn
       Left = 322
       Top = 16
       Width = 17
@@ -677,9 +769,15 @@ object MainForm: TMainForm
       TabOrder = 7
       OnClick = bbDD1Click
       OnEnter = chkExpandEnter
+      AccName = 'Fore Colour Dropdown'
+      AccActionDesc = 'Button Click'
+      AccShortCut = 'F9'
+      CtrlPrev = btnFore
+      CtrlLeft = btnFore
+      CtrlDown = bbDD2
     end
   end
-  object chkblind: TCheckBox
+  object chkblind: TTransCheckBox
     Left = 8
     Top = 168
     Width = 345
@@ -687,14 +785,16 @@ object MainForm: TMainForm
     Caption = 'Show contrast result for colour blindness'
     TabOrder = 2
     OnClick = chkblindClick
+    AccName = 'chkShowBlindness'
   end
-  object gbResNormal: TGroupBox
+  object gbResNormal: TAccGroupBox
     Left = 8
     Top = 192
     Width = 345
     Height = 129
     Caption = 'Result'
     TabOrder = 4
+    AccName = 'Result Group'
     object lblRatio: TLabel
       Left = 8
       Top = 21
@@ -703,7 +803,7 @@ object MainForm: TMainForm
       AutoSize = False
       Transparent = True
     end
-    object Memo1: TMemo
+    object Memo1: TAccMemo
       Left = 8
       Top = 128
       Width = 329
@@ -714,8 +814,13 @@ object MainForm: TMainForm
       TabOrder = 3
       Visible = False
       OnEnter = chkExpandEnter
+      AccName = 'Result Memo'
+      CtrlNext = btnCopyRes
+      CtrlPrev = edtNormal_LT2
+      CtrlUp = edtNormal_LT2
+      CtrlDown = btnCopyRes
     end
-    object btnCopyRes: TButton
+    object btnCopyRes: TAccButton
       Left = 248
       Top = 334
       Width = 89
@@ -724,8 +829,11 @@ object MainForm: TMainForm
       TabOrder = 4
       Visible = False
       OnClick = btnCopyResClick
+      AccName = 'CopyButton'
+      CtrlPrev = Memo1
+      CtrlUp = Memo1
     end
-    object chkExpand: TCheckBox
+    object chkExpand: TTransCheckBox
       Left = 176
       Top = 21
       Width = 161
@@ -734,14 +842,17 @@ object MainForm: TMainForm
       TabOrder = 0
       OnClick = chkExpandClick
       OnEnter = chkExpandEnter
+      AccName = 'chkShort/Full'
+      CtrlDown = gbLText
     end
-    object gbText: TGroupBox
+    object gbText: TAccGroupBox
       Left = 8
       Top = 40
       Width = 161
       Height = 81
       Caption = 'Text'
       TabOrder = 1
+      AccName = 'Normal Text Group'
       object Image1: TImage
         Left = 8
         Top = 21
@@ -756,30 +867,41 @@ object MainForm: TMainForm
         Height = 20
         Transparent = True
       end
-      object edtNormal_T: TEdit
+      object edtNormal_T: TAccEdit
         Left = 32
         Top = 20
         Width = 121
         Height = 23
         ReadOnly = True
         TabOrder = 0
+        AccName = 'LevelAA Textbox'
+        CtrlNext = edtNormal_T2
+        CtrlPrev = gbText
+        CtrlRight = gbLText
+        CtrlDown = edtNormal_T2
       end
-      object edtNormal_T2: TEdit
+      object edtNormal_T2: TAccEdit
         Left = 32
         Top = 48
         Width = 121
         Height = 23
         ReadOnly = True
         TabOrder = 1
+        AccName = 'LevelAAA Textbox'
+        CtrlNext = gbLText
+        CtrlPrev = edtNormal_T
+        CtrlRight = gbLText
+        CtrlUp = edtNormal_T
       end
     end
-    object gbLText: TGroupBox
+    object gbLText: TAccGroupBox
       Left = 176
       Top = 40
       Width = 161
       Height = 81
       Caption = 'Large text'
       TabOrder = 2
+      AccName = 'Large Text Group'
       object Image8: TImage
         Left = 8
         Top = 21
@@ -794,21 +916,27 @@ object MainForm: TMainForm
         Height = 20
         Transparent = True
       end
-      object edtNormal_LT: TEdit
+      object edtNormal_LT: TAccEdit
         Left = 32
         Top = 20
         Width = 121
         Height = 23
         ReadOnly = True
         TabOrder = 0
+        AccName = 'LevelAA LargeTextbox'
+        CtrlNext = edtNormal_LT2
+        CtrlDown = edtNormal_LT2
       end
-      object edtNormal_LT2: TEdit
+      object edtNormal_LT2: TAccEdit
         Left = 32
         Top = 48
         Width = 121
         Height = 23
         ReadOnly = True
         TabOrder = 1
+        AccName = 'LevelAAA LargeTextbox'
+        CtrlPrev = edtNormal_LT
+        CtrlUp = edtNormal_LT
       end
     end
   end
@@ -818,7 +946,7 @@ object MainForm: TMainForm
     Left = 352
     Top = 88
     Bitmap = {
-      494C010102000400440014001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000400700014001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000500000001400000001002000000000000019
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1277,7 +1405,7 @@ object MainForm: TMainForm
     Left = 352
     Top = 296
     Bitmap = {
-      494C010101000400440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000400700010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       00000000000000000000000000000000000000000000BFBF0000BFBF0000BFBF
       0000BFBF0000BFBF0000BFBF0000BFBF00000000000000000000000000000000

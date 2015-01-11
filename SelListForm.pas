@@ -21,7 +21,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, System.Types,
-  Vcl.Dialogs, StdCtrls, ComCtrls, PBNumEdit, PBSuperSpin, ExtCtrls, JPEG, iniFiles, ShlObj, ComObj;
+  Vcl.Dialogs, StdCtrls, ComCtrls, ExtCtrls, JPEG, iniFiles, ShlObj , AccCTRLs,
+  TransCheckBox, ComObj;
 
 type
   TBMPs = record
@@ -39,24 +40,12 @@ type
     Image1: TImage;
     SaveDialog1: TSaveDialog;
     ScrollBox2: TScrollBox;
-    ListView1: TListView;
-    gbSimulation: TGroupBox;
-    btnSave: TButton;
-    btnPreview: TButton;
-    gbJPEG: TGroupBox;
-    lblC_Quality: TLabel;
-    edtC_Quality: TPBSuperSpin;
-    chkSmooth: TCheckBox;
-    btnClose: TButton;
-    Label1: TPanel;
-    GroupBox1: TGroupBox;
-    RadioButton1: TRadioButton;
-    RadioButton2: TRadioButton;
-    RadioButton3: TRadioButton;
-    RadioButton4: TRadioButton;
-    RadioButton5: TRadioButton;
-    RadioButton6: TRadioButton;
-    RadioButton7: TRadioButton;
+    gbSimulation: TAccGroupBox;
+    btnSave: TAccButton;
+    btnPreview: TAccButton;
+    ComboBox2: TAccComboBox;
+    gbWndList: TAccGroupBox;
+    ComboBox1: TAccComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnPreviewClick(Sender: TObject);
@@ -111,7 +100,7 @@ begin
         begin
             StrLCopy(s, buf, i);
             if FWnd.Title = '' then
-                FWnd.Title := s + '(ClassName)';
+                FWnd.Title := s;// + '(ClassName)';
             if (LowerCase(s) <> 'progman') and (LowerCase(s) <> 'tapplication') then
             begin
                 if (hWindow = MainForm.Handle) or (Application.Handle = hWindow) then
@@ -169,11 +158,10 @@ begin
     begin
         for i := 0 to WList.Count - 1 do
         begin
-            ListI := ListView1.Items.Add;
-            ListI.Caption := PWnd(WList.Items[i])^.Title;
-            ListI.SubItems.Add(IntToStr(PWnd(WList.Items[i])^.hWindow));
+        		ComboBox1.Items.Add(PWnd(WList.Items[i])^.Title + '(' + IntToHEX(PWnd(WList.Items[i])^.hWindow, 2) + ')');
+
         end;
-        ListView1.ItemIndex := 0;
+        ComboBox1.ItemIndex := 0;
     end
     else
     begin
@@ -182,8 +170,8 @@ begin
     end;
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
-        edtC_Quality.Value := ini.ReadInteger('JPEG', 'Compression', 75);
-        chkSmooth.Checked := ini.ReadBool('JPEG', 'Smooth', False);
+        //edtC_Quality.Value := ini.ReadInteger('JPEG', 'Compression', 75);
+        //chkSmooth.Checked := ini.ReadBool('JPEG', 'Smooth', False);
         Left := ini.ReadInteger('Window', 'SelList_Left', (Screen.WorkAreaWidth div 2) - (Width div 2));
         Top := ini.ReadInteger('Window', 'SelList_Top', (Screen.WorkAreaHeight div 2) - (Height div 2));
         Width := ini.ReadInteger('Window', 'SelList_Width', 800);
@@ -191,25 +179,30 @@ begin
     finally
         ini.Free;
     end;
-    ListView1.Columns[0].Caption := MainForm.GetTranslation('title', 'Title');
-    ListView1.Columns[1].Caption := MainForm.GetTranslation('handle', 'Handle');
+    if Width < Constraints.MinWidth then
+    	Width := Constraints.MinWidth;
+    if Height < Constraints.MinHeight then
+    	Height := Constraints.MinHeight;
+
     Caption := MainForm.GetTranslation('wnd_list', 'Window list');
-    Label1.Caption := MainForm.GetTranslation('sel_wnd', 'Select window');
+    gbWndList.Caption := MainForm.GetTranslation('sel_wnd', 'Select window');
     gbSimulation.Caption := MainForm.GetTranslation('simulation', 'Simulation');
-    gbJPEG.Caption := MainForm.GetTranslation('jpeg_options', 'JPEG options');
+    //gbJPEG.Caption := MainForm.GetTranslation('jpeg_options', 'JPEG options');
     btnSave.Caption := MainForm.GetTranslation('save', '&Save');
     btnPreview.Caption := MainForm.GetTranslation('preview', '&Preview');
-    lblC_Quality.Caption := MainForm.GetTranslation('compression_quality', 'Compression Quality:');
-    chkSmooth.Caption := MainForm.GetTranslation('smoothing', 'S&moothing');
-    btnClose.Caption := MainForm.GetTranslation('close', '&Close');
-    RadioButton1.Caption := MainForm.GetTranslation('protanopia', 'Protanopia');
-    RadioButton2.Caption := MainForm.GetTranslation('deuteranopia', 'Deuteranopia');
-    RadioButton3.Caption := MainForm.GetTranslation('tritanopia', 'Tritanopia');
-    RadioButton4.Caption := MainForm.GetTranslation('grayscale', 'Grayscale');
-    RadioButton5.Caption := MainForm.GetTranslation('invert', 'Invert');
-    RadioButton6.Caption := MainForm.GetTranslation('cataracts', 'Cataracts');
-    RadioButton7.Caption := MainForm.GetTranslation('normal', 'Nromal');
-    RadioButton1.Checked := True;
+    //lblC_Quality.Caption := MainForm.GetTranslation('compression_quality', 'Compression Quality:');
+    //chkSmooth.Caption := MainForm.GetTranslation('smoothing', 'S&moothing');
+    //btnClose.Caption := MainForm.GetTranslation('close', '&Close');
+
+    ComboBox2.Items.Add(MainForm.GetTranslation('protanopia', 'Protanopia'));
+    ComboBox2.Items.Add(MainForm.GetTranslation('deuteranopia', 'Deuteranopia'));
+    ComboBox2.Items.Add(MainForm.GetTranslation('tritanopia', 'Tritanopia'));
+    ComboBox2.Items.Add(MainForm.GetTranslation('grayscale', 'Grayscale'));
+    ComboBox2.Items.Add(MainForm.GetTranslation('invert', 'Invert'));
+    ComboBox2.Items.Add(MainForm.GetTranslation('cataracts', 'Cataracts'));
+    ComboBox2.Items.Add(MainForm.GetTranslation('normal', 'Normal'));
+    ComboBox2.ItemIndex := 0;
+
 end;
 
 procedure TfrmSelList.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -219,8 +212,8 @@ var
 begin
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
-        ini.WriteInteger('JPEG', 'Compression', edtC_Quality.AsInteger);
-        ini.WriteBool('JPEG', 'Smooth', chkSmooth.Checked);
+        //ini.WriteInteger('JPEG', 'Compression', edtC_Quality.AsInteger);
+        //ini.WriteBool('JPEG', 'Smooth', chkSmooth.Checked);
         ini.WriteInteger('Window', 'SelList_Left', Left);
         ini.WriteInteger('Window', 'SelList_Top', Top);
         ini.WriteInteger('Window', 'SelList_Width', Width);
@@ -252,7 +245,7 @@ end;
 
 procedure TfrmSelList.btnPreviewClick(Sender: TObject);
 begin
-    if (FBMPs.hWindow <> THandle(StrToInt(ListView1.Selected.SubItems[0]))) then
+    if (FBMPs.hWindow <> THandle(PWnd(WList.Items[ComboBox1.ItemIndex])^.hWindow)) then
     begin
         if Assigned(FBMPs.P_BMP) then
             FreeAndNil(FBMPs.P_BMP);
@@ -268,8 +261,8 @@ begin
             FreeAndNil(FBMPs.C_BMP);
         if Assigned(FBMPs.N_BMP) then
             FreeAndNil(FBMPs.N_BMP);
-        FBMPs.Title := ListView1.Selected.Caption;
-        FBMPs.hWindow := StrToInt(ListView1.Selected.SubItems[0]);
+        FBMPs.Title := PWnd(WList.Items[ComboBox1.ItemIndex])^.Title;
+        FBMPs.hWindow := PWnd(WList.Items[ComboBox1.ItemIndex])^.hWindow;
         if not ScreenShot then exit;
         
     end
@@ -280,42 +273,42 @@ begin
             if not ScreenShot then exit;
 
     end;
-    if RadioButton1.Checked then
+    if ComboBox2.ItemIndex = 0 then
     begin
         if not Assigned(FBMPs.P_BMP) then
             ShowProg(1)
         else
             Image1.Picture.Assign(FBMPs.P_BMP);
     end
-    else if RadioButton2.Checked then
+    else if ComboBox2.ItemIndex = 1 then
     begin
         if not Assigned(FBMPs.D_BMP) then
             ShowProg(2)
         else
             Image1.Picture.Assign(FBMPs.D_BMP);
     end
-    else if RadioButton3.Checked then
+    else if ComboBox2.ItemIndex = 2 then
     begin
         if not Assigned(FBMPs.T_BMP) then
             ShowProg(3)
         else
             Image1.Picture.Assign(FBMPs.T_BMP);
     end
-    else if RadioButton4.Checked then
+    else if ComboBox2.ItemIndex = 3 then
     begin
         if not Assigned(FBMPs.G_BMP) then
             ShowProg(0)
         else
             Image1.Picture.Assign(FBMPs.G_BMP);
     end
-    else if RadioButton5.Checked then
+    else if ComboBox2.ItemIndex = 4 then
     begin
         if not Assigned(FBMPs.I_BMP) then
             ShowProg(4)
         else
             Image1.Picture.Assign(FBMPs.I_BMP);
     end
-    else if RadioButton6.Checked then
+    else if ComboBox2.ItemIndex = 5 then
     begin
         if not Assigned(FBMPs.C_BMP) then
             ShowProg(5)
@@ -403,8 +396,10 @@ begin
         if GetWindowLong(FBMPs.hWindow, GWL_STYLE) = 0 then
         begin
             Showmessage(MainForm.GetTranslation('wnd_notfound', 'The selected window cannot be found.'));
-            ListView1.DeleteSelected;
-            ListView1.ItemIndex := 0;
+            ComboBox1.DeleteSelected;
+            ComboBox1.ItemIndex := 0;
+            //ListView1.DeleteSelected;
+            //ListView1.ItemIndex := 0;
             Exit;
         end;
         DC := 0;
@@ -443,8 +438,8 @@ begin
                     Application.Restore;
                     Show;
                     Showmessage(MainForm.GetTranslation('fail_getdc', Fail_GetDC));
-                    ListView1.DeleteSelected;
-                    ListView1.ItemIndex := 0;
+                    ComboBox1.DeleteSelected;
+            				ComboBox1.ItemIndex := 0;
                 end;
                 Keybd_event(VK_LWIN,   0, 0, 0);
                 Keybd_event(Byte('D'), 0, 0, 0);
@@ -494,8 +489,8 @@ begin
                         Application.Restore;
                         Show;
                         Showmessage(MainForm.GetTranslation('fail_getdc', Fail_GetDC));
-                        ListView1.DeleteSelected;
-                        ListView1.ItemIndex := 0;
+                        ComboBox1.DeleteSelected;
+            						ComboBox1.ItemIndex := 0;
                     end;
                 end
                 else
@@ -503,8 +498,8 @@ begin
                     Application.Restore;
                     Show;
                     ShowMessage(MainForm.GetTranslation('fail_wndsize', Fail_WndSize));
-                    ListView1.DeleteSelected;
-                    ListView1.ItemIndex := 0;
+                    ComboBox1.DeleteSelected;
+            				ComboBox1.ItemIndex := 0;
                 end;
             end;
         end;
@@ -590,7 +585,7 @@ procedure TfrmSelList.ListView1SelectItem(Sender: TObject; Item: TListItem;
 begin
     if Selected then
     begin
-        if (FBMPs.Title = ListView1.Selected.Caption) and (FBMPs.hWindow = THandle(StrToInt(ListView1.Selected.SubItems[0]))) then
+        if (FBMPs.Title = PWnd(WList.Items[ComboBox1.ItemIndex])^.Title) and (FBMPs.hWindow = THandle(PWnd(WList.Items[ComboBox1.ItemIndex])^.hWindow)) then
         begin
             if (Assigned(FBMPs.N_BMP)) or (Assigned(FBMPs.P_BMP)) or (Assigned(FBMPs.D_BMP)) or (Assigned(FBMPs.T_BMP)) or
                 (Assigned(FBMPs.G_BMP)) or (Assigned(FBMPs.I_BMP)) then
@@ -624,9 +619,9 @@ begin
         begin
             JPG := TJPEGImage.Create;
             try
-                JPG.Smoothing := chkSmooth.Checked;
+                JPG.Smoothing := True;//chkSmooth.Checked;
                 JPG.Assign(Image1.Picture.Bitmap);
-                JPG.CompressionQuality := edtC_Quality.AsInteger;
+                JPG.CompressionQuality := 75;//edtC_Quality.AsInteger;
 
                 JPG.SaveToFile(FN);
                 Application.ProcessMessages;
