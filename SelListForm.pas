@@ -21,8 +21,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, System.Types,
-  Vcl.Dialogs, StdCtrls, ComCtrls, ExtCtrls, JPEG, iniFiles, ShlObj , AccCTRLs,
-  TransCheckBox, ComObj;
+  Vcl.Dialogs, StdCtrls, ComCtrls, ExtCtrls, JPEG, iniFiles, ShlObj , AccCTRLs, System.Math,
+  TransCheckBox, ComObj, Funcs;
+
 
 type
   TBMPs = record
@@ -58,10 +59,15 @@ type
 
     function ScreenShot:Boolean;
     procedure ShowProg(Mode: integer);
+
+    procedure WMDPIChanged(var Message: TMessage); message WM_DPICHANGED;
   public
     { Public éŒ¾ }
     SPath:string;
     FBMPs: TBMPs;
+    ScaleY, ScaleX, Dx, Dy: double;
+    DefFont: integer;
+    procedure ResizeCtrls;
   end;
 
 var
@@ -138,11 +144,11 @@ end;
 procedure TfrmSelList.FormCreate(Sender: TObject);
 var
     i: Integer;
-    ListI: TListItem;
     DWnd: HWND;
     FWnd: PWnd;
     ini: TMemIniFile;
 begin
+
     WList := TList.Create;
     DWnd := GetDesktopWindow;
     SPath := IncludeTrailingPathDelimiter(GetMyDocPath) + 'CCA.ini';
@@ -202,7 +208,7 @@ begin
     ComboBox2.Items.Add(MainForm.GetTranslation('cataracts', 'Cataracts'));
     ComboBox2.Items.Add(MainForm.GetTranslation('normal', 'Normal'));
     ComboBox2.ItemIndex := 0;
-
+    //ResizeCtrls;
 end;
 
 procedure TfrmSelList.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -227,19 +233,40 @@ begin
         DisPose(PWnd(WList.Items[i]));
     end;
     if Assigned(FBMPs.P_BMP) then
+    begin
+        FBMPs.P_BMP.FreeImage;
         FreeAndNil(FBMPs.P_BMP);
+    end;
     if Assigned(FBMPs.D_BMP) then
+    begin
+        FBMPs.D_BMP.FreeImage;
         FreeAndNil(FBMPs.D_BMP);
+    end;
     if Assigned(FBMPs.T_BMP) then
+    begin
+        FBMPs.T_BMP.FreeImage;
         FreeAndNil(FBMPs.T_BMP);
+    end;
     if Assigned(FBMPs.I_BMP) then
+    begin
+        FBMPs.I_BMP.FreeImage;
         FreeAndNil(FBMPs.I_BMP);
+    end;
     if Assigned(FBMPs.G_BMP) then
+    begin
+        FBMPs.G_BMP.FreeImage;
         FreeAndNil(FBMPs.G_BMP);
-    if Assigned(FBMPs.C_BMP) then
-        FreeAndNil(FBMPs.C_BMP);
+    end;
     if Assigned(FBMPs.N_BMP) then
+    begin
+        FBMPs.N_BMP.FreeImage;
         FreeAndNil(FBMPs.N_BMP);
+    end;
+    if Assigned(FBMPs.C_BMP) then
+    begin
+        FBMPs.C_BMP.FreeImage;
+        FreeAndNil(FBMPs.C_BMP);
+    end;
     WList.Free;
 end;
 
@@ -630,6 +657,70 @@ begin
             end;
         end;
     end;
+end;
+
+
+function DoubleToInt(d: double): integer;
+begin
+  SetRoundMode(rmUP);
+  Result := Trunc(SimpleRoundTo(d));
+end;
+
+procedure TfrmSelList.WMDPIChanged(var Message: TMessage);
+begin
+  if (Dx > 0) and (Dy > 0) then
+  begin
+    scaleX := Message.WParamLo / Dx;
+    scaleY := Message.WParamHi / Dy;
+    ResizeCtrls;
+  end;
+end;
+
+procedure TfrmSelList.ResizeCtrls;
+var
+  sHeight, sWidth, mw: integer;
+    procedure GetStrSize(Cap: string);
+    begin
+
+      sWidth := DoubleToInt(Canvas.TextWidth(Cap));
+      sHeight := DoubleToInt(Canvas.TextHeight(Cap));
+
+    end;
+begin
+  //GetWindowScale(Handle, Dx, Dy, ScaleX, ScaleY);
+  Font.Size := DoubleToInt(DefFont * ScaleX);
+  GetStrSize(Caption);
+  ComboBox1.ItemHeight := sHeight;
+  ComboBox2.ItemHeight := sHeight;
+  ComboBox2.Width := DoubleToInt(150 * ScaleX);
+  GetStrSize(btnPreview.Caption + ' ');
+  mw := swidth;
+  GetStrSize(btnSave.Caption + ' ');
+  mw := MAX(mw, sWidth);
+  btnPreview.Height := ComboBox1.Height;
+  btnPreview.Width := mw;
+  btnSave.Height := ComboBox1.Height;
+  btnSave.Width := mw;
+  gbWndList.Height := DoubleToInt(sHeight * 1.3) + ComboBox1.Height + 5;
+  gbWndList.Width := ComboBox1.Width +  6;
+
+  gbSimulation.Height := gbWndList.Height;
+  gbSimulation.Width := ComboBox2.Width + btnSave.Width + btnPreview.Width + 12;
+
+  Scrollbox2.Height := gbWndList.Height + 8;
+
+  gbWndList.Top := 0;
+  gbSimulation.Top := 0;
+  ComboBox1.Left := 3;
+  ComboBox1.Top := sHeight;
+  gbSimulation.Left := gbWndList.Left + gbWndList.Width + 3;
+  ComboBox2.Left := 3;
+  ComboBox2.Top := sHeight;
+  btnSave.Top := sHeight;
+  btnSave.Left := ComboBox2.Width + 6;
+  btnPreview.Top := sHeight;
+  btnPreview.Left := btnSave.Left + btnSave.Width + 3;
+  Constraints.MinWidth := gbWndList.Width + gbSimulation.Width + 50;
 end;
 
 end.

@@ -23,7 +23,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Vcl.Forms, Math,
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorConvert,
   ImgList, Buttons, IniFiles, ActnList, JColorSelect2, ShellAPI, Menus, MultiMon,
-  Mask, JPEG, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, System.Actions, TransCheckBox;
+  Mask, JPEG, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, System.Actions, TransCheckBox, PermonitorApi, Funcs;
 resourcestring
   B_Difference = 'brightness difference :';
   C_Difference = 'colour difference :';
@@ -44,6 +44,10 @@ resourcestring
   Fail_GETDC = 'The device context was not able to be acquired.';
   Fail_WndSize = 'Please change the window to a visible state.';
   Wnd_Move = '''M'' key is window move mode. The window can be moved by pushing the arrow key.';
+
+
+
+
 type
 
 
@@ -161,6 +165,7 @@ type
     rb_least7: TAccRadioButton;
     lblRatio: TLabel;
     chkblind: TTransCheckBox;
+    mnuLang: TMenuItem;
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure Edit2KeyPress(Sender: TObject; var Key: Char);
     procedure mnuHexClick(Sender: TObject);
@@ -216,12 +221,17 @@ type
     procedure rb_least3Click(Sender: TObject);
     procedure rb_least3Enter(Sender: TObject);
     procedure chkblindClick(Sender: TObject);
+    procedure mnuHelpMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width, Height: Integer);
+    procedure mnuHelpDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
   private
     { Private declare }
     Hex, RGB, copied: string;
     frmSelIMG: TfrmIMGConvert;
     bSetValue: Boolean;
-    Transpath, APPDir, SPath: string;
+    Transpath, APPDir, SPath, TransDir: string;
+    LangList: TStringList;
+    DefFont: integer;
+    ScaleX, ScaleY, DefX, DefY: double;
     procedure SetRGB;
     procedure OnSHint(Sender: TObject);
     procedure SetTBPos;
@@ -229,7 +239,11 @@ type
     procedure BGGroupSizeChange(Large: boolean = True);
     procedure ResGroupSizeChange(Large: boolean = True);
     procedure ResizeCtrls;
-
+    procedure LoadLang(mnuCreate: boolean = true);
+    procedure mnuLangChildClick(Sender: TObject);
+    procedure ItemMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width, Height: Integer);
+    procedure ItemDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
+    procedure WMDPIChanged(var Message: TMessage); message WM_DPICHANGED;
   public
     { Public declare }
     arSS_HDC: array of HDC;
@@ -250,7 +264,16 @@ implementation
 
 uses Pick, about, SelListForm, ProgressForm, ConvWnd;
 
+var
+  SS_HDC: HDC;
+
 {$R *.dfm}
+
+function DoubleToInt(d: double): integer;
+begin
+  SetRoundMode(rmUP);
+  Result := Trunc(SimpleRoundTo(d));
+end;
 
 function GetMyDocPath: string;
 var
@@ -275,19 +298,474 @@ begin
 end;
 
 procedure TMainForm.ResizeCtrls;
-begin
-    gbBack.Top := gbFore.Top + gbFore.Height + 7;
-    //btnCopyRes.Top := ChkResult.Top;
-    chkBlind.Top := gbBack.Top + gbBack.Height + 7;
-    gbResBlind.Top := chkBlind.Top + chkBlind.Height + 5;
-    gbResNormal.Top := gbResBlind.Top;
-    if not mnuShowBlind.Checked then
+var
+  iHeight, sWidth, sHeight, iLeft, tw, mH, iTop, i: integer;
+  sz: TSize;
+  dc: HDC;
+    procedure GetStrSize(Cap: string);
     begin
-        ClientHeight := gbResNormal.Top + gbResNormal.Height + StatusBar1.height;
+
+      sWidth := DoubleToInt(Canvas.TextWidth(Cap));
+      sHeight := DoubleToInt(Canvas.TextHeight(Cap));
+
+    end;
+begin
+  Font.Size := DoubleToInt(DefFont * ScaleY);
+  iHeight := DoubleToInt(25 * ScaleX);
+  mH := iHeight;
+
+    GetStrSize(Label1.Caption);
+    Label1.Width := sWidth;
+    Label1.Height := sHeight;
+    Label2.Width := sWidth;
+    Label2.Height := sHeight;
+    tw := Label1.Width + 8;
+    mh := MAX(mH, Label1.Height);
+
+    FJColor.ItemHeight := iHeight - 5;
+    FJColor.Width := DoubleToInt(70 * ScaleX);
+    BColor.ItemHeight := iHeight - 5;
+    BColor.Width := DoubleToInt(70 * ScaleX);
+    mh := MAX(mH, FJColor.Height);
+    tw := tw + FJColor.Width + 3;
+    if mnuHex.Checked then
+    begin
+
+      GetStrSize(Label3.Caption + ' ');
+      Label3.Width := sWidth;
+      Label3.Height := sHeight;
+      Label4.Width := sWidth;
+      Label4.Height := sHeight;
+      tw := tw + Label3.Width + 5;
+
+      GetStrSize('255 255 255');
+
+      Edit1.Height := sHeight + 6;
+      Edit1.Width := sWidth + 30;
+      Edit2.Height := sHeight + 6;
+      Edit2.Width := sWidth + 30;
+      mh := MAX(mH, Edit1.Height);
+      tw := tw + Edit1.Width + 3;
+
+
+    end
+    else if mnuRGB.Checked then
+    begin
+
+      GetStrSize(Label3.Caption + ' ');
+      Label3.Width := sWidth;
+      Label3.Height := sHeight;
+      Label4.Width := sWidth;
+      Label4.Height := sHeight;
+      GetStrSize('255 255 255');
+      tw := tw + Label3.Width + 5;
+
+      Panel1.Height := sHeight;
+      Panel1.Width := sWidth + 30;
+      Panel2.Height := sHeight;
+      Panel2.Width := sWidth + 30;
+      mh := MAX(mH, Panel1.Height);
+
+      sWidth := (sWidth + 30) div 3;
+      FREdit.Height := sHeight + 4;
+      FREdit.Width := sWidth;
+
+      FGEdit.Height := sHeight + 4;
+      FGEdit.Width := sWidth;
+
+      FBEdit.Height := sHeight + 4;
+      FBEdit.Width := sWidth;
+
+      BREdit.Height := sHeight + 4;
+      BREdit.Width := sWidth;
+
+      BGEdit.Height := sHeight + 4;
+      BGEdit.Width := sWidth;
+
+      BBEdit.Height := sHeight + 4;
+      BBEdit.Width := sWidth;
+
+      tw := tw + Panel1.Width + 5;
+    end;
+
+    GetStrSize(lblFR.Caption + ' ');
+    lblFR.Width := sWidth;
+    lblFR.Height := sHeight + 6;
+    lblBR.Width := sWidth;
+    lblBR.Height := sHeight + 6;
+
+
+    GetStrSize(lblFG.Caption + ' ');
+    lblFG.Width := sWidth;
+    lblFG.Height := sHeight + 6;
+    lblBG.Width := sWidth;
+    lblBG.Height := sHeight + 6;
+
+    GetStrSize(lblFB.Caption + ' ');
+    lblFB.Width := sWidth;
+    lblFB.Height := sHeight + 6;
+    lblBB.Width := sWidth;
+    lblBB.Height := sHeight + 6;
+
+    tbFR.Height := iHeight;
+    tbFG.Height := iHeight;
+    tbFB.Height := iHeight;
+    tbBR.Height := iHeight;
+    tbBG.Height := iHeight;
+    tbBB.Height := iHeight;
+
+    iTop := (mH + 25) div 2;
+
+
+    btnFore.Width := iHeight;
+    btnFore.Height := iHeight;
+    bbDD1.Height := iHeight;
+
+    btnBack.Width := iHeight;
+    btnBack.Height := iHeight;
+    bbDD2.Height := iHeight;
+    tw := tw + btnFore.Width + bbDD1.Width + 1;
+
+    if mnuSlider.Checked then
+    begin
+      gbFore.Height := mH + (sHeight * 3 ) + 45;// + DoubleToInt(5 * ScaleY);
+      gbBack.Height := mH + (sHeight * 3 ) + 45;// + DoubleToInt(5 * ScaleY);
     end
     else
-        ClientHeight := gbResBlind.Top + gbResBlind.Height + StatusBar1.height;
+    begin
+      gbFore.Height :=mH + 15 + DoubleToInt(10 * ScaleY);
+      gbBack.Height :=mH + 15 + DoubleToInt(10 * ScaleY);
+    end;
+    gbFore.Width := tw + 10;
+    gbBack.Width := tw + 10;
 
+
+    ClientWidth := gbFore.Width + 15;
+
+
+    Label1.Top := iTop - (Label1.Height div 4);
+    Label1.Left := 8;
+
+    Label2.Top := iTop - (Label2.Height div 4);
+    Label2.Left := 8;
+
+    FJColor.Top := iTop - (FJColor.Height div 4);
+    FJColor.Left := Label1.Left + Label1.Width + 3;
+
+    BColor.Top := iTop - (BColor.Height div 4);
+    BColor.Left := Label2.Left + Label2.Width + 3;
+    iLeft := 0;
+    if mnuHex.Checked then
+    begin
+      Label3.Left := FJColor.Left + FJColor.Width + 5;
+      Label3.Top := iTop - (Label3.Height div 4);
+
+      Label4.Left := BColor.Left + BColor.Width + 5;
+      Label4.Top := iTop - (Label4.Height div 4);
+
+      Edit1.Left := Label3.Left + Label3.Width + 3;
+      Edit1.Top :=  iTop - (Edit1.Height div 4);
+
+      Edit2.Left := Label4.Left + Label4.Width + 3;
+      Edit2.Top :=  iTop - (Edit2.Height div 4);
+
+      iLeft := Edit1.Left + Edit1.Width + 5;
+    end
+    else if mnuRGB.Checked then
+    begin
+      Label3.Left := FJColor.Left + FJColor.Width + 5;
+      Label3.Top := iTop - (Label3.Height div 4);
+
+      Label4.Left := BColor.Left + BColor.Width + 5;
+      Label4.Top := iTop - (Label4.Height div 4);
+
+      Panel1.Left := Label3.Left + Label3.Width + 3;
+      Panel1.Top :=  iTop - (panel1.Height div 4);
+
+      Panel2.Left := Label3.Left + Label3.Width + 3;
+      Panel2.Top :=  iTop - (panel2.Height div 4);
+
+      FREdit.Top := 0;
+      FREdit.Left := 0;
+
+      FGEdit.Top := 0;
+      FGEdit.Left := FREdit.Left + FREdit.Width;
+
+      FBEdit.Top := 0;
+      FBEdit.Left := FGEdit.Left + FGEdit.Width;
+
+      BREdit.Top := 0;
+      BREdit.Left := 0;
+
+      BGEdit.Top := 0;
+      BGEdit.Left := BREdit.Left + BREdit.Width;
+
+      BBEdit.Top := 0;
+      BBEdit.Left := BGEdit.Left + BGEdit.Width;
+
+      iLeft := Panel1.Left + Panel1.Width + 5;
+    end;
+    btnFore.Left := iLEft;
+    btnFore.Top := iTop - (btnFore.Height div 4);
+    bbDD1.Top := iTop - (bbDD1.Height div 4);
+    bbDD1.Left := btnFore.Left + btnFore.Width + 1;
+
+    btnBack.Left := iLEft;
+    btnBack.Top := iTop - (btnBack.Height div 4);
+    bbDD2.Top := iTop - (bbDD2.Height div 4);
+    bbDD2.Left := btnBack.Left + btnBack.Width + 1;
+
+    lblFR.Left := 8;
+    lblFG.Left := 8;
+    lblFB.Left := 8;
+    lblFR.Top := mh + 25;
+    lblFG.Top := lblFR.Top + lblFR.Height;
+    lblFB.Top := lblFG.Top + lblFG.Height;
+
+    lblBR.Left := 8;
+    lblBG.Left := 8;
+    lblBB.Left := 8;
+    lblBR.Top := mh + 25;
+    lblBG.Top := lblBR.Top + lblBR.Height;
+    lblBB.Top := lblBG.Top + lblBG.Height;
+
+    mh := lblFR.Width;
+    mh := MAX(mh, lblFG.Width);
+    mh := MAX(mh, lblFB.Width);
+    tbFR.Left := mh + 5;
+    tbFR.Top := lblFR.Top + 5;
+    tbFG.Left := mh + 5;
+    tbFG.Top := lblFG.Top + 5;
+    tbFB.Left := mh + 5;
+    tbFB.Top := lblFB.Top + 5;
+    tbFR.Width := gbFore.Width -mh - 5;
+    tbFG.Width := tbFR.Width;
+    tbFB.Width := tbFR.Width;
+
+    tbBR.Left := mh + 5;
+    tbBR.Top := lblBR.Top + 5;
+    tbBG.Left := mh + 5;
+    tbBG.Top := lblBG.Top + 5;
+    tbBB.Left := mh + 5;
+    tbBB.Top := lblBB.Top + 5;
+    tbBR.Width := gbBack.Width -mh - 5;
+    tbBG.Width := tbBR.Width;
+    tbBB.Width := tbBR.Width;
+
+    gbBack.Top := gbFore.Top + gbFore.Height + 7;
+
+    GetStrSize(chkBlind.Caption + ' ');
+    chkBlind.Top := gbBack.Top + gbBack.Height + 10;
+    chkBlind.Height := sHeight;
+    chkBlind.Width := ClientWidth;
+
+
+
+    gbResBlind.Top := chkBlind.Top + chkBlind.Height + 5;
+    gbResNormal.Top := gbResBlind.Top;
+
+    GetStrSize(lblRatio.Caption + ' ');
+
+    lblRatio.Height := sHeight + 5;
+    lblRatio.Width := (gbResNormal.Width div 2) - 8;
+
+    GetStrSize(chkExpand.Caption + ' ');
+
+    chkExpand.Height := sHeight + 5;
+    chkExpand.Width := (gbResNormal.Width div 2) - 10;
+
+
+
+    gbText.Width := (gbResNormal.Width div 2) - 8;
+
+
+
+    gbLText.Width := (gbResNormal.Width div 2) - 10;
+
+
+
+
+    with edtNormal_T do
+    begin
+        Font.Size :=  DoubleToInt(DefFont * ScaleY);
+    end;
+    with edtNormal_T2 do
+    begin
+        Font.Size :=  DoubleToInt(DefFont * ScaleY);
+    end;
+    with edtNormal_LT do
+    begin
+        Font.Size :=  DoubleToInt((DefFont + 5) * ScaleY);
+        Font.Style := [fsBold];
+    end;
+    with edtNormal_LT2 do
+    begin
+        Font.Size :=  DoubleToInt((DefFont + 5) * ScaleY);
+        Font.Style := [fsBold];
+    end;
+
+
+    Font.Size :=  DoubleToInt((DefFont + 5) * ScaleY);
+    Font.Style := [fsBold];
+    GetStrSize(edtNormal_Lt2.Text + ' ');
+    Font.Size :=  DoubleToInt(DefFont * ScaleY);
+    Font.Style := [];
+    //caption := inttostr(sHeight);
+    if sHeight < 15 then
+      sHeight := 15;
+    edtNormal_t.Height :=  sHeight + 5;
+
+
+    edtNormal_t2.Height :=  sHeight + 5;
+
+
+    edtNormal_Lt.Height :=  sHeight + 5;
+
+
+    edtNormal_Lt2.Height :=  sHeight + 5;
+
+
+
+
+    if edtNormal_T.Height >= DoubleToInt(20 * ScaleY) then
+    begin
+
+      Image1.Height := DoubleToInt(20 * ScaleY);
+      Image1.Width := DoubleToInt(20 * ScaleX);
+      Image7.Height := DoubleToInt(20 * ScaleY);
+      Image7.Width := DoubleToInt(20 * ScaleX);
+    end
+    else
+    begin
+      Image1.Height := edtNormal_T.Height;
+      Image1.Width := edtNormal_T.Height;
+      Image7.Height := edtNormal_T.Height;
+      Image7.Width := edtNormal_T.Height;
+    end;
+    if edtNormal_LT.Height >= DoubleToInt(20 * ScaleY) then
+    begin
+
+      Image8.Height := DoubleToInt(20 * ScaleY);
+      Image8.Width := DoubleToInt(20 * ScaleX);
+      Image9.Height := DoubleToInt(20 * ScaleY);
+      Image9.Width := DoubleToInt(20 * ScaleX);
+    end
+    else
+    begin
+      Image8.Height := edtNormal_LT.Height;
+      Image8.Width := edtNormal_LT.Height;
+      Image9.Height := edtNormal_LT.Height;
+      Image9.Width := edtNormal_LT.Height;
+    end;
+
+    with edtNormal_T do
+    begin
+        Width := gbText.Width - Image1.Width - 18;
+    end;
+    with edtNormal_T2 do
+    begin
+        Width := gbText.Width - Image7.Width - 18;
+    end;
+    with edtNormal_LT do
+    begin
+        Width := gbLText.Width - Image8.Width - 18;
+    end;
+    with edtNormal_LT2 do
+    begin
+        Width := gbLText.Width - Image9.Width - 18;
+    end;
+
+    //GetStrSize(gbText.Caption + ' ');
+    gbText.Height := sHeight + edtNormal_T.Height + edtNormal_T2.Height;
+    gbLText.Height := sHeight + edtNormal_LT.Height + edtNormal_LT2.Height;
+
+
+    GetStrSize(btnCopyRes.Caption + ' ');
+    btnCopyRes.Height := sHeight + 10;
+    btnCopyRes.Width := sWidth + 10;
+
+    Memo1.Width := gbResNormal.Width - 15;
+    Memo1.Height := sHeight * 10;
+
+    //edtNormal2.Font := Font;
+    edtNormal2.Font.Size :=  DoubleToInt(DefFont * ScaleY);
+    //edtProta.Font := Font;
+    edtProta.Font.Size :=  DoubleToInt(DefFont * ScaleY);
+    //edtDeutera.Font := Font;
+    edtDeutera.Font.Size :=  DoubleToInt(DefFont * ScaleY);
+    //edtTrita.Font := Font;
+    edtTrita.Font.Size :=  DoubleToInt(DefFont * ScaleY);
+
+    GetStrSize(edtNormal2.Text + ' ');
+
+    edtNormal2.Height := sHeight + 5;
+    edtNormal2.Width := gbResBlind.Width - (edtNormal2.Left * 2);
+    edtProta.Height := sHeight + 5;
+    edtProta.Width := gbResBlind.Width - (edtProta.Left * 2);
+    edtDeutera.Height := sHeight + 5;
+    edtDeutera.Width := gbResBlind.Width - (edtDeutera.Left * 2);
+    edtTrita.Height := sHeight + 5;
+    edtTrita.Width := gbResBlind.Width - (edtTrita.Left * 2);
+
+    gbResBlind.Height := (edtNormal2.Height * 4) + (edtNormal2.EditLabel.Height * 4) + sHeight + 25;
+
+    if not chkExpand.Checked then
+    begin
+      gbResNormal.Height := lblRatio.Height + gbLText.Height{ + Memo1.Height + btnCopyRes.Height} + 25;
+    end
+    else
+    begin
+      gbResNormal.Height := lblRatio.Height + gbText.Height + Memo1.Height + btnCopyRes.Height + 35;
+    end;
+    if not mnuShowBlind.Checked then
+    begin
+        ClientHeight := gbResNormal.Top + gbResNormal.Height + StatusBar1.height + 5;
+    end
+    else
+    begin
+        ClientHeight := gbResBlind.Top + gbResBlind.Height + StatusBar1.height;
+    end;
+    GetStrSize(gbResNormal.Caption + ' ');
+    lblRatio.Top :=  sHeight;
+    lblRatio.Left := 8;
+    chkExpand.Top := sHeight - 3;
+    chkExpand.Left := (gbResNormal.Width div 2) + 5;
+    gbText.Top := chkExpand.Top + chkExpand.Height;
+    gbText.Left := 8;
+    gbLText.Top := chkExpand.Top + chkExpand.Height;
+    gbLText.Left := (gbResNormal.Width div 2) + 5;
+
+    //GetStrSize(gbText.Caption + ' ');
+
+    edtNormal_T.Left := Image1.Left + Image1.Width + 4;
+    edtNormal_T.Top := sHeight;
+
+    edtNormal_T2.Left := Image7.Left + Image7.Width + 4;
+    edtNormal_T2.Top := edtNormal_T.Top + edtNormal_T.Height;
+
+    edtNormal_LT.Left := Image8.Left + Image8.Width + 4;
+    edtNormal_LT.Top := sHeight;
+
+    edtNormal_LT2.Left := Image9.Left + Image9.Width + 4;
+    edtNormal_LT2.Top := edtNormal_LT.Top + edtNormal_LT.Height;
+
+    Image1.Top := edtNormal_T.Top + ((edtNormal_T.Height - Image1.Height) div 4);
+    Image7.Top := edtNormal_T2.Top + ((edtNormal_T2.Height - Image7.Height) div 4);
+    Image8.Top := edtNormal_LT.Top + ((edtNormal_LT.Height - Image8.Height) div 4);
+    Image9.Top := edtNormal_LT2.Top + ((edtNormal_LT2.Height - Image9.Height) div 4);
+
+    Memo1.Top := gbText.Top + gbText.Height + 7;
+
+    btnCopyRes.Top := Memo1.Top + Memo1.Height + 5;
+    btnCopyRes.Left := gbResNormal.Width - btnCopyRes.Width -5;
+
+    GetStrSize(gbResBlind.Caption + ' ');
+    edtNormal2.Top := sHeight + edtNormal2.EditLabel.Height;
+    edtProta.Top := edtNormal2.Top + edtNormal2.Height + edtNormal2.EditLabel.Height + 5;
+    edtDeutera.Top := edtProta.Top + edtProta.Height + edtProta.EditLabel.Height + 5;
+    edtTrita.Top := edtDeutera.Top + edtDeutera.Height + edtDeutera.EditLabel.Height + 5;
+     //caption := floattostr(scaley);
+    //ClientHeight := DoubleToInt(ClientHeight * ScaleY);
 
 end;
 
@@ -295,17 +773,17 @@ procedure TMainForm.ResGroupSizeChange(Large: boolean = True);
 begin
     Memo1.Visible := Large;
     btnCopyRes.Visible := Large;
-    if Large then
+    {if Large then
     begin
 
-        gbResBlind.Height := edtTrita.Top + edtTrita.Height + 8;
-        gbResNormal.Height := btnCopyRes.Top + btnCopyRes.Height + 8;
+        gbResBlind.Height := DoubleToInt((edtTrita.Top + edtTrita.Height + 8) * ScaleY);
+        gbResNormal.Height := DoubleToInt((btnCopyRes.Top + btnCopyRes.Height + 8) * ScaleY);
     end
     else
     begin
-        gbResBlind.Height := edtTrita.Top + edtTrita.Height + 8;
-        gbResNormal.Height := gbText.Top + gbText.Height + 8;
-    end;
+        gbResBlind.Height := DoubleToInt((edtTrita.Top + edtTrita.Height + 8) * ScaleY);
+        gbResNormal.Height := DoubleToInt((gbText.Top + gbText.Height + 8) * ScaleY);
+    end;       }
     ResizeCtrls;
 end;
 
@@ -421,7 +899,7 @@ function TMainForm.GetTranslation(Key, Default: string): string;
 var
     ini: TMemIniFile;
 begin
-    ini := TMemIniFile.Create(TransPath, TEncoding.Unicode);
+    ini := TMemIniFile.Create(TransPath, TEncoding.UTF8);
     try
         Result := ini.ReadString('Translations', Key, Default);
     finally
@@ -447,69 +925,116 @@ begin
 
 end;
 
-procedure TMainForm.FormCreate(Sender: TObject);
+procedure TMainForm.mnuLangChildClick(Sender: TObject);
 var
-    i: Integer;
+    i: integer;
+    bChk: boolean;
+    lf: string;
     ini: TMemIniFile;
 begin
-    APPDir :=  IncludeTrailingPathDelimiter(ExtractFileDir(Application.ExeName));
-    Transpath := APPDir + ChangeFileExt(ExtractFileName(Application.ExeName), '.ini');
-    SPath := IncludeTrailingPathDelimiter(GetMyDocPath) + 'CCA.ini';
-    bSetValue := False;
-    SelFore := True;
-    i := GetWindowLong(edtNormal_T.Handle, GWL_STYLE);
-    i := i or ES_CENTER;
-    SetWindowLong(edtNormal_T.Handle, GWL_STYLE, i);
-    SetWindowLong(edtNormal_T2.Handle, GWL_STYLE, i);
-    SetWindowLong(edtNormal_LT.Handle, GWL_STYLE, i);
-    SetWindowLong(edtNormal_LT2.Handle, GWL_STYLE, i);
-    SetWindowLong(edtNormal2.Handle, GWL_STYLE, i);
-    SetWindowLong(edtDeutera.Handle, GWL_STYLE, i);
-    SetWindowLong(edtProta.Handle, GWL_STYLE, i);
-    SetWindowLong(edtTrita.Handle, GWL_STYLE, i);
-    Application.OnHint := OnSHint;
-    ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
-    try
-        Font.Charset := ini.ReadInteger('Font', 'Charset', 0);
-        Font.Name := ini.ReadString('Font', 'Name', 'Arial');
-        Font.Size := ini.ReadInteger('Font', 'Size', 9);
-        FJColor.Font := Font;
-        BColor.Font := Font;
-        Left := ini.ReadInteger('Window', 'Left', (Screen.WorkAreaWidth div 2) - (Width div 2));
-        Top := ini.ReadInteger('Window', 'Top', (Screen.WorkAreaHeight div 2) - (Height div 2));
-        mnuOnTop.Checked := ini.ReadBool('Options', 'Stayontop', False);
-        if ini.ReadBool('Options', 'HexValue', True) then
+    if not (Sender is TMenuitem) then
+        Exit;
+    (Sender as TMenuitem).Checked := not (Sender as TMenuitem).Checked;
+    if mnuLang.Count > 0 then
+    begin
+        bChk := False;
+        for i := 0 to mnuLang.Count - 1 do
         begin
-            mnuHex.Checked := False;
-            mnuRGB.Checked := True;
-        end
-        else
-        begin
-            mnuRGB.Checked := False;
-            mnuHex.Checked := True;
+            if i > LangList.Count - 1 then
+                Break;
+            if mnuLang.Items[i].Checked then
+            begin
+                bChk := True;
+                lf := LangList[i];
+                Break;
+            end;
         end;
-
-
-        mnuOnTopClick(self);
-    finally
-        ini.Free;
+        if not bChk then
+        begin
+            if (Sender is TMenuitem) then
+            begin
+                if (Sender as TMenuitem).MenuIndex > LangList.Count - 1 then
+                begin
+                    mnuLang.Items[0].Checked := True;
+                    lf := LangList[0];
+                end
+                else
+                begin
+                    (Sender as TMenuitem).Checked := True;
+                    lf := LangList[(Sender as TMenuitem).MenuIndex];
+                end;
+            end;
+        end;
+        if LowerCase(TransPath) <> LowerCase(TransDir + lf)  then
+        begin
+            TransPath := TransDir + lf;
+            //showmessage(Transpath);
+            LoadLang(False);
+            ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+            try
+                Ini.WriteString('Settings', 'FontName', Font.Name);
+                ini.WriteInteger('Settings', 'FontSize', Font.Size);
+                Ini.WriteInteger('Settings', 'Charset', Font.Charset);
+                Ini.WriteString('Settings', 'LangFile', lf);
+                ini.UpdateFile;
+            finally
+                ini.Free;
+            end;
+        end;
     end;
+end;
 
-    edtNormal_T.Font.Style := [];
-    edtNormal_T.Font.Size := 9;
-    edtNormal_T2.Font.Style := [];
-    edtNormal_T2.Font.Size := 9;
-    edtNormal_LT.Font.Style := [fsBold];
-    edtNormal_LT.Font.Size := 14;
-    edtNormal_LT2.Font.Style := [fsBold];
-    edtNormal_LT2.Font.Size := 14;
-    edtNormal2.Font.Style := [fsBold];
-    edtDeutera.Font.Style := [fsBold];
-    edtProta.Font.Style := [fsBold];
-    edtTrita.Font.Style := [fsBold];
-    Hex := 'Hex';
-    RGB := 'RGB';
-    ini := TMemIniFile.Create(TransPath, TEncoding.Unicode);
+procedure TMainForm.LoadLang(mnuCreate: boolean = true);
+var
+    ini: TMemIniFile;
+    d: string;
+    i: integer;
+    mItem: TMenuItem;
+begin
+    if mnuCreate then
+    begin
+        ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+        try
+            if mnuLang.Visible then
+            begin
+                d := Ini.ReadString('Settings', 'LangFile', 'Default.ini');
+                TransPath := TransDir + d;
+            end;
+        finally
+            ini.Free;
+
+        end;
+        if mnuLang.Visible then
+        begin
+            if LangList.Count = 0 then
+                mnuLang.Enabled := False;
+            for i := 0 to LangList.Count - 1 do
+            begin
+                if FileExists(TransDir + LangList[i]) then
+                begin
+                    ini := TMemIniFile.Create(TransDir + LangList[i], TEncoding.UTF8);
+                    try
+                        mItem := MainMenu1.CreateMenuItem;
+                        mItem.Caption := Ini.ReadString('Translations', 'Language', 'English');
+                        mItem.RadioItem := True;
+                        mItem.GroupIndex := 1;
+                        //mItem.AutoCheck := True;
+                        mItem.OnClick := mnuLangChildClick;
+                        if LowerCase(TransPath) = LowerCase(TransDir + LangList[i])  then
+                            mItem.Checked := True
+                        else
+                            mItem.Checked := False;
+                        mnuLang.Add(mItem);
+                    finally
+                        ini.Free;
+                    end;
+                end;
+            end;
+            if LangList.Count = 1 then
+                mnuLang.Items[0].Checked := True;
+        end;
+    end;
+    ini := TMemIniFile.Create(TransPath, TEncoding.UTF8);
 
     try
 
@@ -590,7 +1115,7 @@ begin
         mnufg8px.Caption := ini.ReadString('Translations', '8px', '8 x 8 pixels');
         mnubg8px.Caption := ini.ReadString('Translations', '8px', '8 x 8 pixels');
 
-
+        mnuLang.Caption := ini.ReadString('Translations', 'mnuLang', 'English');
         chkExpand.Caption := ini.ReadString('Translations', 'chkExpand_Collapse', 'Short / Full');
         chkExpand.Hint := ini.ReadString('Translations', 'chkExpand_Collapse_Hint', '');
         chkExpand2.Caption := ini.ReadString('Translations', 'chkExpand_Collapse', 'Short / Full');
@@ -611,6 +1136,112 @@ begin
     finally
         ini.Free;
     end;
+    CalcColor;
+    ResizeCtrls;
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+var
+    i: Integer;
+    ini: TMemIniFile;
+    Rec     : TSearchRec;
+    dc: HDC;
+    monEx: TMonitorInfoEx;
+    hm: HMonitor;
+begin
+    SystemCanSupportPerMonitorDpi(true);
+    GetDCap(handle, Defx, Defy);
+    GetWindowScale(Handle, DefX, DefY, ScaleX, ScaleY);
+
+    {dc := GetDC(0);
+    scaleX := GetDeviceCaps(dc, LOGPIXELSX) / 96.0;
+    scaleY := GetDeviceCaps(dc, LOGPIXELSY) / 96.0;
+    ReleaseDC(0, dc);   }
+    APPDir :=  IncludeTrailingPathDelimiter(ExtractFileDir(Application.ExeName));
+    TransDir := IncludeTrailingPathDelimiter(AppDir + 'Lang');
+    mnuLang.Visible := FileExists(TransDir + 'Default.ini');
+    if mnuLang.Visible then
+        Transpath := TransDir + 'Default.ini'
+    else
+        Transpath := APPDir + ChangeFileExt(ExtractFileName(Application.ExeName), '.ini');
+
+    SPath := IncludeTrailingPathDelimiter(GetMyDocPath) + 'CCA.ini';
+    bSetValue := False;
+    SelFore := True;
+    i := GetWindowLong(edtNormal_T.Handle, GWL_STYLE);
+    i := i or ES_CENTER;
+    SetWindowLong(edtNormal_T.Handle, GWL_STYLE, i);
+    SetWindowLong(edtNormal_T2.Handle, GWL_STYLE, i);
+    SetWindowLong(edtNormal_LT.Handle, GWL_STYLE, i);
+    SetWindowLong(edtNormal_LT2.Handle, GWL_STYLE, i);
+    SetWindowLong(edtNormal2.Handle, GWL_STYLE, i);
+    SetWindowLong(edtDeutera.Handle, GWL_STYLE, i);
+    SetWindowLong(edtProta.Handle, GWL_STYLE, i);
+    SetWindowLong(edtTrita.Handle, GWL_STYLE, i);
+    Application.OnHint := OnSHint;
+    ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+    try
+        Font.Charset := ini.ReadInteger('Font', 'Charset', 0);
+        Font.Name := ini.ReadString('Font', 'Name', 'Arial');
+        Font.Size := ini.ReadInteger('Font', 'Size', 9);
+        DefFont := Font.Size;
+        FJColor.Font := Font;
+        BColor.Font := Font;
+        Left := ini.ReadInteger('Window', 'Left', (Screen.WorkAreaWidth div 2) - (Width div 2));
+        Top := ini.ReadInteger('Window', 'Top', (Screen.WorkAreaHeight div 2) - (Height div 2));
+        mnuOnTop.Checked := ini.ReadBool('Options', 'Stayontop', False);
+        if ini.ReadBool('Options', 'HexValue', True) then
+        begin
+            mnuHex.Checked := False;
+            mnuRGB.Checked := True;
+        end
+        else
+        begin
+            mnuRGB.Checked := False;
+            mnuHex.Checked := True;
+        end;
+
+
+        mnuOnTopClick(self);
+    finally
+        ini.Free;
+    end;
+    Width := DoubleToInt(Width * ScaleX);
+    Height := DoubleToInt(Height * ScaleY);
+    edtNormal_T.Font.Style := [];
+    edtNormal_T.Font.Size := 9;
+    edtNormal_T2.Font.Style := [];
+    edtNormal_T2.Font.Size := 9;
+    edtNormal_LT.Font.Style := [fsBold];
+    edtNormal_LT.Font.Size := 14;
+    edtNormal_LT2.Font.Style := [fsBold];
+    edtNormal_LT2.Font.Size := 14;
+    edtNormal2.Font.Style := [fsBold];
+    edtDeutera.Font.Style := [fsBold];
+    edtProta.Font.Style := [fsBold];
+    edtTrita.Font.Style := [fsBold];
+    Hex := 'Hex';
+    RGB := 'RGB';
+
+
+    LangList := TStringList.Create;
+
+    if mnuLang.Visible then
+    begin
+        if  (FindFirst(TransDir + '*.ini', faAnyFile, Rec) = 0) then
+        begin
+            repeat
+                if  ((Rec.Name <> '.') and (Rec.Name <> '..')) then
+                begin
+                    if  ((Rec.Attr and faDirectory) = 0)  then
+                    begin
+                    LangList.Add(Rec.Name);
+                    end;
+                end;
+            until (FindNext(Rec) <> 0);
+        end;
+    end;
+    LoadLang;
 
     if not mnuHEX.Checked then
     begin
@@ -668,7 +1299,8 @@ begin
 
     Dither1 := 1;
     Dither2 := 1;
-    ResGroupSizeChange(False);
+    //ResGroupSizeChange(False);
+
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -696,7 +1328,7 @@ end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 begin
-    mnuOnTopClick(self);
+    //mnuOnTopClick(self);
 end;
 
 procedure TMainForm.acrFColorDropExecute(Sender: TObject);
@@ -818,9 +1450,19 @@ end;
 procedure TMainForm.mnuOnTopClick(Sender: TObject);
 begin
     if mnuOnTop.Checked then
-        SetWindowPos(Handle,HWND_TOPMOST,Left,Top,Width,Height,SWP_SHOWWINDOW)
+        FormStyle := fsStayOnTop
     else
-        SetWindowPos(Handle,HWND_NOTOPMOST,Left,Top,Width,Height,SWP_SHOWWINDOW);
+       FormStyle := fsNormal;
+end;
+
+procedure TMainForm.ItemDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
+begin
+
+end;
+
+procedure TMainForm.ItemMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width, Height: Integer);
+begin
+
 end;
 
 procedure TMainForm.mnuHelp1Click(Sender: TObject);
@@ -829,101 +1471,40 @@ begin
         ShellExecute(Handle, 'open', PChar(GetTranslation('docurl', 'http://www.nils.org.au/ais/web/resources/contrast_analyser/index.html')), nil, nil, SW_SHOW);
 end;
 
+procedure TMainForm.mnuHelpDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
+begin
+  aCanvas.font := Font;
+  aCanvas.fillrect(aRect);
+  acanvas.textrect(aRect, arect.left+20, arect.top+2, TMenuItem(Sender).caption );
+  selected := true;
+end;
+
+procedure TMainForm.mnuHelpMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width, Height: Integer);
+begin
+  aCanvas.font := Font;
+  width := aCanvas.TextWidth(TMenuItem(Sender).caption) + 20;
+  height := aCanvas.TextHeight(TMenuItem(Sender).caption) + 10;
+
+end;
+
 procedure TMainForm.mnuFontClick(Sender: TObject);
 var
     ini: TMemIniFile;
-    i: integer;
 begin
     FontDialog1.Font := Font;
+    FontDialog1.Font.Size := DefFont;
     if FontDialog1.Execute then
     begin
         Font := FontDialog1.Font;
-        edtNormal_T.Font.Name := Font.Name;
-        edtNormal_T.Font.Charset := Font.Charset;
-        edtNormal_T.Font.Style := [];
-        edtNormal_T2.Font.Name := Font.Name;
-        edtNormal_T2.Font.Charset := Font.Charset;
-        edtNormal_T2.Font.Style := [];
-        edtNormal_LT.Font.Name := Font.Name;
-        edtNormal_LT.Font.Charset := Font.Charset;
-        edtNormal_LT.Font.Style := [fsBold];
-        edtNormal_LT2.Font.Name := Font.Name;
-        edtNormal_LT2.Font.Charset := Font.Charset;
-        edtNormal_LT2.Font.Style := [fsBold];
-        edtNormal2.Font := Font;
-        edtDeutera.Font := Font;
-        edtProta.Font := Font;
-        edtTrita.Font := Font;
-        //edtNormal_T.Font.Style := [fsBold];
-        //edtNormal_T2.Font.Style := [fsBold];
+        DefFont := Font.Size;
+
         edtNormal_LT.Font.Style := [fsBold];
         edtNormal_LT2.Font.Style := [fsBold];
         edtNormal2.Font.Style := [fsBold];
         edtDeutera.Font.Style := [fsBold];
         edtProta.Font.Style := [fsBold];
         edtTrita.Font.Style := [fsBold];
-        FJColor.Font := Font;
-        BColor.Font := Font;
-        {FJColor.Left := Label1.Left + Label1.Width + 4;
-        BColor.Left := Label2.Left + Label2.Width + 4;
-        FJColor.Width := 185 - FJColor.Left;
-        BColor.Width := 185 - BColor.Left;
-        Edit1.Left := 193 + Label3.Width;
-        Edit1.Width := 337 - 193- Label3.Width;
-        Edit2.Left := 193 + Label4.Width;
-        Edit2.Width := 337 - 193- Label4.Width;
-        Panel1.Left := 193 + Label3.Width;
-        Panel2.Left := 193 + Label4.Width;
-        Panel1.Width := 337 - 193- Label3.Width;
-        Panel2.Width := 337 - 193- Label4.Width;
-        i := Panel1.Width div 3;
-        FREdit.Left := 0;
-        FREdit.Width := i;
-        FGEdit.Left := i;
-        FGEdit.Width := i;
-        FBEdit.Left := i * 2;
-        FBEdit.Width := i;
-        i := Panel2.Width div 3;
-        BREdit.Left := 0;
-        BREdit.Width := i;
-        BGEdit.Left := i;
-        BGEdit.Width := i;
-        BBEdit.Left := i * 2;
-        BBEdit.Width := i; }
-        FJColor.Left := Label1.Left + Label1.Width + 4;
-        BColor.Left := Label2.Left + Label2.Width + 4;
-        FJColor.Width := 150{185} - FJColor.Left;
-        BColor.Width := 150{185} - BColor.Left;
-        Label3.Left := FJColor.Left + FJColor.Width + 4;
-        Label4.Left := BColor.Left + BColor.Width + 4;
-        Edit1.Left := Label3.Left + Label3.Width + 4;
-        //Edit1.Left := 193 + Label3.Width;
-        Edit1.Width := 287{337} - 154{193}- Label3.Width;
-        Edit2.Left := Label4.Left + Label4.Width + 4;
-        Edit2.Width := 287{337} - 154{193}- Label4.Width;
 
-        Panel1.Left := Label3.Left + Label3.Width + 4;
-        Panel1.Width := 287{337} - 154{193}- Label3.Width;
-        //Panel1.Left := 193 + Label3.Width;
-        //Panel1.Width := 337 - 193- Label3.Width;
-        i := Panel1.Width div 3;
-        FREdit.Left := 0;
-        FREdit.Width := i;
-        FGEdit.Left := i;
-        FGEdit.Width := i;
-        FBEdit.Left := i * 2;
-        FBEdit.Width := i;
-        Panel2.Left := Label4.Left + Label4.Width + 4;
-        Panel2.Width := 287{337} - 154{193}- Label4.Width;
-        //Panel2.Left := 193 + Label4.Width;
-        //Panel2.Width := 337 - 193- Label4.Width;
-        i := Panel2.Width div 3;
-        BREdit.Left := 0;
-        BREdit.Width := i;
-        BGEdit.Left := i;
-        BGEdit.Width := i;
-        BBEdit.Left := i * 2;
-        BBEdit.Width := i;
         ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
         try
             ini.WriteInteger('Font', 'Charset', Font.Charset);
@@ -933,6 +1514,7 @@ begin
         finally
             ini.Free;
         end;
+        ResizeCtrls;
     end;
 
 end;
@@ -943,8 +1525,7 @@ var
 begin
     AboutForm := TAboutForm.Create(self);
     AboutForm.PopupParent := Self;
-    AboutForm.Font.Name := Font.Name;
-    AboutForm.Font.Charset := Font.Charset;
+    AboutForm.Font := Font;
 
     AboutForm.ShowModal;
     AboutForm.Free;
@@ -968,23 +1549,13 @@ begin
         Edit2.EditMask := '\#aaaaaa;1;_';
         Edit1.Text := ColortoHex2(FJColor.ActiveColor);
         Edit2.Text := ColortoHex2(BColor.ActiveColor);
-        FJColor.Left := Label1.Left + Label1.Width + 4;
-        BColor.Left := Label2.Left + Label2.Width + 4;
-        FJColor.Width := 150{185} - FJColor.Left;
-        BColor.Width := 150{185} - BColor.Left;
-        Label3.Left := FJColor.Left + FJColor.Width + 4;
-        Label4.Left := BColor.Left + BColor.Width + 4;
-        Edit1.Left := Label3.Left + Label3.Width + 4;
-        //Edit1.Left := 193 + Label3.Width;
-        Edit1.Width := 287{337} - 154{193}- Label3.Width;
-        Edit2.Left := Label4.Left + Label4.Width + 4;
-        Edit2.Width := 287{337} - 154{193}- Label4.Width;
+        ResizeCtrls;
+
     end;
 end;
 
 procedure TMainForm.mnuRGBClick(Sender: TObject);
-var
-    i: integer;
+
 begin
     if mnuRGB.Checked then Exit;
     mnuRGB.Checked := not mnuRGB.Checked;
@@ -998,35 +1569,8 @@ begin
         Edit2.Visible := False;
         Label3.Caption := RGB;
         Label4.Caption := RGB;
-        FJColor.Left := Label1.Left + Label1.Width + 4;
-        BColor.Left := Label2.Left + Label2.Width + 4;
-        FJColor.Width := 150{185} - FJColor.Left;
-        BColor.Width := 150{185} - BColor.Left;
-        Label3.Left := FJColor.Left + FJColor.Width + 4;
-        Label4.Left := BColor.Left + BColor.Width + 4;
-        Panel1.Left := Label3.Left + Label3.Width + 4;
-        Panel1.Width := 287{337} - 154{193}- Label3.Width;
-        //Panel1.Left := 193 + Label3.Width;
-        //Panel1.Width := 337 - 193- Label3.Width;
-        i := Panel1.Width div 3;
-        FREdit.Left := 0;
-        FREdit.Width := i;
-        FGEdit.Left := i;
-        FGEdit.Width := i;
-        FBEdit.Left := i * 2;
-        FBEdit.Width := i;
-        Panel2.Left := Label4.Left + Label4.Width + 4;
-        Panel2.Width := 287{337} - 154{193}- Label4.Width;
-        //Panel2.Left := 193 + Label4.Width;
-        //Panel2.Width := 337 - 193- Label4.Width;
-        i := Panel2.Width div 3;
-        BREdit.Left := 0;
-        BREdit.Width := i;
-        BGEdit.Left := i;
-        BGEdit.Width := i;
-        BBEdit.Left := i * 2;
-        BBEdit.Width := i;
-        //SetRGB;
+        ResizeCtrls;
+
         CalcColor;
     end;
 end;
@@ -1388,29 +1932,7 @@ begin
 
 end;
 
-procedure TMainForm.mnuSelListClick(Sender: TObject);
-var
-    frmSelList: TfrmSelList;
-begin
-    frmSelList := TFrmSelList.Create(self);
-    try
-        frmSelList.Font.Name := Font.Name;
-        frmSelList.Font.Size := Font.Size;
-        frmSelList.Font.Charset := Font.Charset;
-        frmSelList.ShowModal;
-    finally
-        frmSelList.Free;
-    end;
-end;
-procedure TMainForm.mnuSelIMGClick(Sender: TObject);
-begin
-    frmSelIMG := TfrmIMGConvert.Create(self);
-    try
-        frmSelIMG.ShowModal;
-    finally
-        FreeAndNil(frmSelIMG);
-    end;
-end;
+
 
 
 procedure TMainForm.tbFRChange(Sender: TObject);
@@ -1616,59 +2138,68 @@ end;
 
 procedure TMainForm.mnuScreenClick(Sender: TObject);
 var
-    SC_hdc: HDC;
-    iw, ih, i: Integer;
     ConvWndForm: TConvWndForm;
-    monEx: TMonitorInfoEx;
 begin
     Hide;
     Sleep(300);
-    {if SS_hdc <> 0 then
-        DeleteDC(SS_hdc);
-    if SS_bmp <> 0 then
-        DeleteObject(SS_bmp);
 
-
-
-    SC_hdc := GetDC(0);
-    SS_hdc := CreateCompatibleDC(SC_hdc);
-
-    iw := GetDeviceCaps (SC_hdc, HORZRES);
-    ih := GetDeviceCaps (SC_hdc, VERTRES);
-    SS_bmp := CreateCompatibleBitmap(SC_hdc, Screen.DesktopWidth, Screen.DesktopHeight);
-    SelectObject(SS_hdc, SS_bmp);
-    BitBlt(SS_hdc, 0, 0, iw, ih, SC_hdc, 0, 0, SRCCOPY);
-    DeleteObject(SS_bmp);
-    ReleaseDC(0, SC_hdc);        }
-    for i := Low(arSS_HDC) to High(arSS_HDC) do
-        	DeleteDC(arSS_HDC[i]);
-        SetLength(arSS_HDC, 0);
-        SetLength(arSS_HDC, Screen.MonitorCount);
-        for i := Low(arSS_HDC) to High(arSS_HDC) do
-        begin
-    			FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
-    			monEx.cbSize := SizeOf(monEx);
-
-    			GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
-
-    			SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
-          arSS_HDC[i] := CreateCompatibleDC(SC_hdc);
-          iw := GetDeviceCaps (SC_hdc, HORZRES);
-        	ih := GetDeviceCaps (SC_hdc, VERTRES);
-        	SS_bmp := CreateCompatibleBitmap(SC_hdc, iw , ih);
-        	SelectObject(arSS_HDC[i], SS_bmp);
-        	BitBlt(arSS_HDC[i], 0,0, iw , ih, SC_hdc, 0, 0, SRCCOPY);
-        	DeleteObject(SS_bmp);
-          DeleteDC(SC_hdc);
-        end;
 
     ConvWndForm := TConvWndForm.Create(self);
+    ConvWndForm.Font := Font;
+    ConvWndForm.DefFont := DefFont;
+    ConvWndForm.Dy := DefY;
+    ConvWndForm.Dx := DefX;
+    ConvWndForm.ScaleX := ScaleX;
+    ConvWndForm.ScaleY := ScaleY;
     ConvWndForm.Exec := False;
 
     ConvWndForm.ExecCute(1);
     ConvWndForm.ShowModal;
     Show;
 
+end;
+
+procedure TMainForm.mnuSelListClick(Sender: TObject);
+var
+    frmSelList: TfrmSelList;
+begin
+
+    frmSelList := TFrmSelList.Create(self);
+    FormStyle := fsNormal;
+    try
+        frmSelList.Font.Name := Font.Name;
+        frmSelList.Font.Size := Font.Size;
+        frmSelList.Font.Charset := Font.Charset;
+        frmSelList.DefFont := DefFont;
+        frmSelList.Dy := DefY;
+        frmSelList.Dx := DefX;
+        frmSelList.ScaleX := ScaleX;
+        frmSelList.ScaleY := ScaleY;
+        frmSelList.ResizeCtrls;
+        frmSelList.ShowModal;
+
+    finally
+        frmSelList.Free;
+        mnuOnTopClick(self);
+    end;
+end;
+procedure TMainForm.mnuSelIMGClick(Sender: TObject);
+begin
+    frmSelIMG := TfrmIMGConvert.Create(self);
+    FormStyle := fsNormal;
+    try
+      frmSelIMG.Font := Font;
+      frmSelIMG.DefFont := DefFont;
+      frmSelIMG.Dy := DefY;
+      frmSelIMG.Dx := DefX;
+      frmSelIMG.ScaleX := ScaleX;
+      frmSelIMG.ScaleY := ScaleY;
+      frmSelIMG.ResizeCtrls;
+        frmSelIMG.ShowModal;
+    finally
+        FreeAndNil(frmSelIMG);
+        mnuOnTopClick(self);
+    end;
 end;
 
 procedure TMainForm.btnForeClick(Sender: TObject);
@@ -1686,7 +2217,7 @@ begin
             SelFore := False;
         //if SS_hdc <> 0 then
         //begin
-        {if SS_hdc <> 0 then
+        if SS_hdc <> 0 then
         	DeleteDC(SS_hdc);
         //end;
         if SS_bmp <> 0 then
@@ -1701,32 +2232,41 @@ begin
         SelectObject(SS_hdc, SS_bmp);
         BitBlt(SS_hdc, 0,0, Screen.DesktopWidth, Screen.DesktopHeight, SC_hdc, 0, 0, SRCCOPY);
         DeleteObject(SS_bmp);
-        ReleaseDC(0, SC_hdc);   }
+        ReleaseDC(0, SC_hdc);
 
         for i := Low(arSS_HDC) to High(arSS_HDC) do
         	DeleteDC(arSS_HDC[i]);
+
+        FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
+        monEx.cbSize := SizeOf(monEx);
+
         SetLength(arSS_HDC, 0);
         SetLength(arSS_HDC, Screen.MonitorCount);
         for i := Low(arSS_HDC) to High(arSS_HDC) do
         begin
-    			FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
-    			monEx.cbSize := SizeOf(monEx);
+
 
     			GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
 
     			SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
           arSS_HDC[i] := CreateCompatibleDC(SC_hdc);
-          iw := GetDeviceCaps (SC_hdc, HORZRES);
-        	ih := GetDeviceCaps (SC_hdc, VERTRES);
-        	SS_bmp := CreateCompatibleBitmap(SC_hdc, iw , ih);
+        	SS_bmp := CreateCompatibleBitmap(SC_hdc, Monex.rcMonitor.Width , monex.rcMonitor.Height);
         	SelectObject(arSS_HDC[i], SS_bmp);
-        	BitBlt(arSS_HDC[i], 0,0, iw , ih, SC_hdc, 0, 0, SRCCOPY);
-        	DeleteObject(SS_bmp);
-          DeleteDC(SC_hdc);
+
+          try
+            //SetStretchBltMode(arSS_HDC[i], HALFTONE );
+        	  //StretchBlt(arSS_HDC[i], 0,0, Monex.rcMonitor.Width , monex.rcMonitor.Height, SC_hdc, 0, 0, iw, ih, SRCCOPY);
+            BitBlt(arSS_HDC[i], 0,0, iw , ih, SC_hdc, 0, 0, SRCCOPY);
+          finally
+        	  DeleteObject(SS_bmp);
+            DeleteDC(SC_hdc);
+          end;
         end;
+        PickForm.ScaleX := ScaleX;
+        PickForm.ScaleY := ScaleY;
 
         GetCursorPos(pt);
-        MoveWindow(PickForm.Handle, pt.x - 101, pt.y - 101, 202, 202, TRUE);
+        MoveWindow(PickForm.Handle, pt.x - (DoubleToInt(200 * ScaleX) div 2 + 1), pt.y - (DoubleToInt(200 * ScaleY) div 2 + 1), DoubleToInt(200 * ScaleX) + 2, DoubleToInt(200 * Scaley) + 2, TRUE);
         ShowCursor(False);
         PickForm.Show;
     end;
@@ -1778,13 +2318,9 @@ begin
     mnuShowBlind.Checked := chkblind.Checked;
     gbResNormal.Visible := False;
     gbResBlind.Visible := False;
-    if mnuShowBlind.Checked then
-        gbResBlind.Visible := mnuShowBlind.Checked
-    else
-    begin
-        gbResNormal.Visible := True;
-    end;
-    ResizeCtrls;
+    gbResBlind.Visible := mnuShowBlind.Checked;
+    gbResNormal.Visible := not mnuShowBlind.Checked;
+    //ResizeCtrls;
     if mnuShowBlind.Checked then
         ResGroupSizeChange(True)
     else
@@ -1822,6 +2358,11 @@ begin
 end;
 
 
-
+procedure  TMainForm.WMDPIChanged(var Message: TMessage);
+begin
+  scaleX := Message.WParamLo / DefX;//96.0;
+  scaleY := Message.WParamHi / DefY;//96.0;
+  ResizeCtrls;
+end;
 
 end.
