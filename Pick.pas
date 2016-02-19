@@ -21,8 +21,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, ComCtrls, System.Math;
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, System.Math, MultiMon;
 
+const
+  WM_DPICHANGED = 736;
 type
   TPickForm = class(TForm)
     Shape1: TShape;
@@ -38,8 +40,10 @@ type
   private
     { Private êÈåæ }
     procedure WMCaptureChanged(var Message: TMessage); message WM_CaptureChanged;
+    procedure WMDPIChanged(var Message: TMessage); message WM_DPICHANGED;
   public
     { Public êÈåæ }
+    ScaleX, ScaleY: double;
   end;
 
 var
@@ -51,12 +55,21 @@ uses Main;
 
 {$R *.dfm}
 
+function DoubleToInt(d: double): integer;
+begin
+  SetRoundMode(rmUP);
+  Result := Trunc(SimpleRoundTo(d));
+end;
+
 procedure TPickForm.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 var
-    pt: TPoint;
+    TP: TPoint;
     ArPTClr: array of TColor;
     i, t, p, dit: integer;
+    monEx: TMonitorInfoEx;
+    SC_hdc: HDC;
+    hm: HMonitor;
     function GetAverageColor: TColor;
     var
         R, G, B, i: integer;
@@ -65,7 +78,7 @@ var
         R := 0;
         G := 0;
         B := 0;
-        for i := 0 to Length(ArPTClr) - 1 do
+        for i := Low(ArPTClr) to High(ArPTClr) do
         begin
             RGBColor := ArPTClr[i];
             R := R + ($000000FF and RGBColor);
@@ -83,10 +96,49 @@ begin
     if GetCapture <> Handle then
         SetCapture(Handle);
 
-    GetCursorPos(pt);
-    MoveWindow(Handle, pt.x - 101, pt.y - 101, 202, 202, TRUE);
-    StretchBlt(Canvas.Handle, 1, 1, 200, 200, MainForm.SS_hdc, pt.x - 20, pt.y - 20, 40, 40, SRCCOPY);
-    Canvas.Brush.Color := clBlack;
+    GetCursorPos(TP);
+
+
+    //MoveWindow(Handle, TP.x - 101, TP.y - 101, 202, 202, TRUE);
+    MoveWindow(PickForm.Handle, tp.x - Width div 2, tp.y - height div 2, width, height, TRUE);
+
+    FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
+    monEx.cbSize := SizeOf(monEx);
+
+    for i := 0 to Screen.MonitorCount - 1 do
+    begin
+
+
+      GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
+      hm := MonitorFromWindow(Handle, MONITOR_DEFAULTTONEAREST);
+    	//if PtInRect(monEx.rcMonitor , TP) then
+      if hm = Screen.Monitors[i].Handle then
+      begin
+
+
+
+        //lx := GetDeviceCaps (SC_hdc, LOGPIXELSX) div 96;
+        //ly := GetDeviceCaps (SC_hdc, LOGPIXELSY) div 96;
+        {SetRoundMode(rmUP);
+        TP.X := Trunc(SimpleRoundTo((TP.X - Screen.Monitors[i].Left) * 1.2, 0));// * lx;
+        TP.Y := Trunc(SimpleRoundTo((TP.Y - Screen.Monitors[i].Top) * 1.2, 0));// * ly;}
+        TP.X := TP.X - Screen.Monitors[i].Left;// * lx;
+        TP.Y := TP.Y - Screen.Monitors[i].Top;// * ly;
+
+        SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
+        try
+
+          //BitBlt(Canvas.Handle, 0, 0, 200, 200, {MainForm.arSS_hdc[i]}SC_hdc, TP.X-20, TP.Y-20, SRCCOPY);
+      	  StretchBlt(Canvas.Handle, 1, 1, width -2 , Height - 2, MainForm.arSS_hdc[i], TP.X-((width - 2) div 10), TP.Y-((height - 2) div 10), (width - 2) div 5, (height - 2) div 5, SRCCOPY);
+        finally
+          DeleteDC(SC_HDC);
+
+        end;
+        break;
+      end;
+    end;
+
+    //StretchBlt(Canvas.Handle, 1, 1, 200, 200, MainForm.SS_hdc, pt.x - 20, pt.y - 20, 40, 40, SRCCOPY);
 
 
     if MainForm.SelFore then
@@ -94,11 +146,14 @@ begin
     else
         dit := MainForm.Dither2;
 
-    Canvas.FrameRect(Rect(100, 100, 100+(dit * 5)+2, 100+(dit * 5)+2));
+    Canvas.Brush.Color := clBlack;
+    Canvas.Pen.Style := psSolid ;
+   	Canvas.FrameRect(Rect((width -2) div 2, (Height - 2 ) div 2, ((width -2) div 2)+(dit * 5)+2, ((Height - 2 ) div 2)+(dit * 5)+2));
+
     if dit = 1 then
     begin
         SetLength(ArPTClr, 1);
-        ArPTClr[0] := Canvas.Pixels[101, 101];
+        ArPTClr[0] := Canvas.Pixels[width div 2, height div 2];
     end
     else
     begin
@@ -108,7 +163,7 @@ begin
         begin
             for t := 0 to dit - 1 do
             begin
-                ArPTClr[p] := Canvas.Pixels[101 + (i * 5), 101 + (t * 5)];
+                ArPTClr[p] := Canvas.Pixels[(width div 2) + (i * 5), (height div 2) + (t * 5)];
                 Inc(p);
             end;
         end;
@@ -117,7 +172,6 @@ begin
         MainForm.FJColor.ActiveColor := GetAverageColor
     else
         MainForm.BColor.ActiveColor := GetAverageColor;
-
 
 end;
 
@@ -137,6 +191,13 @@ procedure TPickForm.WMCaptureChanged(var Message: TMessage);
 begin
     inherited;
     OnMouseDown(self, mbLeft, [], 0, 0);
+end;
+
+procedure TPickForm.WMDPIChanged(var Message: TMessage);
+begin
+  scaleX := Message.WParamLo / 96.0;
+  //scaleY := Message.WParamHi / 96.0;
+
 end;
 
 procedure TPickForm.FormKeyDown(Sender: TObject; var Key: Word;

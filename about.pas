@@ -47,6 +47,10 @@ implementation
 
 uses Main;
 
+
+
+
+
 {$R *.dfm}
 
 procedure TAboutForm.FormCreate(Sender: TObject);
@@ -69,16 +73,16 @@ begin
         Charset := ini.ReadString('HTML', 'Charset', 'utf-8');
         Lang := ini.ReadString('HTML', 'Lang', 'en');
         EN := ini.ReadString('Translations', 'en_ver', 'Steven Faulkner (English version):');
-        JP := ini.ReadString('Translations', 'jp_ver', 'Jun (Japanese version):');
-        EN_Mail := ini.ReadString('Translations', 'en_mail', 'steven.faulkner@nils.org.au');
-        JP_Mail := ini.ReadString('Translations', 'jp_mail', 'jun@idena.jp');
-        EN_Address := ini.ReadString('Translations', 'en_website', 'http://www.accessibleinfo.org.au/');
-        JP_Address := ini.ReadString('Translations', 'jp_website', 'http://idena.jp/');
+        JP := ini.ReadString('Translations', 'jp_ver', '');
+        EN_Mail := ini.ReadString('Translations', 'en_mail', 'sfaulkner@paciellogroup.com');
+        JP_Mail := ini.ReadString('Translations', 'jp_mail', '');
+        EN_Address := ini.ReadString('Translations', 'en_website', 'http://www.paciellogroup.com/resources/contrast-analyser.html');
+        JP_Address := ini.ReadString('Translations', 'jp_website', '');
         Caption := ini.ReadString('Translations', 'aboutwnd', 'About');
         T_Name := ini.ReadString('Translations', 'translator_name', '');
         T_Site := ini.ReadString('Translations', 'translator_site', '');
         T_Mail := ini.ReadString('Translations', 'translator_mail', '');
-        VTxt := ini.ReadString('Translations', 'versiontext', 'Colour Contrast Analyser version 1.2');
+        VTxt := ini.ReadString('Translations', 'versiontext', 'Colour Contrast Analyser version 2.2a');
         Add := ini.ReadString('Translations', 'address_group', 'E-Mail & Web site address');
         Note := ini.ReadString('Translations', 'abouttext', 'The Colour Contrast Analyser was developed by Jun in collaboration with Steve Faulkner.');
         RS := TResourceStream.Create(hInstance,'ABOUT',PChar('TEXT'));
@@ -98,11 +102,11 @@ begin
             s := s + #13#10 + '<dl>';
             s := s + #13#10 + '<dt>' + EN + '</dt><dd>' + 'Mail: <a href="mailto:' + EN_Mail + '">' + EN_Mail + '</a></dd>';
             s := s + '<dd>' + 'Website: <a href="' + EN_Address + '">' + EN_Address + '</a></dd>';
-            s := s + #13#10 + '<dt>' + JP + '</dt>';
+            {s := s + #13#10 + '<dt>' + JP + '</dt>';
             if JP_Mail <> '' then
                 s := s + '<dd>' + 'Mail: <a href="mailto:' + JP_Mail + '">' + JP_Mail + '</a></dd>';
             if JP_Address <> '' then
-                s := s + '<dd>' + 'Website: <a href="' + JP_Address + '">' + JP_Address + '</a></dd>';
+                s := s + '<dd>' + 'Website: <a href="' + JP_Address + '">' + JP_Address + '</a></dd>';  }
 
             s := s + #13#10 + '<dt>WAT-C</dt>';
             s := s + '<dd>' + 'Website: <a href="' + WATC + '">' + WATC + '</a></dd>';

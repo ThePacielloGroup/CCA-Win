@@ -2,22 +2,22 @@ object frmIMGConvert: TfrmIMGConvert
   Left = 287
   Top = 223
   Caption = 'Image file convert'
-  ClientHeight = 563
-  ClientWidth = 784
+  ClientHeight = 483
+  ClientWidth = 777
   Color = clBtnFace
   Constraints.MinHeight = 325
-  Constraints.MinWidth = 336
   ParentFont = True
   OldCreateOrder = False
+  PopupMode = pmExplicit
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object ScrollBox1: TScrollBox
-    Left = 218
-    Top = 0
-    Width = 566
-    Height = 563
+    Left = 0
+    Top = 65
+    Width = 777
+    Height = 418
     Align = alClient
     TabOrder = 1
     TabStop = True
@@ -32,130 +32,66 @@ object frmIMGConvert: TfrmIMGConvert
   object ScrollBox2: TScrollBox
     Left = 0
     Top = 0
-    Width = 218
-    Height = 563
-    Align = alLeft
+    Width = 777
+    Height = 65
+    Align = alTop
     TabOrder = 0
     TabStop = True
     object gbSimulation: TGroupBox
-      Left = 9
-      Top = 95
-      Width = 200
-      Height = 261
+      Left = 408
+      Top = 11
+      Width = 354
+      Height = 47
       Caption = 'Simulation'
       TabOrder = 1
       object btnSave: TButton
-        Left = 9
-        Top = 225
+        Left = 164
+        Top = 17
         Width = 87
         Height = 27
         Caption = '&Save'
         Enabled = False
-        TabOrder = 1
+        TabOrder = 0
         OnClick = btnSaveClick
       end
       object btnPreview: TButton
-        Left = 102
-        Top = 224
+        Left = 257
+        Top = 17
         Width = 88
         Height = 27
         Caption = '&Preview'
         Enabled = False
-        TabOrder = 2
+        TabOrder = 1
         OnClick = btnPreviewClick
       end
-      object GroupBox1: TGroupBox
-        Left = 9
-        Top = 17
-        Width = 183
-        Height = 201
-        TabOrder = 0
-        object RadioButton1: TRadioButton
-          Left = 9
-          Top = 17
-          Width = 165
-          Height = 19
-          Caption = 'RadioButton1'
-          TabOrder = 0
-        end
-        object RadioButton2: TRadioButton
-          Left = 9
-          Top = 43
-          Width = 165
-          Height = 19
-          Caption = 'RadioButton1'
-          TabOrder = 1
-        end
-        object RadioButton3: TRadioButton
-          Left = 9
-          Top = 69
-          Width = 165
-          Height = 19
-          Caption = 'RadioButton1'
-          TabOrder = 2
-        end
-        object RadioButton4: TRadioButton
-          Left = 9
-          Top = 95
-          Width = 165
-          Height = 19
-          Caption = 'RadioButton1'
-          TabOrder = 3
-        end
-        object RadioButton5: TRadioButton
-          Left = 9
-          Top = 121
-          Width = 165
-          Height = 19
-          Caption = 'RadioButton1'
-          TabOrder = 4
-        end
-        object RadioButton6: TRadioButton
-          Left = 9
-          Top = 147
-          Width = 165
-          Height = 19
-          Caption = 'RadioButton1'
-          TabOrder = 5
-        end
-        object RadioButton7: TRadioButton
-          Left = 9
-          Top = 173
-          Width = 165
-          Height = 19
-          Caption = 'RadioButton1'
-          TabOrder = 6
-        end
+      object cmbSimu: TAccComboBox
+        Left = 3
+        Top = 14
+        Width = 155
+        Height = 21
+        Style = csDropDownList
+        TabOrder = 2
+        AccName = 'Simuration Combobox'
       end
     end
-    object btnClose: TButton
-      Left = 131
-      Top = 362
-      Width = 79
-      Height = 27
-      Cancel = True
-      Caption = '&Close'
-      TabOrder = 2
-      OnClick = btnCloseClick
-    end
     object gbSelIMG: TGroupBox
-      Left = 9
-      Top = 9
-      Width = 200
-      Height = 79
+      Left = 3
+      Top = 10
+      Width = 399
+      Height = 47
       Caption = 'Select image file'
       TabOrder = 0
       object edtFileName: TEdit
-        Left = 9
-        Top = 14
-        Width = 183
+        Left = 3
+        Top = 15
+        Width = 310
         Height = 21
         TabOrder = 0
         OnKeyPress = edtFileNameKeyPress
       end
       object btnBrowse: TButton
-        Left = 121
-        Top = 43
+        Left = 319
+        Top = 17
         Width = 71
         Height = 27
         Caption = '&Browse'

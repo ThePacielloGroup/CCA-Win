@@ -3,7 +3,7 @@ object frmSelList: TfrmSelList
   Top = 223
   Caption = 'Window list'
   ClientHeight = 468
-  ClientWidth = 749
+  ClientWidth = 1059
   Color = clBtnFace
   Constraints.MinHeight = 500
   Constraints.MinWidth = 696
@@ -45,7 +45,7 @@ object frmSelList: TfrmSelList
   object ScrollBox1: TScrollBox
     Left = 0
     Top = 73
-    Width = 749
+    Width = 1059
     Height = 395
     Align = alClient
     TabOrder = 1
@@ -60,7 +60,7 @@ object frmSelList: TfrmSelList
   object ScrollBox2: TScrollBox
     Left = 0
     Top = 0
-    Width = 749
+    Width = 1059
     Height = 73
     VertScrollBar.Increment = 35
     Align = alTop
@@ -69,7 +69,7 @@ object frmSelList: TfrmSelList
     object gbSimulation: TAccGroupBox
       Left = 376
       Top = 13
-      Width = 366
+      Width = 569
       Height = 52
       Caption = 'Simulation'
       TabOrder = 0
@@ -79,8 +79,8 @@ object frmSelList: TfrmSelList
       CtrlFirstChild = ComboBox2
       CtrlLastChicl = btnPreview
       object btnSave: TAccButton
-        Left = 215
-        Top = 18
+        Left = 351
+        Top = 16
         Width = 70
         Height = 22
         Caption = '&Save'
@@ -94,8 +94,8 @@ object frmSelList: TfrmSelList
         CtrlLeft = ComboBox2
       end
       object btnPreview: TAccButton
-        Left = 291
-        Top = 18
+        Left = 427
+        Top = 16
         Width = 70
         Height = 22
         Caption = '&Preview'
@@ -120,7 +120,7 @@ object frmSelList: TfrmSelList
       end
     end
     object gbWndList: TAccGroupBox
-      Left = 8
+      Left = 3
       Top = 13
       Width = 363
       Height = 52

@@ -4,14 +4,14 @@ object MainForm: TMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Colour Contrast Analyser'
-  ClientHeight = 342
-  ClientWidth = 358
+  ClientHeight = 436
+  ClientWidth = 370
   Color = clBtnFace
-  Constraints.MinHeight = 285
-  Font.Charset = ANSI_CHARSET
+  DoubleBuffered = True
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -12
-  Font.Name = 'Arial'
+  Font.Height = -11
+  Font.Name = 'Tahoma'
   Font.Style = []
   Icon.Data = {
     0000010001001010000001001800680300001600000028000000100000002000
@@ -44,184 +44,20 @@ object MainForm: TMainForm
     0000C0030000E00F0000F00F0000F80F0000FE0F0000FFFF0000FFFF0000}
   Menu = MainMenu1
   OldCreateOrder = False
+  Scaled = False
   ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
+  DesignSize = (
+    370
+    436)
   PixelsPerInch = 96
-  TextHeight = 15
-  object gbResBlind: TAccGroupBox
-    Left = 8
-    Top = 192
-    Width = 345
-    Height = 193
-    Caption = 'Result'
-    TabOrder = 3
-    Visible = False
-    AccName = 'Result Blindness Group '
-    object Image2: TImage
-      Left = 8
-      Top = 165
-      Width = 20
-      Height = 20
-      Transparent = True
-      Visible = False
-    end
-    object Image3: TImage
-      Left = 8
-      Top = 205
-      Width = 20
-      Height = 20
-      Transparent = True
-      Visible = False
-    end
-    object Image4: TImage
-      Left = 8
-      Top = 245
-      Width = 20
-      Height = 20
-      Transparent = True
-      Visible = False
-    end
-    object Image5: TImage
-      Left = 8
-      Top = 125
-      Width = 20
-      Height = 20
-      Transparent = True
-      Visible = False
-    end
-    object gbTextFor: TAccGroupBox
-      Left = 8
-      Top = 16
-      Width = 329
-      Height = 89
-      Caption = 'Text for'
-      TabOrder = 1
-      Visible = False
-      object rb_least3: TAccRadioButton
-        Left = 8
-        Top = 16
-        Width = 313
-        Height = 17
-        Caption = 'Large text AA (at least 3:1)'
-        Checked = True
-        TabOrder = 0
-        TabStop = True
-        OnClick = rb_least3Click
-        OnEnter = rb_least3Enter
-      end
-      object rb_least5: TAccRadioButton
-        Left = 8
-        Top = 40
-        Width = 313
-        Height = 17
-        Caption = 'Text AA and Large text AAA (at least 5:1)'
-        TabOrder = 1
-        OnClick = rb_least3Click
-        OnEnter = rb_least3Enter
-      end
-      object rb_least7: TAccRadioButton
-        Left = 8
-        Top = 64
-        Width = 313
-        Height = 17
-        Caption = 'Text AAA (at least 7:1)'
-        TabOrder = 2
-        OnClick = rb_least3Click
-        OnEnter = rb_least3Enter
-      end
-    end
-    object edtProta: TAccLabeledEdit
-      Left = 8
-      Top = 80
-      Width = 329
-      Height = 17
-      BorderStyle = bsNone
-      EditLabel.Width = 63
-      EditLabel.Height = 15
-      EditLabel.Caption = 'Protanopia:'
-      ReadOnly = True
-      TabOrder = 3
-      OnEnter = chkExpandEnter
-      OnKeyDown = edtProtaKeyDown
-      AccName = 'Prota Edit'
-      CtrlNext = edtDeutera
-      CtrlPrev = edtNormal2
-      CtrlUp = edtNormal2
-      CtrlDown = edtDeutera
-    end
-    object edtDeutera: TAccLabeledEdit
-      Left = 8
-      Top = 128
-      Width = 329
-      Height = 17
-      BorderStyle = bsNone
-      EditLabel.Width = 78
-      EditLabel.Height = 15
-      EditLabel.Caption = 'Deuteranopia:'
-      ReadOnly = True
-      TabOrder = 4
-      OnEnter = chkExpandEnter
-      OnKeyDown = edtDeuteraKeyDown
-      AccName = 'Deutera Edit'
-      CtrlNext = edtTrita
-      CtrlPrev = edtProta
-      CtrlUp = edtProta
-      CtrlDown = edtTrita
-    end
-    object edtTrita: TAccLabeledEdit
-      Left = 8
-      Top = 168
-      Width = 329
-      Height = 17
-      BorderStyle = bsNone
-      EditLabel.Width = 58
-      EditLabel.Height = 15
-      EditLabel.Caption = 'Tritanopia:'
-      ReadOnly = True
-      TabOrder = 5
-      OnEnter = chkExpandEnter
-      OnKeyDown = edtTritaKeyDown
-      AccName = 'Trita Edit'
-      CtrlPrev = edtDeutera
-      CtrlUp = edtDeutera
-    end
-    object edtNormal2: TAccLabeledEdit
-      Left = 8
-      Top = 40
-      Width = 329
-      Height = 17
-      BorderStyle = bsNone
-      EditLabel.Width = 44
-      EditLabel.Height = 15
-      EditLabel.Caption = 'Normal:'
-      ReadOnly = True
-      TabOrder = 2
-      OnEnter = chkExpandEnter
-      OnKeyDown = edtNormal2KeyDown
-      AccName = 'Normal Edit'
-      CtrlNext = edtProta
-      CtrlDown = edtProta
-    end
-    object chkExpand2: TTransCheckBox
-      Left = 8
-      Top = 21
-      Width = 193
-      Height = 17
-      Caption = 'Short / Full'
-      Checked = True
-      State = cbChecked
-      TabOrder = 0
-      Visible = False
-      OnClick = chkExpandClick
-      OnEnter = chkExpandEnter
-    end
-  end
+  TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 323
-    Width = 358
+    Top = 417
+    Width = 370
     Height = 19
     Panels = <>
     SimplePanel = True
@@ -230,53 +66,53 @@ object MainForm: TMainForm
     Left = 8
     Top = 64
     Width = 345
-    Height = 49
+    Height = 89
     Caption = 'Background'
     TabOrder = 1
     AccName = 'Background Group'
     object Label2: TLabel
       Left = 8
       Top = 24
-      Width = 76
-      Height = 15
+      Width = 66
+      Height = 13
       Caption = 'Colour select:'
     end
     object Label4: TLabel
       Left = 188
       Top = 24
-      Width = 24
-      Height = 15
+      Width = 23
+      Height = 13
       Caption = 'Hex:'
     end
     object lblBR: TLabel
-      Left = 8
+      Left = 39
       Top = 50
-      Width = 57
+      Width = 26
       Height = 15
-      Alignment = taRightJustify
       AutoSize = False
       Caption = 'Red:'
       Transparent = True
+      Visible = False
     end
     object lblBG: TLabel
-      Left = 8
+      Left = 28
       Top = 74
-      Width = 57
+      Width = 37
       Height = 15
-      Alignment = taRightJustify
       AutoSize = False
       Caption = 'Green:'
       Transparent = True
+      Visible = False
     end
     object lblBB: TLabel
-      Left = 8
+      Left = 37
       Top = 98
-      Width = 57
+      Width = 28
       Height = 15
-      Alignment = taRightJustify
       AutoSize = False
       Caption = 'Blue:'
       Transparent = True
+      Visible = False
     end
     object BColor: TJColorSelect2
       Left = 88
@@ -306,14 +142,9 @@ object MainForm: TMainForm
       Width = 73
       Height = 23
       Hint = '|The picked colour is displayed. And, the value can be input.'
+      AutoSize = False
       EditMask = '\#aaaaaa;1;_'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Arial'
-      Font.Style = []
       MaxLength = 7
-      ParentFont = False
       TabOrder = 1
       Text = '#ffffff'
       OnChange = Edit2Change
@@ -334,7 +165,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 0
         Width = 25
-        Height = 23
+        Height = 21
         Alignment = taRightJustify
         MaxLength = 3
         TabOrder = 0
@@ -349,7 +180,7 @@ object MainForm: TMainForm
         Left = 24
         Top = 0
         Width = 25
-        Height = 23
+        Height = 21
         Alignment = taRightJustify
         MaxLength = 3
         TabOrder = 1
@@ -366,7 +197,7 @@ object MainForm: TMainForm
         Left = 48
         Top = 0
         Width = 25
-        Height = 23
+        Height = 21
         Alignment = taRightJustify
         MaxLength = 3
         TabOrder = 2
@@ -387,6 +218,7 @@ object MainForm: TMainForm
       Height = 25
       Max = 255
       Frequency = 20
+      PositionToolTip = ptBottom
       TabOrder = 3
       ThumbLength = 18
       TickMarks = tmBoth
@@ -402,6 +234,7 @@ object MainForm: TMainForm
       Height = 25
       Max = 255
       Frequency = 20
+      PositionToolTip = ptBottom
       TabOrder = 4
       ThumbLength = 18
       TickMarks = tmBoth
@@ -417,6 +250,7 @@ object MainForm: TMainForm
       Height = 25
       Max = 255
       Frequency = 20
+      PositionToolTip = ptBottom
       TabOrder = 5
       ThumbLength = 18
       TickMarks = tmBoth
@@ -507,13 +341,19 @@ object MainForm: TMainForm
     Width = 345
     Height = 49
     Caption = 'Foreground'
+    Padding.Top = 5
+    Padding.Bottom = 5
     TabOrder = 0
     AccName = 'Foreground Group'
+    DesignSize = (
+      345
+      49)
     object Label1: TLabel
       Left = 8
       Top = 24
       Width = 76
       Height = 15
+      AutoSize = False
       Caption = 'Colour select:'
     end
     object Label3: TLabel
@@ -521,40 +361,41 @@ object MainForm: TMainForm
       Top = 24
       Width = 24
       Height = 15
+      AutoSize = False
       Caption = 'Hex:'
     end
     object lblFR: TLabel
-      Left = 8
+      Left = 39
       Top = 50
-      Width = 57
+      Width = 26
       Height = 15
-      Alignment = taRightJustify
       AutoSize = False
       Caption = 'Red:'
       Transparent = True
+      Visible = False
     end
     object lblFB: TLabel
-      Left = 8
+      Left = 37
       Top = 98
-      Width = 57
+      Width = 28
       Height = 15
-      Alignment = taRightJustify
       AutoSize = False
       Caption = 'Blue:'
       Transparent = True
+      Visible = False
     end
     object lblFG: TLabel
-      Left = 8
+      Left = 28
       Top = 74
-      Width = 57
+      Width = 37
       Height = 15
-      Alignment = taRightJustify
       AutoSize = False
       Caption = 'Green:'
       Transparent = True
+      Visible = False
     end
     object FJColor: TJColorSelect2
-      Left = 88
+      Left = 90
       Top = 20
       Width = 97
       Height = 22
@@ -564,6 +405,7 @@ object MainForm: TMainForm
       OnEnter = chkExpandEnter
       DropDnColor = clBtnFace
       TabOrder = 0
+      Anchors = []
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -581,14 +423,9 @@ object MainForm: TMainForm
       Width = 73
       Height = 23
       Hint = '|The picked colour is displayed. And, the value can be input.'
+      AutoSize = False
       EditMask = '\#aaaaaa;1;_'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -12
-      Font.Name = 'Arial'
-      Font.Style = []
       MaxLength = 7
-      ParentFont = False
       TabOrder = 1
       Text = '#000000'
       OnChange = Edit1Change
@@ -611,6 +448,7 @@ object MainForm: TMainForm
         Width = 25
         Height = 23
         Alignment = taRightJustify
+        AutoSize = False
         MaxLength = 3
         TabOrder = 0
         OnChange = FREditChange
@@ -626,6 +464,7 @@ object MainForm: TMainForm
         Width = 25
         Height = 23
         Alignment = taRightJustify
+        AutoSize = False
         MaxLength = 3
         TabOrder = 1
         OnChange = FREditChange
@@ -643,6 +482,7 @@ object MainForm: TMainForm
         Width = 25
         Height = 23
         Alignment = taRightJustify
+        AutoSize = False
         MaxLength = 3
         TabOrder = 2
         OnChange = FREditChange
@@ -662,6 +502,7 @@ object MainForm: TMainForm
       Height = 25
       Max = 255
       Frequency = 20
+      PositionToolTip = ptBottom
       TabOrder = 3
       ThumbLength = 18
       TickMarks = tmBoth
@@ -677,6 +518,7 @@ object MainForm: TMainForm
       Height = 25
       Max = 255
       Frequency = 20
+      PositionToolTip = ptBottom
       TabOrder = 4
       ThumbLength = 18
       TickMarks = tmBoth
@@ -692,6 +534,7 @@ object MainForm: TMainForm
       Height = 25
       Max = 255
       Frequency = 20
+      PositionToolTip = ptBottom
       TabOrder = 5
       ThumbLength = 18
       TickMarks = tmBoth
@@ -780,8 +623,9 @@ object MainForm: TMainForm
   object chkblind: TTransCheckBox
     Left = 8
     Top = 168
-    Width = 345
+    Width = 357
     Height = 17
+    Anchors = [akLeft, akTop, akRight]
     Caption = 'Show contrast result for colour blindness'
     TabOrder = 2
     OnClick = chkblindClick
@@ -789,15 +633,16 @@ object MainForm: TMainForm
   end
   object gbResNormal: TAccGroupBox
     Left = 8
-    Top = 192
-    Width = 345
+    Top = 191
+    Width = 357
     Height = 129
+    Anchors = [akLeft, akTop, akRight]
     Caption = 'Result'
     TabOrder = 4
     AccName = 'Result Group'
     object lblRatio: TLabel
-      Left = 8
-      Top = 21
+      Left = 9
+      Top = 25
       Width = 161
       Height = 17
       AutoSize = False
@@ -835,7 +680,7 @@ object MainForm: TMainForm
     end
     object chkExpand: TTransCheckBox
       Left = 176
-      Top = 21
+      Top = 22
       Width = 161
       Height = 17
       Caption = 'Short / Full'
@@ -858,6 +703,7 @@ object MainForm: TMainForm
         Top = 21
         Width = 20
         Height = 20
+        Stretch = True
         Transparent = True
       end
       object Image7: TImage
@@ -865,13 +711,15 @@ object MainForm: TMainForm
         Top = 49
         Width = 20
         Height = 20
+        Stretch = True
         Transparent = True
       end
       object edtNormal_T: TAccEdit
         Left = 32
         Top = 20
         Width = 121
-        Height = 23
+        Height = 21
+        AutoSize = False
         ReadOnly = True
         TabOrder = 0
         AccName = 'LevelAA Textbox'
@@ -884,7 +732,8 @@ object MainForm: TMainForm
         Left = 32
         Top = 48
         Width = 121
-        Height = 23
+        Height = 21
+        AutoSize = False
         ReadOnly = True
         TabOrder = 1
         AccName = 'LevelAAA Textbox'
@@ -907,6 +756,7 @@ object MainForm: TMainForm
         Top = 21
         Width = 20
         Height = 20
+        Stretch = True
         Transparent = True
       end
       object Image9: TImage
@@ -914,13 +764,15 @@ object MainForm: TMainForm
         Top = 49
         Width = 20
         Height = 20
+        Stretch = True
         Transparent = True
       end
       object edtNormal_LT: TAccEdit
         Left = 32
         Top = 20
         Width = 121
-        Height = 23
+        Height = 21
+        AutoSize = False
         ReadOnly = True
         TabOrder = 0
         AccName = 'LevelAA LargeTextbox'
@@ -928,10 +780,11 @@ object MainForm: TMainForm
         CtrlDown = edtNormal_LT2
       end
       object edtNormal_LT2: TAccEdit
-        Left = 32
-        Top = 48
+        Left = 34
+        Top = 49
         Width = 121
-        Height = 23
+        Height = 21
+        AutoSize = False
         ReadOnly = True
         TabOrder = 1
         AccName = 'LevelAAA LargeTextbox'
@@ -940,13 +793,185 @@ object MainForm: TMainForm
       end
     end
   end
+  object gbResBlind: TAccGroupBox
+    Left = 8
+    Top = 192
+    Width = 357
+    Height = 193
+    Anchors = [akLeft, akTop, akRight]
+    Caption = 'Result'
+    TabOrder = 3
+    Visible = False
+    AccName = 'Result Blindness Group '
+    object Image2: TImage
+      Left = 8
+      Top = 165
+      Width = 20
+      Height = 20
+      Transparent = True
+      Visible = False
+    end
+    object Image3: TImage
+      Left = 8
+      Top = 205
+      Width = 20
+      Height = 20
+      Transparent = True
+      Visible = False
+    end
+    object Image4: TImage
+      Left = 8
+      Top = 245
+      Width = 20
+      Height = 20
+      Transparent = True
+      Visible = False
+    end
+    object Image5: TImage
+      Left = 8
+      Top = 125
+      Width = 20
+      Height = 20
+      Transparent = True
+      Visible = False
+    end
+    object gbTextFor: TAccGroupBox
+      Left = 8
+      Top = 16
+      Width = 329
+      Height = 89
+      Caption = 'Text for'
+      TabOrder = 1
+      Visible = False
+      object rb_least3: TAccRadioButton
+        Left = 8
+        Top = 16
+        Width = 313
+        Height = 17
+        Caption = 'Large text AA (at least 3:1)'
+        Checked = True
+        TabOrder = 0
+        TabStop = True
+        OnClick = rb_least3Click
+        OnEnter = rb_least3Enter
+      end
+      object rb_least5: TAccRadioButton
+        Left = 8
+        Top = 40
+        Width = 313
+        Height = 17
+        Caption = 'Text AA and Large text AAA (at least 5:1)'
+        TabOrder = 1
+        OnClick = rb_least3Click
+        OnEnter = rb_least3Enter
+      end
+      object rb_least7: TAccRadioButton
+        Left = 8
+        Top = 64
+        Width = 313
+        Height = 17
+        Caption = 'Text AAA (at least 7:1)'
+        TabOrder = 2
+        OnClick = rb_least3Click
+        OnEnter = rb_least3Enter
+      end
+    end
+    object edtProta: TAccLabeledEdit
+      Left = 8
+      Top = 80
+      Width = 329
+      Height = 17
+      AutoSize = False
+      BorderStyle = bsNone
+      EditLabel.Width = 56
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Protanopia:'
+      ReadOnly = True
+      TabOrder = 3
+      OnEnter = chkExpandEnter
+      OnKeyDown = edtProtaKeyDown
+      AccName = 'Prota Edit'
+      CtrlNext = edtDeutera
+      CtrlPrev = edtNormal2
+      CtrlUp = edtNormal2
+      CtrlDown = edtDeutera
+    end
+    object edtDeutera: TAccLabeledEdit
+      Left = 8
+      Top = 128
+      Width = 329
+      Height = 17
+      AutoSize = False
+      BorderStyle = bsNone
+      EditLabel.Width = 69
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Deuteranopia:'
+      ReadOnly = True
+      TabOrder = 4
+      OnEnter = chkExpandEnter
+      OnKeyDown = edtDeuteraKeyDown
+      AccName = 'Deutera Edit'
+      CtrlNext = edtTrita
+      CtrlPrev = edtProta
+      CtrlUp = edtProta
+      CtrlDown = edtTrita
+    end
+    object edtTrita: TAccLabeledEdit
+      Left = 8
+      Top = 168
+      Width = 329
+      Height = 17
+      AutoSize = False
+      BorderStyle = bsNone
+      EditLabel.Width = 52
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Tritanopia:'
+      ReadOnly = True
+      TabOrder = 5
+      OnEnter = chkExpandEnter
+      OnKeyDown = edtTritaKeyDown
+      AccName = 'Trita Edit'
+      CtrlPrev = edtDeutera
+      CtrlUp = edtDeutera
+    end
+    object edtNormal2: TAccLabeledEdit
+      Left = 8
+      Top = 40
+      Width = 329
+      Height = 17
+      BorderStyle = bsNone
+      EditLabel.Width = 37
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Normal:'
+      ReadOnly = True
+      TabOrder = 2
+      OnEnter = chkExpandEnter
+      OnKeyDown = edtNormal2KeyDown
+      AccName = 'Normal Edit'
+      CtrlNext = edtProta
+      CtrlDown = edtProta
+    end
+    object chkExpand2: TTransCheckBox
+      Left = 8
+      Top = 21
+      Width = 193
+      Height = 17
+      Caption = 'Short / Full'
+      Checked = True
+      State = cbChecked
+      TabOrder = 0
+      Visible = False
+      OnClick = chkExpandClick
+      OnEnter = chkExpandEnter
+    end
+  end
   object ImageList1: TImageList
     Height = 20
     Width = 20
     Left = 352
     Top = 88
     Bitmap = {
-      494C010102000400700014001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000400F40014001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000500000001400000001002000000000000019
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1171,8 +1196,8 @@ object MainForm: TMainForm
     Top = 32
   end
   object ActionList1: TActionList
-    Left = 144
-    Top = 296
+    Left = 240
+    Top = 152
     object acrFColorDrop: TAction
       ShortCut = 120
       OnExecute = acrFColorDropExecute
@@ -1216,27 +1241,37 @@ object MainForm: TMainForm
     Top = 56
     object mnuOptions: TMenuItem
       Caption = '&Options'
+      OnDrawItem = mnuHelpDrawItem
+      OnMeasureItem = mnuHelpMeasureItem
       object mnuOnTop: TMenuItem
         AutoCheck = True
         Caption = '&Stay On Top'
         ShortCut = 16467
         OnClick = mnuOnTopClick
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
       object mnuFont: TMenuItem
         Caption = '&Font'
         GroupIndex = 1
         ShortCut = 16454
         OnClick = mnuFontClick
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
       object mnuP_Value: TMenuItem
         Caption = '&Displayed color value'
         GroupIndex = 2
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
         object mnuHex: TMenuItem
           Caption = '&Hex value'
           GroupIndex = 1
           RadioItem = True
           ShortCut = 16453
           OnClick = mnuHexClick
+          OnDrawItem = mnuHelpDrawItem
+          OnMeasureItem = mnuHelpMeasureItem
         end
         object mnuRGB: TMenuItem
           Caption = '&RGB'
@@ -1244,6 +1279,8 @@ object MainForm: TMainForm
           RadioItem = True
           ShortCut = 16466
           OnClick = mnuRGBClick
+          OnDrawItem = mnuHelpDrawItem
+          OnMeasureItem = mnuHelpMeasureItem
         end
       end
       object mnuShowBlind: TMenuItem
@@ -1251,40 +1288,64 @@ object MainForm: TMainForm
         GroupIndex = 3
         ShortCut = 117
         OnClick = mnuShowBlindClick
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
       object mnuSlider: TMenuItem
         Caption = 'Show color sliders'
         GroupIndex = 4
         ShortCut = 118
         OnClick = mnuSliderClick
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
+      end
+      object mnuLang: TMenuItem
+        Caption = '&Language'
+        GroupIndex = 4
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
     end
     object mnuIMG: TMenuItem
       Caption = '&Image'
+      OnDrawItem = mnuHelpDrawItem
+      OnMeasureItem = mnuHelpMeasureItem
       object mnuSelList: TMenuItem
         Caption = '&Select window(List)...'
         ShortCut = 16457
         OnClick = mnuSelListClick
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
       object mnuSelIMG: TMenuItem
         Caption = 'Select &image file'
         OnClick = mnuSelIMGClick
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
       object mnuScreen: TMenuItem
         Caption = 'S&creen'
         OnClick = mnuScreenClick
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
     end
     object mnuHelp: TMenuItem
       Caption = '&Help'
+      OnDrawItem = mnuHelpDrawItem
+      OnMeasureItem = mnuHelpMeasureItem
       object mnuHelp1: TMenuItem
         Caption = '&Help'
         ShortCut = 16456
         OnClick = mnuHelp1Click
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
       object mnuAbout: TMenuItem
         Caption = '&About...'
         OnClick = mnuAboutClick
+        OnDrawItem = mnuHelpDrawItem
+        OnMeasureItem = mnuHelpMeasureItem
       end
     end
   end
@@ -1297,8 +1358,8 @@ object MainForm: TMainForm
   end
   object PopupMenu1: TPopupMenu
     OnPopup = PopupMenu1Popup
-    Left = 304
-    Top = 236
+    Left = 344
+    Top = 156
     object mnufg1px: TMenuItem
       Caption = '1pixel'
       GroupIndex = 1
@@ -1350,8 +1411,8 @@ object MainForm: TMainForm
   end
   object PopupMenu2: TPopupMenu
     OnPopup = PopupMenu2Popup
-    Left = 240
-    Top = 260
+    Left = 304
+    Top = 156
     object mnubg1px: TMenuItem
       Caption = '1pixel'
       GroupIndex = 1
@@ -1402,10 +1463,10 @@ object MainForm: TMainForm
     end
   end
   object ImageList2: TImageList
-    Left = 352
-    Top = 296
+    Left = 296
+    Top = 112
     Bitmap = {
-      494C010101000400700010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000400F40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       00000000000000000000000000000000000000000000BFBF0000BFBF0000BFBF
       0000BFBF0000BFBF0000BFBF0000BFBF00000000000000000000000000000000
