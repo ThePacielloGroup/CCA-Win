@@ -21,7 +21,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, ComCtrls, System.Math, MultiMon;
+  Dialogs, ExtCtrls, StdCtrls, ComCtrls, Math, MultiMon;
 
 const
   WM_DPICHANGED = 736;

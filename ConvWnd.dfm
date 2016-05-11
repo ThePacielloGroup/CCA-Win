@@ -1,9 +1,10 @@
 object ConvWndForm: TConvWndForm
   Left = 354
   Top = 322
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Screen convert'
-  ClientHeight = 394
-  ClientWidth = 452
+  ClientHeight = 414
+  ClientWidth = 446
   Color = clBtnFace
   DoubleBuffered = True
   ParentFont = True
@@ -11,28 +12,30 @@ object ConvWndForm: TConvWndForm
   OldCreateOrder = False
   Scaled = False
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyPress = FormKeyPress
   OnResize = FormResize
   OnShow = FormShow
   DesignSize = (
-    452
-    394)
+    446
+    414)
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
     Left = 0
     Top = 0
-    Width = 299
-    Height = 392
+    Width = 293
+    Height = 412
     Anchors = [akLeft, akTop, akRight, akBottom]
     ExplicitWidth = 300
     ExplicitHeight = 300
   end
   object Label1: TLabel
-    Left = 306
-    Top = 44
+    Left = 307
+    Top = 75
     Width = 131
     Height = 256
     AutoSize = False
@@ -57,5 +60,14 @@ object ConvWndForm: TConvWndForm
     Style = csDropDownList
     TabOrder = 0
     OnChange = cmbColorChange
+  end
+  object btnPV: TButton
+    Left = 307
+    Top = 44
+    Width = 131
+    Height = 25
+    Caption = 'Parallel view'
+    TabOrder = 1
+    OnClick = btnPVClick
   end
 end

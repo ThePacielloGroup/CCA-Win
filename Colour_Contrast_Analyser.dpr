@@ -19,6 +19,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 *)
 
+{$R 'about.res' 'about.rc'}
+
 uses
   NoMultipleBoot,
   Forms,
@@ -29,14 +31,15 @@ uses
   about in 'about.pas' {AboutForm},
   SelListForm in 'SelListForm.pas' {frmSelList},
   ProgressForm in 'ProgressForm.pas' {frmProgress},
-  Th_IMGConv in 'Th_IMGConv.pas',
   FormIMGConvert in 'FormIMGConvert.pas' {frmIMGConvert},
-  ConvWnd in 'ConvWnd.pas' {ConvWndForm};
+  ConvWnd in 'ConvWnd.pas' {ConvWndForm},
+  Funcs in 'Funcs.pas',
+  frmPV in 'frmPV.pas' {pvForm};
 
 {$R *.res}
 {$R res.res}
 {$R rc.res}
-{$R about.res}
+
 var
     Wnd, AppWnd: HWND;
 begin
@@ -60,7 +63,9 @@ begin
         Application.Initialize;
         Application.MainFormOnTaskbar := True;
         Application.CreateForm(TMainForm, MainForm);
-        Application.CreateForm(TPickForm, PickForm);
-        Application.Run;
+  Application.CreateForm(TPickForm, PickForm);
+  Application.Run;
     end;
 end.
+
+

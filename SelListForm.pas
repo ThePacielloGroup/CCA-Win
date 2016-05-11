@@ -21,8 +21,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, System.Types,
-  Vcl.Dialogs, StdCtrls, ComCtrls, ExtCtrls, JPEG, iniFiles, ShlObj , AccCTRLs, System.Math,
-  TransCheckBox, ComObj, Funcs;
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, JPEG, iniFiles, ShlObj , AccCTRLs, System.Math,
+  ComObj, Funcs;
 
 
 type

@@ -20,10 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Vcl.Forms, Math,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Math,
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorConvert,
-  ImgList, Buttons, IniFiles, ActnList, JColorSelect2, ShellAPI, Menus, MultiMon,
-  Mask, JPEG, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, System.Actions, TransCheckBox, PermonitorApi, Funcs;
+  ImgList, Buttons, IniFiles, ActnList, AccCtrls, ShellAPI, Menus, MultiMon,
+  Mask, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, Actions, PermonitorApi, Funcs;
 resourcestring
   B_Difference = 'brightness difference :';
   C_Difference = 'colour difference :';
@@ -72,8 +72,8 @@ type
     actBColorDrop: TAction;
     actFColorPick: TAction;
     actBColorPick: TAction;
-    FJColor: TJColorSelect2;
-    BColor: TJColorSelect2;
+    FJColor: TColorDrop;
+    BColor: TColorDrop;
     MainMenu1: TMainMenu;
     mnuOptions: TMenuItem;
     mnuOnTop: TMenuItem;
@@ -169,7 +169,6 @@ type
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure Edit2KeyPress(Sender: TObject; var Key: Char);
     procedure mnuHexClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FJColorChanged(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -223,10 +222,11 @@ type
     procedure chkblindClick(Sender: TObject);
     procedure mnuHelpMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width, Height: Integer);
     procedure mnuHelpDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
+    procedure FormDestroy(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declare }
     Hex, RGB, copied: string;
-    frmSelIMG: TfrmIMGConvert;
     bSetValue: Boolean;
     Transpath, APPDir, SPath, TransDir: string;
     LangList: TStringList;
@@ -1303,10 +1303,20 @@ begin
 
 end;
 
-procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TMainForm.FormDestroy(Sender: TObject);
+var
+  i: integer;
+begin
+    for i := Low(arSS_HDC) to High(arSS_HDC) do
+        	DeleteDC(arSS_HDC[i]);
+
+    if SS_bmp <> 0 then
+        DeleteObject(SS_bmp);
+end;
+
+procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 var
     ini: TMemIniFile;
-    i: integer;
 begin
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
@@ -1318,12 +1328,7 @@ begin
     finally
         ini.Free;
     end;
-    PickForm.Free;
-    for i := Low(arSS_HDC) to High(arSS_HDC) do
-        	DeleteDC(arSS_HDC[i]);
-
-    if SS_bmp <> 0 then
-        DeleteObject(SS_bmp);
+    CanClose := True;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -2137,14 +2142,12 @@ begin
 end;
 
 procedure TMainForm.mnuScreenClick(Sender: TObject);
-var
-    ConvWndForm: TConvWndForm;
 begin
     Hide;
     Sleep(300);
 
 
-    ConvWndForm := TConvWndForm.Create(self);
+    ConvWndForm := TConvWndForm.Create(nil);
     ConvWndForm.Font := Font;
     ConvWndForm.DefFont := DefFont;
     ConvWndForm.Dy := DefY;
@@ -2160,8 +2163,6 @@ begin
 end;
 
 procedure TMainForm.mnuSelListClick(Sender: TObject);
-var
-    frmSelList: TfrmSelList;
 begin
 
     frmSelList := TFrmSelList.Create(self);
@@ -2185,19 +2186,19 @@ begin
 end;
 procedure TMainForm.mnuSelIMGClick(Sender: TObject);
 begin
-    frmSelIMG := TfrmIMGConvert.Create(self);
+    frmIMGConvert := TfrmIMGConvert.Create(self);
     FormStyle := fsNormal;
     try
-      frmSelIMG.Font := Font;
-      frmSelIMG.DefFont := DefFont;
-      frmSelIMG.Dy := DefY;
-      frmSelIMG.Dx := DefX;
-      frmSelIMG.ScaleX := ScaleX;
-      frmSelIMG.ScaleY := ScaleY;
-      frmSelIMG.ResizeCtrls;
-        frmSelIMG.ShowModal;
+      frmIMGConvert.Font := Font;
+      frmIMGConvert.DefFont := DefFont;
+      frmIMGConvert.Dy := DefY;
+      frmIMGConvert.Dx := DefX;
+      frmIMGConvert.ScaleX := ScaleX;
+      frmIMGConvert.ScaleY := ScaleY;
+      frmIMGConvert.ResizeCtrls;
+      frmIMGConvert.ShowModal;
     finally
-        FreeAndNil(frmSelIMG);
+        FreeAndNil(frmIMGConvert);
         mnuOnTopClick(self);
     end;
 end;
