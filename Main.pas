@@ -324,13 +324,14 @@ begin
 
     FJColor.ItemHeight := iHeight - 5;
     FJColor.Width := DoubleToInt(70 * ScaleX);
+    FJColor.Font := Font;
     BColor.ItemHeight := iHeight - 5;
     BColor.Width := DoubleToInt(70 * ScaleX);
+    BColor.Font := Font;
     mh := MAX(mH, FJColor.Height);
     tw := tw + FJColor.Width + 3;
     if mnuHex.Checked then
     begin
-
       GetStrSize(Label3.Caption + ' ');
       Label3.Width := sWidth;
       Label3.Height := sHeight;
@@ -555,13 +556,16 @@ begin
     gbBack.Top := gbFore.Top + gbFore.Height + 7;
 
     GetStrSize(chkBlind.Caption + ' ');
-    chkBlind.Top := gbBack.Top + gbBack.Height + 10;
-    chkBlind.Height := sHeight;
+    chkBlind.Top := gbBack.Top + gbBack.Height + (sHeight div 2);
+    if sHeight > DoubleToInt(20 * ScaleY) then
+      chkBlind.Height := sHeight
+    else
+      chkBlind.Height := DoubleToInt(20 * ScaleY);
     chkBlind.Width := ClientWidth;
 
 
 
-    gbResBlind.Top := chkBlind.Top + chkBlind.Height + 5;
+    gbResBlind.Top := chkBlind.Top + chkBlind.Height + (sHeight div 2);
     gbResNormal.Top := gbResBlind.Top;
 
     GetStrSize(lblRatio.Caption + ' ');
