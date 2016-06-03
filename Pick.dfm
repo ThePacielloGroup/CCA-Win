@@ -1,6 +1,7 @@
 object PickForm: TPickForm
   Left = 878
   Top = 219
+  BorderIcons = []
   BorderStyle = bsNone
   ClientHeight = 202
   ClientWidth = 202
