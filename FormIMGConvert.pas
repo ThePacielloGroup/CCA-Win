@@ -53,7 +53,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
-    { Private éŒ¾ }
+    { Private å®£è¨€ }
     FBMPs: TBMPs;
 
     procedure LoadNormalImage;
@@ -61,7 +61,7 @@ type
 
     procedure WMDPIChanged(var Message: TMessage); message WM_DPICHANGED;
   public
-    { Public éŒ¾ }
+    { Public å®£è¨€ }
     ScaleY, ScaleX, Dx, Dy: double;
     SPath: string;
     DefFont: integer;
@@ -368,7 +368,7 @@ begin
     CSIDL_PERSONAL, IIDList));
   if not SHGetPathFromIDList(IIDList, buffer) then
   begin
-    raise Exception.Create('‰¼‘zƒtƒHƒ‹ƒ_‚Ì‚½‚ßæ“¾‚Å‚«‚Ü‚¹‚ñ');
+    raise Exception.Create('ä»®æƒ³ãƒ•ã‚©ãƒ«ãƒ€ã®ãŸã‚å–å¾—ã§ãã¾ã›ã‚“');
   end;
   Result := StrPas(Buffer);
 end;
@@ -406,7 +406,7 @@ begin
     cmbSimu.Items.Add(MainForm.GetTranslation('grayscale', 'Grayscale'));
     cmbSimu.Items.Add(MainForm.GetTranslation('invert', 'Invert'));
     cmbSimu.Items.Add(MainForm.GetTranslation('cataracts', 'Cataracts'));
-    cmbSimu.Items.Add(MainForm.GetTranslation('normal', 'Nromal'));
+    cmbSimu.Items.Add(MainForm.GetTranslation('normal', 'Normal'));
     cmbSimu.ItemIndex := 0;
     //ResizeCtrls;
 end;
