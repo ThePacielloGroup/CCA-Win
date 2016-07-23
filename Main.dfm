@@ -4,8 +4,8 @@ object MainForm: TMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Colour Contrast Analyser'
-  ClientHeight = 436
-  ClientWidth = 370
+  ClientHeight = 658
+  ClientWidth = 868
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -49,597 +49,679 @@ object MainForm: TMainForm
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnShow = FormShow
-  DesignSize = (
-    370
-    436)
   PixelsPerInch = 96
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 417
-    Width = 370
+    Top = 639
+    Width = 868
     Height = 19
     Panels = <>
+    ParentFont = True
     SimplePanel = True
-  end
-  object gbBack: TAccGroupBox
-    Left = 8
-    Top = 64
-    Width = 345
-    Height = 89
-    Caption = 'Background'
-    TabOrder = 1
-    AccName = 'Background Group'
-    object Label2: TLabel
-      Left = 8
-      Top = 24
-      Width = 66
-      Height = 13
-      Caption = 'Colour select:'
-    end
-    object Label4: TLabel
-      Left = 188
-      Top = 24
-      Width = 23
-      Height = 13
-      Caption = 'Hex:'
-    end
-    object lblBR: TLabel
-      Left = 39
-      Top = 50
-      Width = 26
-      Height = 15
-      AutoSize = False
-      Caption = 'Red:'
-      Transparent = True
-      Visible = False
-    end
-    object lblBG: TLabel
-      Left = 28
-      Top = 74
-      Width = 37
-      Height = 15
-      AutoSize = False
-      Caption = 'Green:'
-      Transparent = True
-      Visible = False
-    end
-    object lblBB: TLabel
-      Left = 37
-      Top = 98
-      Width = 28
-      Height = 15
-      AutoSize = False
-      Caption = 'Blue:'
-      Transparent = True
-      Visible = False
-    end
-    object BColor: TColorDrop
-      Left = 88
-      Top = 20
-      Width = 97
-      Height = 22
-      Hint = 'F10|F10 is Dropdown.'
-      ActiveColor = clWhite
-      OnChanged = FJColorChanged
-      OnEnter = chkExpandEnter
-      DropDnColor = clBtnFace
-      TabOrder = 0
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Other = '&Others...'
-      AccName = 'Background Colour'
-      CtrlNext = BREdit
-      CtrlRight = BREdit
-      CtrlUp = FJColor
-    end
-    object Edit2: TAccMaskEdit
-      Left = 216
-      Top = 20
-      Width = 73
-      Height = 23
-      Hint = '|The picked colour is displayed. And, the value can be input.'
-      AutoSize = False
-      EditMask = '\#aaaaaa;1;_'
-      MaxLength = 7
-      TabOrder = 1
-      Text = '#ffffff'
-      OnChange = Edit2Change
-      OnEnter = chkExpandEnter
-      OnKeyPress = Edit2KeyPress
-      AccName = 'Background Hex Edit'
-      CtrlNext = btnBack
-      CtrlRight = btnBack
-    end
-    object Panel2: TPanel
-      Left = 216
-      Top = 20
-      Width = 81
-      Height = 25
-      BevelOuter = bvNone
-      TabOrder = 2
-      object BREdit: TAccEdit
-        Left = 0
-        Top = 0
-        Width = 25
-        Height = 21
-        Alignment = taRightJustify
-        MaxLength = 3
-        TabOrder = 0
-        OnChange = BREditChange
-        OnEnter = chkExpandEnter
-        AccName = 'Back Red Colour Edit'
-        CtrlNext = BGEdit
-        CtrlRight = BGEdit
-        CtrlUp = FREdit
-      end
-      object BGEdit: TAccEdit
-        Left = 24
-        Top = 0
-        Width = 25
-        Height = 21
-        Alignment = taRightJustify
-        MaxLength = 3
-        TabOrder = 1
-        OnChange = BREditChange
-        OnEnter = chkExpandEnter
-        AccName = 'Back GreenColour Edit'
-        CtrlNext = BBEdit
-        CtrlPrev = BREdit
-        CtrlRight = BBEdit
-        CtrlLeft = BREdit
-        CtrlUp = FGEdit
-      end
-      object BBEdit: TAccEdit
-        Left = 48
-        Top = 0
-        Width = 25
-        Height = 21
-        Alignment = taRightJustify
-        MaxLength = 3
-        TabOrder = 2
-        OnChange = BREditChange
-        OnEnter = chkExpandEnter
-        AccName = 'Back Blue Colour Edit'
-        CtrlNext = btnBack
-        CtrlPrev = BGEdit
-        CtrlRight = btnBack
-        CtrlLeft = BGEdit
-        CtrlUp = FBEdit
-      end
-    end
-    object tbBR: TAccTrackBar
-      Left = 64
-      Top = 48
-      Width = 233
-      Height = 25
-      Max = 255
-      Frequency = 20
-      PositionToolTip = ptBottom
-      TabOrder = 3
-      ThumbLength = 18
-      TickMarks = tmBoth
-      TickStyle = tsNone
-      Visible = False
-      OnChange = tbBRChange
-      AccName = 'Back Red Slider'
-    end
-    object tbBG: TAccTrackBar
-      Left = 64
-      Top = 72
-      Width = 233
-      Height = 25
-      Max = 255
-      Frequency = 20
-      PositionToolTip = ptBottom
-      TabOrder = 4
-      ThumbLength = 18
-      TickMarks = tmBoth
-      TickStyle = tsNone
-      Visible = False
-      OnChange = tbBRChange
-      AccName = 'Back Green Slider'
-    end
-    object tbBB: TAccTrackBar
-      Left = 64
-      Top = 96
-      Width = 233
-      Height = 25
-      Max = 255
-      Frequency = 20
-      PositionToolTip = ptBottom
-      TabOrder = 5
-      ThumbLength = 18
-      TickMarks = tmBoth
-      TickStyle = tsNone
-      Visible = False
-      OnChange = tbBRChange
-      AccName = 'Back Blue Slider'
-    end
-    object btnBack: TAccBitBtn
-      Left = 296
-      Top = 16
-      Width = 25
-      Height = 25
-      Glyph.Data = {
-        36030000424D3603000000000000360000002800000010000000100000000100
-        1800000000000003000000000000000000000000000000000000C0C0C0BFBF00
-        BFBF00BFBF00BFBF00BFBF00BFBF00BFBF00C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0BFBF00BFBF00000000000000000000BFBF00BFBF00BF
-        BF00BFBF00BFBF00C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0BFBF00
-        000000BFBF00BFBF00000000BFBF00BFBF00BFBF00C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0000000FFFFFFFFFFFFBFBF00000000C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0000000FFFFFFFFFFFFBFBF00000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0000000FFFFFFFFFFFFBF
-        BF00000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0000000FFFFFFFFFFFF808080000000C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0000000FF
-        FFFFFFFFFF808080000000C0C0C0000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0000000FFFFFFFFFFFF8080800000000000
-        00C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0000000FFFFFF000000000000000000000000C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C00000000000000000000000
-        00000000000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0000000000000000000000000000000000000000000000000C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C00000000000000000
-        00000000000000000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0000000C0C0C0000000000000000000C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C00000
-        00000000000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0}
-      TabOrder = 6
-      OnClick = btnForeClick
-      OnEnter = chkExpandEnter
-      AccName = 'Back Colour picker'
-      AccActionDesc = 'Button Click'
-      AccShortCut = 'F12'
-      CtrlNext = bbDD2
-      CtrlPrev = BBEdit
-      CtrlRight = bbDD2
-      CtrlLeft = BBEdit
-      CtrlUp = btnFore
-    end
-    object bbDD2: TAccBitBtn
-      Left = 322
-      Top = 16
-      Width = 17
-      Height = 25
-      Glyph.Data = {
-        E6010000424DE60100000000000036000000280000000C0000000C0000000100
-        180000000000B001000000000000000000000000000000000000DCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC000000000000DC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC000000000000
-        000000000000DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC0000000000
-        00000000000000000000000000DCDCDCDCDCDCDCDCDCDCDCDCDCDCDC00000000
-        0000000000000000000000000000000000000000DCDCDCDCDCDCDCDCDC000000
-        000000000000000000000000000000000000000000000000000000DCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDC}
-      TabOrder = 7
-      OnClick = bbDD2Click
-      OnEnter = chkExpandEnter
-      AccName = 'Back Colour Dropdown'
-      AccShortCut = 'F10'
-      CtrlPrev = btnBack
-      CtrlLeft = btnBack
-      CtrlUp = bbDD1
-    end
+    UseSystemFont = False
   end
   object gbFore: TAccGroupBox
     Left = 8
-    Top = 8
-    Width = 345
-    Height = 49
+    Top = 1
+    Width = 317
+    Height = 380
     Caption = 'Foreground'
     Padding.Top = 5
     Padding.Bottom = 5
     TabOrder = 0
     AccName = 'Foreground Group'
-    DesignSize = (
-      345
-      49)
-    object Label1: TLabel
-      Left = 8
-      Top = 24
-      Width = 76
-      Height = 15
-      AutoSize = False
-      Caption = 'Colour select:'
-    end
-    object Label3: TLabel
-      Left = 188
-      Top = 24
-      Width = 24
-      Height = 15
-      AutoSize = False
-      Caption = 'Hex:'
-    end
-    object lblFR: TLabel
-      Left = 39
-      Top = 50
-      Width = 26
-      Height = 15
-      AutoSize = False
-      Caption = 'Red:'
-      Transparent = True
-      Visible = False
-    end
-    object lblFB: TLabel
-      Left = 37
-      Top = 98
-      Width = 28
-      Height = 15
-      AutoSize = False
-      Caption = 'Blue:'
-      Transparent = True
-      Visible = False
-    end
-    object lblFG: TLabel
-      Left = 28
-      Top = 74
-      Width = 37
-      Height = 15
-      AutoSize = False
-      Caption = 'Green:'
-      Transparent = True
-      Visible = False
-    end
-    object FJColor: TColorDrop
-      Left = 90
-      Top = 20
-      Width = 97
-      Height = 22
-      Hint = 'F9|F9 is dropdown'
-      ActiveColor = clBlack
-      OnChanged = FJColorChanged
-      OnEnter = chkExpandEnter
-      DropDnColor = clBtnFace
-      TabOrder = 0
-      Anchors = []
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Other = '&Others...'
-      AccName = 'Foreground Colour'
-      CtrlNext = FREdit
-      CtrlRight = FREdit
-      CtrlDown = BColor
-    end
-    object Edit1: TAccMaskEdit
-      Left = 216
-      Top = 20
-      Width = 73
-      Height = 23
-      Hint = '|The picked colour is displayed. And, the value can be input.'
-      AutoSize = False
-      EditMask = '\#aaaaaa;1;_'
-      MaxLength = 7
-      TabOrder = 1
-      Text = '#000000'
-      OnChange = Edit1Change
-      OnEnter = chkExpandEnter
-      OnKeyPress = Edit1KeyPress
-      AccName = 'Foreground Hex Edit'
-      CtrlNext = btnFore
-      CtrlRight = btnFore
-    end
-    object Panel1: TPanel
-      Left = 216
-      Top = 20
-      Width = 73
-      Height = 25
+    object grdFRGB: TGridPanel
+      Left = 5
+      Top = 69
+      Width = 300
+      Height = 152
       BevelOuter = bvNone
-      TabOrder = 2
-      object FREdit: TAccEdit
+      ColumnCollection = <
+        item
+          Value = 83.009595909287110000
+        end
+        item
+          Value = 16.990404090712890000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = lblFR
+          Row = 0
+        end
+        item
+          Column = 0
+          Control = tbFR
+          Row = 1
+        end
+        item
+          Column = 1
+          Control = FREdit
+          Row = 1
+        end
+        item
+          Column = 0
+          Control = lblFG
+          Row = 2
+        end
+        item
+          Column = 0
+          Control = tbFG
+          Row = 3
+        end
+        item
+          Column = 1
+          Control = FGEdit
+          Row = 3
+        end
+        item
+          Column = 0
+          Control = lblFB
+          Row = 4
+        end
+        item
+          Column = 0
+          Control = tbFB
+          Row = 5
+        end
+        item
+          Column = 1
+          Control = FBEdit
+          Row = 5
+        end>
+      RowCollection = <
+        item
+          Value = 16.650862524577660000
+        end
+        item
+          Value = 16.660336061541940000
+        end
+        item
+          Value = 16.669273298616170000
+        end
+        item
+          Value = 16.677266999896820000
+        end
+        item
+          Value = 16.682698883786330000
+        end
+        item
+          Value = 16.659562231581070000
+        end>
+      TabOrder = 1
+      TabStop = True
+      object lblFR: TLabel
         Left = 0
         Top = 0
-        Width = 25
-        Height = 23
+        Width = 249
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Red:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 124
+        ExplicitTop = 7
+        ExplicitWidth = 3
+        ExplicitHeight = 13
+      end
+      object tbFR: TAccTrackBar
+        Left = 0
+        Top = 25
+        Width = 249
+        Height = 25
+        Align = alClient
+        Max = 255
+        Frequency = 16
+        PositionToolTip = ptBottom
+        TabOrder = 0
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbFRChange
+        AccName = 'Fore Red Slider'
+        CtrlNext = tbFG
+        CtrlPrev = sbtnFore
+        CtrlRight = FREdit
+        CtrlUp = FJColor
+        CtrlDown = tbFG
+      end
+      object FREdit: TAccEdit
+        Left = 249
+        Top = 25
+        Width = 51
+        Height = 25
+        Align = alClient
         Alignment = taRightJustify
         AutoSize = False
         MaxLength = 3
-        TabOrder = 0
+        NumbersOnly = True
+        TabOrder = 3
         OnChange = FREditChange
         OnEnter = chkExpandEnter
         AccName = 'Fore Red Value Edit'
         CtrlNext = FGEdit
+        CtrlPrev = tbFR
+        CtrlRight = tbBR
+        CtrlLeft = tbFR
+        CtrlUp = sbtnFore
+        CtrlDown = FGEdit
+      end
+      object lblFG: TLabel
+        Left = 0
+        Top = 50
+        Width = 249
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Green:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 124
+        ExplicitTop = 55
+        ExplicitWidth = 3
+        ExplicitHeight = 13
+      end
+      object tbFG: TAccTrackBar
+        Left = 0
+        Top = 75
+        Width = 249
+        Height = 25
+        Align = alClient
+        Max = 255
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 1
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbFRChange
+        AccName = 'Fore Green Slider'
+        CtrlNext = tbFB
+        CtrlPrev = tbFR
         CtrlRight = FGEdit
-        CtrlDown = BREdit
+        CtrlUp = tbFR
+        CtrlDown = tbFB
       end
       object FGEdit: TAccEdit
-        Left = 24
-        Top = 0
-        Width = 25
-        Height = 23
+        Left = 249
+        Top = 75
+        Width = 51
+        Height = 25
+        Align = alClient
         Alignment = taRightJustify
         AutoSize = False
         MaxLength = 3
-        TabOrder = 1
+        NumbersOnly = True
+        TabOrder = 4
         OnChange = FREditChange
         OnEnter = chkExpandEnter
         AccName = 'Fore Green Value Edit'
         CtrlNext = FBEdit
         CtrlPrev = FREdit
-        CtrlRight = FBEdit
-        CtrlLeft = FREdit
-        CtrlDown = BGEdit
+        CtrlRight = tbBG
+        CtrlLeft = tbFG
+        CtrlUp = FREdit
+        CtrlDown = FBEdit
+      end
+      object lblFB: TLabel
+        Left = 0
+        Top = 100
+        Width = 249
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Blue:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 1
+        ExplicitTop = 104
+      end
+      object tbFB: TAccTrackBar
+        Left = 0
+        Top = 125
+        Width = 249
+        Height = 27
+        Align = alClient
+        Max = 255
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 2
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbFRChange
+        AccName = 'Fore Blue Slider'
+        CtrlNext = FREdit
+        CtrlPrev = tbFG
+        CtrlRight = FGEdit
+        CtrlUp = tbFG
+        CtrlDown = tbFH
       end
       object FBEdit: TAccEdit
-        Left = 48
-        Top = 0
-        Width = 25
-        Height = 23
+        Left = 249
+        Top = 125
+        Width = 51
+        Height = 27
+        Align = alClient
         Alignment = taRightJustify
         AutoSize = False
         MaxLength = 3
-        TabOrder = 2
+        NumbersOnly = True
+        TabOrder = 5
         OnChange = FREditChange
         OnEnter = chkExpandEnter
         AccName = 'Fore Blue Value Edit'
-        CtrlNext = btnFore
+        CtrlNext = tbFH
         CtrlPrev = FGEdit
-        CtrlRight = btnFore
-        CtrlLeft = FGEdit
-        CtrlDown = BBEdit
+        CtrlRight = tbBB
+        CtrlLeft = tbFB
+        CtrlUp = FGEdit
+        CtrlDown = FHEdit
       end
     end
-    object tbFR: TAccTrackBar
-      Left = 64
-      Top = 48
-      Width = 233
-      Height = 25
-      Max = 255
-      Frequency = 20
-      PositionToolTip = ptBottom
-      TabOrder = 3
-      ThumbLength = 18
-      TickMarks = tmBoth
-      TickStyle = tsNone
-      Visible = False
-      OnChange = tbFRChange
-      AccName = 'Fore Red Slider'
+    object grdFHSV: TGridPanel
+      Left = 5
+      Top = 221
+      Width = 300
+      Height = 152
+      BevelOuter = bvNone
+      ColumnCollection = <
+        item
+          Value = 82.977129901540520000
+        end
+        item
+          Value = 17.022870098459470000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = lblFH
+          Row = 0
+        end
+        item
+          Column = 0
+          Control = tbFH
+          Row = 1
+        end
+        item
+          Column = 1
+          Control = FHEdit
+          Row = 1
+        end
+        item
+          Column = 0
+          Control = lblFS
+          Row = 2
+        end
+        item
+          Column = 0
+          Control = tbFS
+          Row = 3
+        end
+        item
+          Column = 1
+          Control = FSEdit
+          Row = 3
+        end
+        item
+          Column = 0
+          Control = lblFV
+          Row = 4
+        end
+        item
+          Column = 0
+          Control = tbFV
+          Row = 5
+        end
+        item
+          Column = 1
+          Control = FVEdit
+          Row = 5
+        end>
+      RowCollection = <
+        item
+          Value = 16.728283398431300000
+        end
+        item
+          Value = 16.717239971947860000
+        end
+        item
+          Value = 16.588096198496430000
+        end
+        item
+          Value = 16.632428794061340000
+        end
+        item
+          Value = 16.696161983231520000
+        end
+        item
+          Value = 16.637789653831540000
+        end>
+      TabOrder = 2
+      object lblFH: TLabel
+        Left = 0
+        Top = 0
+        Width = 248
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Hue:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 20
+        ExplicitTop = -6
+        ExplicitWidth = 249
+      end
+      object tbFH: TAccTrackBar
+        Left = 0
+        Top = 25
+        Width = 248
+        Height = 25
+        Align = alClient
+        Max = 360
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 0
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbFHChange
+        AccName = 'Fore Red Slider'
+        CtrlNext = tbFS
+        CtrlPrev = FBEdit
+        CtrlRight = FHEdit
+        CtrlUp = tbFB
+        CtrlDown = tbFS
+      end
+      object FHEdit: TAccEdit
+        Left = 248
+        Top = 25
+        Width = 52
+        Height = 25
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 3
+        OnChange = FHEditChange
+        CtrlNext = FSEdit
+        CtrlPrev = tbFV
+        CtrlRight = tbBH
+        CtrlLeft = tbFH
+        CtrlUp = FBEdit
+        CtrlDown = FSEdit
+        ExplicitHeight = 21
+      end
+      object lblFS: TLabel
+        Left = 0
+        Top = 50
+        Width = 248
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Saturation:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 4
+        ExplicitTop = 54
+        ExplicitWidth = 249
+      end
+      object tbFS: TAccTrackBar
+        Left = 0
+        Top = 75
+        Width = 248
+        Height = 25
+        Align = alClient
+        Max = 100
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 1
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbFHChange
+        AccName = 'Fore Red Slider'
+        CtrlNext = tbFV
+        CtrlPrev = tbFH
+        CtrlRight = FSEdit
+        CtrlUp = tbFH
+        CtrlDown = tbFV
+      end
+      object FSEdit: TAccEdit
+        Left = 248
+        Top = 75
+        Width = 52
+        Height = 25
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 4
+        OnChange = FSEditChange
+        CtrlNext = FVEdit
+        CtrlPrev = FSEdit
+        CtrlRight = tbBS
+        CtrlLeft = tbFS
+        CtrlUp = FSEdit
+        CtrlDown = FVEdit
+        ExplicitHeight = 21
+      end
+      object lblFV: TLabel
+        Left = 0
+        Top = 100
+        Width = 248
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Value:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 4
+        ExplicitTop = 104
+        ExplicitWidth = 249
+      end
+      object tbFV: TAccTrackBar
+        Left = 0
+        Top = 125
+        Width = 248
+        Height = 27
+        Align = alClient
+        Max = 100
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 2
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbFHChange
+        AccName = 'Fore Red Slider'
+        CtrlNext = FHEdit
+        CtrlPrev = tbFS
+        CtrlRight = FVEdit
+        CtrlUp = tbFS
+      end
+      object FVEdit: TAccEdit
+        Left = 248
+        Top = 125
+        Width = 52
+        Height = 27
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 5
+        OnChange = FVEditChange
+        CtrlPrev = FSEdit
+        CtrlRight = tbBV
+        CtrlLeft = tbFV
+        CtrlUp = FSEdit
+        ExplicitHeight = 21
+      end
     end
-    object tbFG: TAccTrackBar
-      Left = 64
-      Top = 72
-      Width = 233
-      Height = 25
-      Max = 255
-      Frequency = 20
-      PositionToolTip = ptBottom
-      TabOrder = 4
-      ThumbLength = 18
-      TickMarks = tmBoth
-      TickStyle = tsNone
-      Visible = False
-      OnChange = tbFRChange
-      AccName = 'Fore Green Slider'
+    object grdFHex: TGridPanel
+      Left = 5
+      Top = 15
+      Width = 300
+      Height = 51
+      BevelOuter = bvNone
+      ColumnCollection = <
+        item
+          Value = 41.749331979729420000
+        end
+        item
+          Value = 41.421462643234750000
+        end
+        item
+          Value = 16.829205377035830000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = Label1
+          Row = 0
+        end
+        item
+          Column = 1
+          Control = Label3
+          Row = 0
+        end
+        item
+          Column = 0
+          Control = FJColor
+          Row = 1
+        end
+        item
+          Column = 1
+          Control = Edit1
+          Row = 1
+        end
+        item
+          Column = 2
+          Control = sbtnFore
+          Row = 1
+        end>
+      RowCollection = <
+        item
+          Value = 50.000000000000000000
+        end
+        item
+          Value = 50.000000000000000000
+        end>
+      TabOrder = 0
+      DesignSize = (
+        300
+        51)
+      object Label1: TLabel
+        Left = 0
+        Top = 0
+        Width = 125
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Colour select:'
+        Layout = tlBottom
+        ExplicitLeft = 59
+        ExplicitTop = 6
+        ExplicitWidth = 3
+        ExplicitHeight = 13
+      end
+      object Label3: TLabel
+        Left = 125
+        Top = 0
+        Width = 124
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Hex:'
+        Layout = tlBottom
+        ExplicitLeft = 181
+        ExplicitTop = 6
+        ExplicitWidth = 3
+        ExplicitHeight = 13
+      end
+      object FJColor: TColorDrop
+        AlignWithMargins = True
+        Left = 1
+        Top = 28
+        Width = 119
+        Height = 22
+        Hint = 'F9|F9 is dropdown'
+        Margins.Left = 1
+        Margins.Right = 5
+        ActiveColor = clBlack
+        OnChanged = FJColorChanged
+        OnEnter = chkExpandEnter
+        DropDnColor = clBtnFace
+        TabOrder = 0
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Other = '&Others...'
+        AccName = 'Foreground Colour'
+        CtrlNext = Edit1
+        CtrlRight = Edit1
+        CtrlDown = tbFR
+      end
+      object Edit1: TAccMaskEdit
+        AlignWithMargins = True
+        Left = 126
+        Top = 28
+        Width = 118
+        Height = 20
+        Hint = '|The picked colour is displayed. And, the value can be input.'
+        Margins.Left = 1
+        Margins.Right = 5
+        Align = alClient
+        AutoSize = False
+        EditMask = '\#aaaaaa;1;_'
+        MaxLength = 7
+        TabOrder = 1
+        Text = '#000000'
+        OnChange = Edit1Change
+        OnKeyPress = Edit1KeyPress
+        AccName = 'Foreground Hex Edit'
+        CtrlNext = sbtnFore
+        CtrlPrev = FJColor
+        CtrlLeft = FJColor
+        CtrlDown = tbFR
+      end
+      object sbtnFore: TAccButton
+        AlignWithMargins = True
+        Left = 252
+        Top = 28
+        Width = 45
+        Height = 20
+        Align = alClient
+        DropDownMenu = PopupMenu1
+        ImageAlignment = iaCenter
+        ImageIndex = 0
+        Images = ImageList2
+        Style = bsSplitButton
+        TabOrder = 2
+        OnClick = btnForeClick
+        AccName = 'Foreground Colour picker'
+        AccActionDesc = 'Button Click'
+        AccShortCut = 'F11'
+        CtrlNext = tbFR
+        CtrlPrev = Edit1
+        CtrlRight = BColor
+        CtrlLeft = Edit1
+        CtrlDown = FREdit
+      end
     end
-    object tbFB: TAccTrackBar
-      Left = 64
-      Top = 96
-      Width = 233
-      Height = 25
-      Max = 255
-      Frequency = 20
-      PositionToolTip = ptBottom
-      TabOrder = 5
-      ThumbLength = 18
-      TickMarks = tmBoth
-      TickStyle = tsNone
-      Visible = False
-      OnChange = tbFRChange
-      AccName = 'Fore Blue Slider'
-    end
-    object btnFore: TAccBitBtn
-      Left = 296
-      Top = 16
-      Width = 25
-      Height = 25
-      Glyph.Data = {
-        36030000424D3603000000000000360000002800000010000000100000000100
-        1800000000000003000000000000000000000000000000000000C0C0C0BFBF00
-        BFBF00BFBF00BFBF00BFBF00BFBF00BFBF00C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0BFBF00BFBF00000000000000000000BFBF00BFBF00BF
-        BF00BFBF00BFBF00C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0BFBF00
-        000000BFBF00BFBF00000000BFBF00BFBF00BFBF00C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0000000FFFFFFFFFFFFBFBF00000000C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0000000FFFFFFFFFFFFBFBF00000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0000000FFFFFFFFFFFFBF
-        BF00000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0000000FFFFFFFFFFFF808080000000C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0000000FF
-        FFFFFFFFFF808080000000C0C0C0000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0000000FFFFFFFFFFFF8080800000000000
-        00C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0000000FFFFFF000000000000000000000000C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C00000000000000000000000
-        00000000000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0000000000000000000000000000000000000000000000000C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C00000000000000000
-        00000000000000000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0000000C0C0C0000000000000000000C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C00000
-        00000000000000C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0
-        C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0}
-      TabOrder = 6
-      OnClick = btnForeClick
-      OnEnter = chkExpandEnter
-      AccName = 'Fore Colour picker'
-      AccActionDesc = 'Button Click'
-      AccShortCut = 'F11'
-      CtrlNext = bbDD1
-      CtrlPrev = FBEdit
-      CtrlRight = bbDD1
-      CtrlLeft = FBEdit
-      CtrlDown = btnBack
-    end
-    object bbDD1: TAccBitBtn
-      Left = 322
-      Top = 16
-      Width = 17
-      Height = 25
-      Glyph.Data = {
-        E6010000424DE60100000000000036000000280000000C0000000C0000000100
-        180000000000B001000000000000000000000000000000000000DCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC000000000000DC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC000000000000
-        000000000000DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC0000000000
-        00000000000000000000000000DCDCDCDCDCDCDCDCDCDCDCDCDCDCDC00000000
-        0000000000000000000000000000000000000000DCDCDCDCDCDCDCDCDC000000
-        000000000000000000000000000000000000000000000000000000DCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDC
-        DCDCDCDCDCDCDCDCDCDC}
-      TabOrder = 7
-      OnClick = bbDD1Click
-      OnEnter = chkExpandEnter
-      AccName = 'Fore Colour Dropdown'
-      AccActionDesc = 'Button Click'
-      AccShortCut = 'F9'
-      CtrlPrev = btnFore
-      CtrlLeft = btnFore
-      CtrlDown = bbDD2
-    end
-  end
-  object chkblind: TTransCheckBox
-    Left = 8
-    Top = 168
-    Width = 357
-    Height = 17
-    Anchors = [akLeft, akTop, akRight]
-    Caption = 'Show contrast result for colour blindness'
-    TabOrder = 2
-    OnClick = chkblindClick
-    AccName = 'chkShowBlindness'
   end
   object gbResNormal: TAccGroupBox
     Left = 8
-    Top = 191
-    Width = 357
-    Height = 129
-    Anchors = [akLeft, akTop, akRight]
+    Top = 387
+    Width = 640
+    Height = 245
     Caption = 'Result'
-    TabOrder = 4
+    TabOrder = 2
     AccName = 'Result Group'
     object lblRatio: TLabel
       Left = 9
@@ -648,17 +730,108 @@ object MainForm: TMainForm
       Height = 17
       AutoSize = False
       Transparent = True
+      Visible = False
+    end
+    object gbResBlind: TAccGroupBox
+      Left = 220
+      Top = 15
+      Width = 414
+      Height = 190
+      Caption = 'Result'
+      TabOrder = 3
+      TabStop = True
+      Visible = False
+      AccName = 'Result Blindness Group '
+      object edtProta: TAccLabeledEdit
+        Left = 8
+        Top = 76
+        Width = 393
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        BorderStyle = bsNone
+        EditLabel.Width = 56
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Protanopia:'
+        ReadOnly = True
+        TabOrder = 1
+        OnEnter = chkExpandEnter
+        OnKeyDown = edtProtaKeyDown
+        AccName = 'Prota Edit'
+        CtrlNext = edtDeutera
+        CtrlPrev = edtNormal2
+        CtrlUp = edtNormal2
+        CtrlDown = edtDeutera
+      end
+      object edtDeutera: TAccLabeledEdit
+        Left = 8
+        Top = 120
+        Width = 393
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        BorderStyle = bsNone
+        EditLabel.Width = 69
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Deuteranopia:'
+        ReadOnly = True
+        TabOrder = 2
+        OnEnter = chkExpandEnter
+        OnKeyDown = edtDeuteraKeyDown
+        AccName = 'Deutera Edit'
+        CtrlNext = edtTrita
+        CtrlPrev = edtProta
+        CtrlUp = edtProta
+        CtrlDown = edtTrita
+      end
+      object edtTrita: TAccLabeledEdit
+        Left = 8
+        Top = 160
+        Width = 393
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        BorderStyle = bsNone
+        EditLabel.Width = 52
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Tritanopia:'
+        ReadOnly = True
+        TabOrder = 3
+        OnEnter = chkExpandEnter
+        OnKeyDown = edtTritaKeyDown
+        AccName = 'Trita Edit'
+        CtrlPrev = edtDeutera
+        CtrlUp = edtDeutera
+      end
+      object edtNormal2: TAccLabeledEdit
+        Left = 8
+        Top = 36
+        Width = 393
+        Height = 17
+        Alignment = taCenter
+        AutoSize = False
+        BorderStyle = bsNone
+        EditLabel.Width = 37
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Normal:'
+        ReadOnly = True
+        TabOrder = 0
+        OnEnter = chkExpandEnter
+        OnKeyDown = edtNormal2KeyDown
+        AccName = 'Normal Edit'
+        CtrlNext = edtProta
+        CtrlDown = edtProta
+      end
     end
     object Memo1: TAccMemo
-      Left = 8
-      Top = 128
-      Width = 329
-      Height = 201
+      Left = 213
+      Top = 19
+      Width = 419
+      Height = 186
       Lines.Strings = (
         'Memo1')
       ScrollBars = ssVertical
-      TabOrder = 3
-      Visible = False
+      TabOrder = 2
       OnEnter = chkExpandEnter
       AccName = 'Result Memo'
       CtrlNext = btnCopyRes
@@ -667,37 +840,25 @@ object MainForm: TMainForm
       CtrlDown = btnCopyRes
     end
     object btnCopyRes: TAccButton
-      Left = 248
-      Top = 334
+      Left = 543
+      Top = 211
       Width = 89
       Height = 25
       Caption = 'Copy results'
-      TabOrder = 4
-      Visible = False
+      TabOrder = 5
       OnClick = btnCopyResClick
       AccName = 'CopyButton'
       CtrlPrev = Memo1
       CtrlUp = Memo1
     end
-    object chkExpand: TTransCheckBox
-      Left = 176
-      Top = 22
-      Width = 161
-      Height = 17
-      Caption = 'Short / Full'
-      TabOrder = 0
-      OnClick = chkExpandClick
-      OnEnter = chkExpandEnter
-      AccName = 'chkShort/Full'
-      CtrlDown = gbLText
-    end
     object gbText: TAccGroupBox
       Left = 8
-      Top = 40
-      Width = 161
+      Top = 16
+      Width = 203
       Height = 81
       Caption = 'Text'
-      TabOrder = 1
+      TabOrder = 0
+      TabStop = True
       AccName = 'Normal Text Group'
       object Image1: TImage
         Left = 8
@@ -718,51 +879,53 @@ object MainForm: TMainForm
       object edtNormal_T: TAccEdit
         Left = 32
         Top = 20
-        Width = 121
+        Width = 161
         Height = 21
+        Alignment = taCenter
         AutoSize = False
         ReadOnly = True
         TabOrder = 0
         AccName = 'LevelAA Textbox'
         CtrlNext = edtNormal_T2
-        CtrlPrev = gbText
-        CtrlRight = gbLText
+        CtrlRight = Memo1
         CtrlDown = edtNormal_T2
       end
       object edtNormal_T2: TAccEdit
         Left = 32
         Top = 48
-        Width = 121
+        Width = 161
         Height = 21
+        Alignment = taCenter
         AutoSize = False
         ReadOnly = True
         TabOrder = 1
         AccName = 'LevelAAA Textbox'
-        CtrlNext = gbLText
+        CtrlNext = edtNormal_LT
         CtrlPrev = edtNormal_T
-        CtrlRight = gbLText
+        CtrlRight = Memo1
         CtrlUp = edtNormal_T
       end
     end
     object gbLText: TAccGroupBox
-      Left = 176
-      Top = 40
-      Width = 161
-      Height = 81
+      Left = 8
+      Top = 103
+      Width = 203
+      Height = 102
       Caption = 'Large text'
-      TabOrder = 2
+      TabOrder = 1
+      TabStop = True
       AccName = 'Large Text Group'
       object Image8: TImage
-        Left = 8
-        Top = 21
+        Left = 6
+        Top = 25
         Width = 20
         Height = 20
         Stretch = True
         Transparent = True
       end
       object Image9: TImage
-        Left = 8
-        Top = 49
+        Left = 6
+        Top = 65
         Width = 20
         Height = 20
         Stretch = True
@@ -771,208 +934,700 @@ object MainForm: TMainForm
       object edtNormal_LT: TAccEdit
         Left = 32
         Top = 20
-        Width = 121
-        Height = 21
+        Width = 161
+        Height = 33
+        Alignment = taCenter
         AutoSize = False
         ReadOnly = True
         TabOrder = 0
         AccName = 'LevelAA LargeTextbox'
         CtrlNext = edtNormal_LT2
+        CtrlRight = Memo1
         CtrlDown = edtNormal_LT2
       end
       object edtNormal_LT2: TAccEdit
-        Left = 34
-        Top = 49
-        Width = 121
-        Height = 21
+        Left = 32
+        Top = 59
+        Width = 161
+        Height = 34
+        Alignment = taCenter
         AutoSize = False
         ReadOnly = True
         TabOrder = 1
         AccName = 'LevelAAA LargeTextbox'
         CtrlPrev = edtNormal_LT
+        CtrlRight = Memo1
         CtrlUp = edtNormal_LT
       end
     end
-  end
-  object gbResBlind: TAccGroupBox
-    Left = 8
-    Top = 192
-    Width = 357
-    Height = 193
-    Anchors = [akLeft, akTop, akRight]
-    Caption = 'Result'
-    TabOrder = 3
-    Visible = False
-    AccName = 'Result Blindness Group '
-    object Image2: TImage
+    object chkblind: TTransCheckBox
       Left = 8
-      Top = 165
-      Width = 20
-      Height = 20
-      Transparent = True
-      Visible = False
-    end
-    object Image3: TImage
-      Left = 8
-      Top = 205
-      Width = 20
-      Height = 20
-      Transparent = True
-      Visible = False
-    end
-    object Image4: TImage
-      Left = 8
-      Top = 245
-      Width = 20
-      Height = 20
-      Transparent = True
-      Visible = False
-    end
-    object Image5: TImage
-      Left = 8
-      Top = 125
-      Width = 20
-      Height = 20
-      Transparent = True
-      Visible = False
-    end
-    object gbTextFor: TAccGroupBox
-      Left = 8
-      Top = 16
-      Width = 329
-      Height = 89
-      Caption = 'Text for'
-      TabOrder = 1
-      Visible = False
-      object rb_least3: TAccRadioButton
-        Left = 8
-        Top = 16
-        Width = 313
-        Height = 17
-        Caption = 'Large text AA (at least 3:1)'
-        Checked = True
-        TabOrder = 0
-        TabStop = True
-        OnClick = rb_least3Click
-        OnEnter = rb_least3Enter
-      end
-      object rb_least5: TAccRadioButton
-        Left = 8
-        Top = 40
-        Width = 313
-        Height = 17
-        Caption = 'Text AA and Large text AAA (at least 5:1)'
-        TabOrder = 1
-        OnClick = rb_least3Click
-        OnEnter = rb_least3Enter
-      end
-      object rb_least7: TAccRadioButton
-        Left = 8
-        Top = 64
-        Width = 313
-        Height = 17
-        Caption = 'Text AAA (at least 7:1)'
-        TabOrder = 2
-        OnClick = rb_least3Click
-        OnEnter = rb_least3Enter
-      end
-    end
-    object edtProta: TAccLabeledEdit
-      Left = 8
-      Top = 80
-      Width = 329
+      Top = 211
+      Width = 518
       Height = 17
-      AutoSize = False
-      BorderStyle = bsNone
-      EditLabel.Width = 56
-      EditLabel.Height = 13
-      EditLabel.Caption = 'Protanopia:'
-      ReadOnly = True
-      TabOrder = 3
-      OnEnter = chkExpandEnter
-      OnKeyDown = edtProtaKeyDown
-      AccName = 'Prota Edit'
-      CtrlNext = edtDeutera
-      CtrlPrev = edtNormal2
-      CtrlUp = edtNormal2
-      CtrlDown = edtDeutera
-    end
-    object edtDeutera: TAccLabeledEdit
-      Left = 8
-      Top = 128
-      Width = 329
-      Height = 17
-      AutoSize = False
-      BorderStyle = bsNone
-      EditLabel.Width = 69
-      EditLabel.Height = 13
-      EditLabel.Caption = 'Deuteranopia:'
-      ReadOnly = True
+      Caption = 'Show contrast result for colour blindness'
       TabOrder = 4
-      OnEnter = chkExpandEnter
-      OnKeyDown = edtDeuteraKeyDown
-      AccName = 'Deutera Edit'
-      CtrlNext = edtTrita
-      CtrlPrev = edtProta
-      CtrlUp = edtProta
-      CtrlDown = edtTrita
+      OnClick = chkblindClick
+      AccName = 'chkShowBlindness'
     end
-    object edtTrita: TAccLabeledEdit
-      Left = 8
-      Top = 168
-      Width = 329
-      Height = 17
-      AutoSize = False
-      BorderStyle = bsNone
-      EditLabel.Width = 52
-      EditLabel.Height = 13
-      EditLabel.Caption = 'Tritanopia:'
-      ReadOnly = True
-      TabOrder = 5
-      OnEnter = chkExpandEnter
-      OnKeyDown = edtTritaKeyDown
-      AccName = 'Trita Edit'
-      CtrlPrev = edtDeutera
-      CtrlUp = edtDeutera
+  end
+  object gbBack: TAccGroupBox
+    Left = 331
+    Top = 1
+    Width = 317
+    Height = 380
+    Caption = 'Background'
+    TabOrder = 1
+    AccName = 'Background Group'
+    object grdBRGB: TGridPanel
+      Left = 5
+      Top = 69
+      Width = 300
+      Height = 152
+      BevelOuter = bvNone
+      ColumnCollection = <
+        item
+          Value = 83.001353874969620000
+        end
+        item
+          Value = 16.998646125030380000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = lblBR
+          Row = 0
+        end
+        item
+          Column = 0
+          Control = tbBR
+          Row = 1
+        end
+        item
+          Column = 1
+          Control = BREdit
+          Row = 1
+        end
+        item
+          Column = 0
+          Control = lblBG
+          Row = 2
+        end
+        item
+          Column = 0
+          Control = tbBG
+          Row = 3
+        end
+        item
+          Column = 1
+          Control = BGEdit
+          Row = 3
+        end
+        item
+          Column = 0
+          Control = lblBB
+          Row = 4
+        end
+        item
+          Column = 0
+          Control = tbBB
+          Row = 5
+        end
+        item
+          Column = 1
+          Control = BBEdit
+          Row = 5
+        end>
+      RowCollection = <
+        item
+          Value = 16.647972651613370000
+        end
+        item
+          Value = 16.641536260592020000
+        end
+        item
+          Value = 16.661443957027940000
+        end
+        item
+          Value = 16.677825648201110000
+        end
+        item
+          Value = 16.689389156241080000
+        end
+        item
+          Value = 16.681832326324490000
+        end>
+      TabOrder = 1
+      TabStop = True
+      object lblBR: TLabel
+        Left = 0
+        Top = 0
+        Width = 249
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Red:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 124
+        ExplicitWidth = 3
+        ExplicitHeight = 13
+      end
+      object tbBR: TAccTrackBar
+        Left = 0
+        Top = 25
+        Width = 249
+        Height = 25
+        Align = alClient
+        Max = 255
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 0
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbBRChange
+        AccName = 'Back Red Slider'
+        CtrlNext = tbBG
+        CtrlPrev = sbtnBack
+        CtrlRight = BREdit
+        CtrlLeft = FREdit
+        CtrlUp = BColor
+        CtrlDown = tbBG
+      end
+      object BREdit: TAccEdit
+        Left = 249
+        Top = 25
+        Width = 51
+        Height = 25
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 3
+        OnChange = BREditChange
+        OnEnter = chkExpandEnter
+        AccName = 'Back Red Colour Edit'
+        CtrlNext = BGEdit
+        CtrlPrev = tbBV
+        CtrlLeft = tbBR
+        CtrlUp = sbtnBack
+        CtrlDown = BGEdit
+        ExplicitHeight = 21
+      end
+      object lblBG: TLabel
+        Left = 0
+        Top = 50
+        Width = 249
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Green:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 124
+        ExplicitTop = 58
+        ExplicitWidth = 3
+        ExplicitHeight = 13
+      end
+      object tbBG: TAccTrackBar
+        Left = 0
+        Top = 75
+        Width = 249
+        Height = 25
+        Align = alClient
+        Max = 255
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 1
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbBRChange
+        AccName = 'Back Green Slider'
+        CtrlNext = tbBB
+        CtrlPrev = tbBR
+        CtrlRight = BGEdit
+        CtrlLeft = FGEdit
+        CtrlUp = tbBR
+        CtrlDown = tbBB
+      end
+      object BGEdit: TAccEdit
+        Left = 249
+        Top = 75
+        Width = 51
+        Height = 25
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 4
+        OnChange = BREditChange
+        OnEnter = chkExpandEnter
+        AccName = 'Back GreenColour Edit'
+        CtrlNext = BBEdit
+        CtrlPrev = BREdit
+        CtrlLeft = tbBG
+        CtrlUp = BREdit
+        CtrlDown = BBEdit
+        ExplicitHeight = 21
+      end
+      object lblBB: TLabel
+        Left = 0
+        Top = 100
+        Width = 249
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Blue:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 124
+        ExplicitTop = 116
+        ExplicitWidth = 3
+        ExplicitHeight = 13
+      end
+      object tbBB: TAccTrackBar
+        Left = 0
+        Top = 125
+        Width = 249
+        Height = 27
+        Align = alClient
+        Max = 255
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 2
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbBRChange
+        AccName = 'Back Blue Slider'
+        CtrlNext = BREdit
+        CtrlPrev = tbBG
+        CtrlRight = BBEdit
+        CtrlLeft = FBEdit
+        CtrlUp = tbBG
+        CtrlDown = tbBH
+      end
+      object BBEdit: TAccEdit
+        Left = 249
+        Top = 125
+        Width = 51
+        Height = 27
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 5
+        OnChange = BREditChange
+        OnEnter = chkExpandEnter
+        AccName = 'Back Blue Colour Edit'
+        CtrlNext = tbBH
+        CtrlPrev = BGEdit
+        CtrlLeft = tbBB
+        CtrlUp = BGEdit
+        CtrlDown = BHEdit
+        ExplicitHeight = 21
+      end
     end
-    object edtNormal2: TAccLabeledEdit
-      Left = 8
-      Top = 40
-      Width = 329
-      Height = 17
-      BorderStyle = bsNone
-      EditLabel.Width = 37
-      EditLabel.Height = 13
-      EditLabel.Caption = 'Normal:'
-      ReadOnly = True
+    object grdBHSV: TGridPanel
+      Left = 5
+      Top = 221
+      Width = 300
+      Height = 152
+      BevelOuter = bvNone
+      ColumnCollection = <
+        item
+          Value = 82.942241571327300000
+        end
+        item
+          Value = 17.057758428672690000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = lblBH
+          Row = 0
+        end
+        item
+          Column = 0
+          Control = tbBH
+          Row = 1
+        end
+        item
+          Column = 1
+          Control = BHEdit
+          Row = 1
+        end
+        item
+          Column = 0
+          Control = lblBS
+          Row = 2
+        end
+        item
+          Column = 0
+          Control = tbBS
+          Row = 3
+        end
+        item
+          Column = 1
+          Control = BSEdit
+          Row = 3
+        end
+        item
+          Column = 0
+          Control = lblBV
+          Row = 4
+        end
+        item
+          Column = 0
+          Control = tbBV
+          Row = 5
+        end
+        item
+          Column = 1
+          Control = BVEdit
+          Row = 5
+        end>
+      RowCollection = <
+        item
+          Value = 16.822327070703880000
+        end
+        item
+          Value = 16.878214153163640000
+        end
+        item
+          Value = 16.524607198656490000
+        end
+        item
+          Value = 16.447332891600010000
+        end
+        item
+          Value = 16.598934284231630000
+        end
+        item
+          Value = 16.728584401644360000
+        end>
       TabOrder = 2
-      OnEnter = chkExpandEnter
-      OnKeyDown = edtNormal2KeyDown
-      AccName = 'Normal Edit'
-      CtrlNext = edtProta
-      CtrlDown = edtProta
+      object lblBH: TLabel
+        Left = 0
+        Top = 0
+        Width = 248
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Hue:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 4
+        ExplicitTop = 4
+        ExplicitWidth = 251
+      end
+      object tbBH: TAccTrackBar
+        Left = 0
+        Top = 25
+        Width = 248
+        Height = 25
+        Align = alClient
+        Max = 360
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 0
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbBHChange
+        AccName = 'Fore Red Slider'
+        CtrlNext = tbBS
+        CtrlPrev = BBEdit
+        CtrlRight = BHEdit
+        CtrlLeft = FHEdit
+        CtrlUp = tbBB
+        CtrlDown = tbBS
+      end
+      object BHEdit: TAccEdit
+        Left = 248
+        Top = 25
+        Width = 52
+        Height = 25
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 3
+        OnChange = BHEditChange
+        CtrlNext = BSEdit
+        CtrlPrev = tbBV
+        CtrlLeft = tbBH
+        CtrlUp = BBEdit
+        CtrlDown = BSEdit
+        ExplicitHeight = 21
+      end
+      object lblBS: TLabel
+        Left = 0
+        Top = 50
+        Width = 248
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Saturation:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 4
+        ExplicitTop = 54
+        ExplicitWidth = 251
+      end
+      object tbBS: TAccTrackBar
+        Left = 0
+        Top = 75
+        Width = 248
+        Height = 24
+        Align = alClient
+        Max = 100
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 1
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbBHChange
+        AccName = 'Fore Red Slider'
+        CtrlNext = tbBV
+        CtrlPrev = tbBH
+        CtrlRight = BSEdit
+        CtrlLeft = FSEdit
+        CtrlUp = tbBH
+        CtrlDown = tbBV
+      end
+      object BSEdit: TAccEdit
+        Left = 248
+        Top = 75
+        Width = 52
+        Height = 24
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 4
+        OnChange = BSEditChange
+        CtrlNext = BVEdit
+        CtrlPrev = BHEdit
+        CtrlLeft = tbBS
+        CtrlUp = BHEdit
+        CtrlDown = BVEdit
+        ExplicitHeight = 21
+      end
+      object lblBV: TLabel
+        Left = 0
+        Top = 99
+        Width = 248
+        Height = 25
+        Align = alClient
+        AutoSize = False
+        Caption = 'Value:'
+        Transparent = True
+        Layout = tlBottom
+        ExplicitLeft = 124
+        ExplicitTop = 290
+        ExplicitWidth = 3
+        ExplicitHeight = 13
+      end
+      object tbBV: TAccTrackBar
+        Left = 0
+        Top = 124
+        Width = 248
+        Height = 28
+        Align = alClient
+        Max = 100
+        Frequency = 20
+        PositionToolTip = ptBottom
+        TabOrder = 2
+        ThumbLength = 18
+        TickMarks = tmBoth
+        TickStyle = tsNone
+        OnChange = tbBHChange
+        AccName = 'Fore Red Slider'
+        CtrlNext = BHEdit
+        CtrlPrev = tbBS
+        CtrlRight = BVEdit
+        CtrlLeft = FVEdit
+        CtrlUp = tbBS
+      end
+      object BVEdit: TAccEdit
+        Left = 248
+        Top = 124
+        Width = 52
+        Height = 28
+        Align = alClient
+        Alignment = taRightJustify
+        MaxLength = 3
+        NumbersOnly = True
+        TabOrder = 5
+        OnChange = BVEditChange
+        CtrlPrev = BSEdit
+        CtrlLeft = tbBV
+        CtrlUp = BSEdit
+        ExplicitHeight = 21
+      end
     end
-    object chkExpand2: TTransCheckBox
-      Left = 8
-      Top = 21
-      Width = 193
-      Height = 17
-      Caption = 'Short / Full'
-      Checked = True
-      State = cbChecked
+    object grdBHex: TGridPanel
+      Left = 5
+      Top = 15
+      Width = 300
+      Height = 51
+      BevelOuter = bvNone
+      ColumnCollection = <
+        item
+          Value = 41.561834787306720000
+        end
+        item
+          Value = 41.699640194193400000
+        end
+        item
+          Value = 16.738525018499890000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = Label2
+          Row = 0
+        end
+        item
+          Column = 1
+          Control = Label4
+          Row = 0
+        end
+        item
+          Column = 0
+          Control = BColor
+          Row = 1
+        end
+        item
+          Column = 1
+          Control = Edit2
+          Row = 1
+        end
+        item
+          Column = 2
+          Control = sbtnBack
+          Row = 1
+        end>
+      RowCollection = <
+        item
+          Value = 50.000000000000000000
+        end
+        item
+          Value = 50.000000000000000000
+        end>
       TabOrder = 0
-      Visible = False
-      OnClick = chkExpandClick
-      OnEnter = chkExpandEnter
+      DesignSize = (
+        300
+        51)
+      object Label2: TLabel
+        Left = 0
+        Top = 0
+        Width = 124
+        Height = 25
+        Align = alClient
+        Caption = 'Colour select:'
+        Layout = tlBottom
+        ExplicitWidth = 66
+        ExplicitHeight = 13
+      end
+      object Label4: TLabel
+        Left = 124
+        Top = 0
+        Width = 125
+        Height = 25
+        Align = alClient
+        Caption = 'Hex:'
+        Layout = tlBottom
+        ExplicitWidth = 23
+        ExplicitHeight = 13
+      end
+      object BColor: TColorDrop
+        AlignWithMargins = True
+        Left = 2
+        Top = 28
+        Width = 116
+        Height = 22
+        Hint = 'F10|F10 is Dropdown.'
+        Margins.Left = 1
+        Margins.Right = 5
+        ActiveColor = clWhite
+        OnChanged = FJColorChanged
+        OnEnter = chkExpandEnter
+        DropDnColor = clBtnFace
+        TabOrder = 0
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        Other = '&Others...'
+        AccName = 'Background Colour'
+        CtrlNext = Edit2
+        CtrlPrev = FVEdit
+        CtrlRight = Edit2
+        CtrlLeft = sbtnFore
+        CtrlDown = tbBR
+      end
+      object Edit2: TAccMaskEdit
+        AlignWithMargins = True
+        Left = 125
+        Top = 28
+        Width = 119
+        Height = 20
+        Hint = '|The picked colour is displayed. And, the value can be input.'
+        Margins.Left = 1
+        Margins.Right = 5
+        Align = alClient
+        AutoSize = False
+        EditMask = '\#aaaaaa;1;_'
+        MaxLength = 7
+        TabOrder = 1
+        Text = '#ffffff'
+        OnChange = Edit2Change
+        OnKeyPress = Edit2KeyPress
+        AccName = 'Background Hex Edit'
+        CtrlNext = sbtnBack
+        CtrlPrev = BColor
+        CtrlRight = sbtnBack
+        CtrlLeft = BColor
+        CtrlDown = tbBR
+      end
+      object sbtnBack: TAccButton
+        AlignWithMargins = True
+        Left = 252
+        Top = 28
+        Width = 45
+        Height = 20
+        Align = alClient
+        DropDownMenu = PopupMenu2
+        ImageAlignment = iaCenter
+        ImageIndex = 0
+        Images = ImageList2
+        Style = bsSplitButton
+        TabOrder = 2
+        OnClick = btnForeClick
+        AccName = 'Background Colour picker'
+        AccActionDesc = 'Button Click'
+        AccShortCut = 'F12'
+        CtrlNext = tbBR
+        CtrlPrev = Edit2
+        CtrlLeft = Edit2
+        CtrlDown = BREdit
+      end
     end
   end
   object ImageList1: TImageList
     Height = 20
     Width = 20
-    Left = 352
-    Top = 88
+    Left = 448
+    Top = 396
     Bitmap = {
-      494C0101020004001C0114001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000400700114001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000500000001400000001002000000000000019
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1193,12 +1848,12 @@ object MainForm: TMainForm
     Font.Name = #65325#65331' '#65328#12468#12471#12483#12463
     Font.Style = []
     Options = [fdTrueTypeOnly, fdEffects, fdNoOEMFonts]
-    Left = 384
-    Top = 32
+    Left = 392
+    Top = 352
   end
   object ActionList1: TActionList
-    Left = 240
-    Top = 152
+    Left = 304
+    Top = 364
     object acrFColorDrop: TAction
       ShortCut = 120
       OnExecute = acrFColorDropExecute
@@ -1221,7 +1876,6 @@ object MainForm: TMainForm
     object actExpandAll: TAction
       Caption = 'actExpandAll'
       ShortCut = 116
-      OnExecute = actExpandAllExecute
     end
     object actExpandFore: TAction
       Caption = 'actExpandFore'
@@ -1238,8 +1892,8 @@ object MainForm: TMainForm
   end
   object MainMenu1: TMainMenu
     AutoHotkeys = maManual
-    Left = 432
-    Top = 56
+    Left = 328
+    Top = 344
     object mnuOptions: TMenuItem
       Caption = '&Options'
       OnDrawItem = mnuHelpDrawItem
@@ -1263,10 +1917,12 @@ object MainForm: TMainForm
       object mnuP_Value: TMenuItem
         Caption = '&Displayed color value'
         GroupIndex = 2
+        Visible = False
         OnDrawItem = mnuHelpDrawItem
         OnMeasureItem = mnuHelpMeasureItem
         object mnuHex: TMenuItem
           Caption = '&Hex value'
+          Enabled = False
           GroupIndex = 1
           RadioItem = True
           ShortCut = 16453
@@ -1276,6 +1932,7 @@ object MainForm: TMainForm
         end
         object mnuRGB: TMenuItem
           Caption = '&RGB'
+          Enabled = False
           GroupIndex = 1
           RadioItem = True
           ShortCut = 16466
@@ -1354,13 +2011,13 @@ object MainForm: TMainForm
     DefaultExt = 'bmp'
     Filter = 'BMP file (*.bmp)|*.bmp'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
-    Left = 400
-    Top = 56
+    Left = 344
+    Top = 416
   end
   object PopupMenu1: TPopupMenu
     OnPopup = PopupMenu1Popup
-    Left = 344
-    Top = 156
+    Left = 368
+    Top = 316
     object mnufg1px: TMenuItem
       Caption = '1pixel'
       GroupIndex = 1
@@ -1412,8 +2069,8 @@ object MainForm: TMainForm
   end
   object PopupMenu2: TPopupMenu
     OnPopup = PopupMenu2Popup
-    Left = 304
-    Top = 156
+    Left = 512
+    Top = 420
     object mnubg1px: TMenuItem
       Caption = '1pixel'
       GroupIndex = 1
@@ -1464,10 +2121,10 @@ object MainForm: TMainForm
     end
   end
   object ImageList2: TImageList
-    Left = 296
-    Top = 112
+    Left = 312
+    Top = 408
     Bitmap = {
-      494C0101010004001C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000400700110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       00000000000000000000000000000000000000000000BFBF0000BFBF0000BFBF
       0000BFBF0000BFBF0000BFBF0000BFBF00000000000000000000000000000000

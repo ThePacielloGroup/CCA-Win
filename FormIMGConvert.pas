@@ -45,15 +45,13 @@ type
     cmbSimu: TAccComboBox;
     procedure btnCloseClick(Sender: TObject);
     procedure btnBrowseClick(Sender: TObject);
-    {procedure FileDropTarget1FileDrop(aSender: TObject;
-      var aContext: TDragContext);  }
     procedure btnSaveClick(Sender: TObject);
     procedure edtFileNameKeyPress(Sender: TObject; var Key: Char);
     procedure btnPreviewClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
-    { Private ÂÆ£Ë®Ä }
+    { Private êÈåæ }
     FBMPs: TBMPs;
 
     procedure LoadNormalImage;
@@ -61,7 +59,7 @@ type
 
     procedure WMDPIChanged(var Message: TMessage); message WM_DPICHANGED;
   public
-    { Public ÂÆ£Ë®Ä }
+    { Public êÈåæ }
     ScaleY, ScaleX, Dx, Dy: double;
     SPath: string;
     DefFont: integer;
@@ -129,28 +127,6 @@ begin
     else
         FBMPs.N_BMP.LoadFromFile(FBMPs.IMG);
 end;
-
-{procedure TfrmIMGConvert.FileDropTarget1FileDrop(aSender: TObject;
-  var aContext: TDragContext);
-var
-    i: integer;
-    d: string;
-begin
-    if FileDropTarget1.DroppedFiles.Count > 0 then
-    begin
-        for i := 0 to FileDropTarget1.DroppedFiles.Count - 1 do
-        begin
-            d := LowerCase(ExtractFileExt(FileDropTarget1.DroppedFiles[i]));
-            if ((d = '.jpg') or (d = '.bmp')) and (FileExists(FileDropTarget1.DroppedFiles[i])) then
-            begin
-                edtFileName.Text := FileDropTarget1.DroppedFiles[i];
-                FBMPs.IMG := FileDropTarget1.DroppedFiles[i];
-                LoadNormalImage;
-                Break;
-            end;
-        end;
-    end;
-end;  }
 
 procedure TfrmIMGConvert.btnSaveClick(Sender: TObject);
 var
@@ -315,46 +291,6 @@ begin
         Image1.Picture.Assign(FBMPs.N_BMP);
         btnSave.Enabled := True;
     end;
-    {if (cmbColor.ItemIndex = 0) then
-    begin
-        if not Assigned(FBMPs.P_BMP) then
-            ShowProg(Mode - 1)
-        else
-            Image1.Picture.Assign(FBMPs.P_BMP);
-    end
-    else if (cmbColor.ItemIndex = 1) then
-    begin
-        if not Assigned(FBMPs.D_BMP) then
-            ShowProg(Mode - 1)
-        else
-            Image1.Picture.Assign(FBMPs.D_BMP);
-    end
-    else if (cmbColor.ItemIndex = 2) then
-    begin
-        if not Assigned(FBMPs.T_BMP) then
-            ShowProg(Mode - 1)
-        else
-            Image1.Picture.Assign(FBMPs.T_BMP);
-    end
-    else if (cmbColor.ItemIndex = 3) then
-    begin
-        if not Assigned(FBMPs.G_BMP) then
-            ShowProg(Mode - 1)
-        else
-            Image1.Picture.Assign(FBMPs.G_BMP);
-    end
-    else if (cmbColor.ItemIndex = 4) then
-    begin
-        if not Assigned(FBMPs.I_BMP) then
-            ShowProg(Mode - 1)
-        else
-            Image1.Picture.Assign(FBMPs.I_BMP);
-    end
-    else
-    begin
-        Image1.Picture.Assign(FBMPs.N_BMP);
-        btnSave.Enabled := True;
-    end;}
 end;
 
 function GetMyDocPath: string;
@@ -368,7 +304,7 @@ begin
     CSIDL_PERSONAL, IIDList));
   if not SHGetPathFromIDList(IIDList, buffer) then
   begin
-    raise Exception.Create('‰ªÆÊÉ≥„Éï„Ç©„É´„ÉÄ„ÅÆ„Åü„ÇÅÂèñÂæó„Åß„Åç„Åæ„Åõ„Çì');
+    raise Exception.Create('âºëzÉtÉHÉãÉ_ÇÃÇΩÇﬂéÊìæÇ≈Ç´Ç‹ÇπÇÒ');
   end;
   Result := StrPas(Buffer);
 end;
@@ -381,8 +317,6 @@ begin
     SPath := IncludeTrailingPathDelimiter(GetMyDocPath) + 'CCA.ini';
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
-        //edtC_Quality.Value := ini.ReadInteger('JPEG', 'Compression', 75);
-        //chkSmooth.Checked := ini.ReadBool('JPEG', 'Smooth', False);
         Left := ini.ReadInteger('Window', 'SelImg_Left', (Screen.WorkAreaWidth div 2) - (Width div 2));
         Top := ini.ReadInteger('Window', 'SelImg_Top', (Screen.WorkAreaHeight div 2) - (Height div 2));
         Width := ini.ReadInteger('Window', 'SelImg_Width', 800);
@@ -394,12 +328,8 @@ begin
     gbSelIMG.Caption := MainForm.GetTranslation('sel_img', 'Select image file');
     btnBrowse.Caption := MainForm.GetTranslation('browse', '&Browse');
     gbSimulation.Caption := MainForm.GetTranslation('simulation', 'Simulation');
-    //gbJPEG.Caption := MainForm.GetTranslation('jpeg_options', 'JPEG options');
     btnSave.Caption := MainForm.GetTranslation('save', '&Save');
     btnPreview.Caption := MainForm.GetTranslation('preview', '&Preview');
-    //lblC_Quality.Caption := MainForm.GetTranslation('compression_quality', 'Compression Quality:');
-    //chkSmooth.Caption := MainForm.GetTranslation('smoothing', 'S&moothing');
-    //btnClose.Caption := MainForm.GetTranslation('close', '&Close');
     cmbSimu.Items.Add(MainForm.GetTranslation('protanopia', 'Protanopia'));
     cmbSimu.Items.Add(MainForm.GetTranslation('deuteranopia', 'Deuteranopia'));
     cmbSimu.Items.Add(MainForm.GetTranslation('tritanopia', 'Tritanopia'));

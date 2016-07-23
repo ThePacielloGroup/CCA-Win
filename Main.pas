@@ -54,26 +54,14 @@ type
 
   TMainForm = class(TForm)
     gbFore: TAccGroupBox;
-    gbBack: TAccGroupBox;
     gbResNormal: TAccGroupBox;
     ImageList1: TImageList;
-    gbResBlind: TAccGroupBox;
-    edtProta: TAccLabeledEdit;
-    edtDeutera: TAccLabeledEdit;
-    edtTrita: TAccLabeledEdit;
-    Image2: TImage;
-    Image3: TImage;
-    Image4: TImage;
     FontDialog1: TFontDialog;
-    edtNormal2: TAccLabeledEdit;
-    Image5: TImage;
     ActionList1: TActionList;
     acrFColorDrop: TAction;
     actBColorDrop: TAction;
     actFColorPick: TAction;
     actBColorPick: TAction;
-    FJColor: TColorDrop;
-    BColor: TColorDrop;
     MainMenu1: TMainMenu;
     mnuOptions: TMenuItem;
     mnuOnTop: TMenuItem;
@@ -82,8 +70,6 @@ type
     mnuHelp1: TMenuItem;
     mnuAbout: TMenuItem;
     mnuHex: TMenuItem;
-    Edit1: TAccMaskEdit;
-    Edit2: TAccMaskEdit;
     mnuIMG: TMenuItem;
     mnuSelList: TMenuItem;
     SaveDialog1: TSaveDialog;
@@ -91,20 +77,6 @@ type
     mnuP_Value: TMenuItem;
     mnuSelIMG: TMenuItem;
     mnuScreen: TMenuItem;
-    Panel1: TPanel;
-    FREdit: TAccEdit;
-    FGEdit: TAccEdit;
-    FBEdit: TAccEdit;
-    Panel2: TPanel;
-    BREdit: TAccEdit;
-    BGEdit: TAccEdit;
-    BBEdit: TAccEdit;
-    tbFR: TAccTrackBar;
-    tbFG: TAccTrackBar;
-    tbFB: TAccTrackBar;
-    tbBR: TAccTrackBar;
-    tbBG: TAccTrackBar;
-    tbBB: TAccTrackBar;
     PopupMenu1: TPopupMenu;
     mnufg1px: TMenuItem;
     mnufg2px: TMenuItem;
@@ -123,14 +95,6 @@ type
     actExpandResult: TAction;
     ImageList2: TImageList;
     StatusBar1: TStatusBar;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    btnFore: TAccBitBtn;
-    btnBack: TAccBitBtn;
-    bbDD1: TAccBitBtn;
-    bbDD2: TAccBitBtn;
     mnufg6px: TMenuItem;
     mnufg8px: TMenuItem;
     mnubg6px: TMenuItem;
@@ -141,8 +105,6 @@ type
     mnufg7px: TMenuItem;
     mnuShowBlind: TMenuItem;
     mnuSlider: TMenuItem;
-    chkExpand: TTransCheckBox;
-    chkExpand2: TTransCheckBox;
     gbText: TAccGroupBox;
     gbLText: TAccGroupBox;
     Image1: TImage;
@@ -153,25 +115,72 @@ type
     Image9: TImage;
     edtNormal_LT: TAccEdit;
     edtNormal_LT2: TAccEdit;
-    lblFR: TLabel;
-    lblFB: TLabel;
-    lblFG: TLabel;
-    lblBR: TLabel;
-    lblBG: TLabel;
-    lblBB: TLabel;
-    gbTextFor: TAccGroupBox;
-    rb_least3: TAccRadioButton;
-    rb_least5: TAccRadioButton;
-    rb_least7: TAccRadioButton;
     lblRatio: TLabel;
-    chkblind: TTransCheckBox;
     mnuLang: TMenuItem;
+    chkblind: TTransCheckBox;
+    gbResBlind: TAccGroupBox;
+    edtProta: TAccLabeledEdit;
+    edtDeutera: TAccLabeledEdit;
+    edtTrita: TAccLabeledEdit;
+    edtNormal2: TAccLabeledEdit;
+    grdFRGB: TGridPanel;
+    lblFR: TLabel;
+    tbFR: TAccTrackBar;
+    FREdit: TAccEdit;
+    lblFG: TLabel;
+    tbFG: TAccTrackBar;
+    FGEdit: TAccEdit;
+    lblFB: TLabel;
+    tbFB: TAccTrackBar;
+    FBEdit: TAccEdit;
+    gbBack: TAccGroupBox;
+    grdBRGB: TGridPanel;
+    lblBR: TLabel;
+    tbBR: TAccTrackBar;
+    BREdit: TAccEdit;
+    lblBG: TLabel;
+    tbBG: TAccTrackBar;
+    BGEdit: TAccEdit;
+    lblBB: TLabel;
+    tbBB: TAccTrackBar;
+    BBEdit: TAccEdit;
+    grdFHSV: TGridPanel;
+    lblFH: TLabel;
+    tbFH: TAccTrackBar;
+    FHEdit: TAccEdit;
+    lblFS: TLabel;
+    tbFS: TAccTrackBar;
+    FSEdit: TAccEdit;
+    lblFV: TLabel;
+    tbFV: TAccTrackBar;
+    FVEdit: TAccEdit;
+    grdBHSV: TGridPanel;
+    lblBH: TLabel;
+    tbBH: TAccTrackBar;
+    BHEdit: TAccEdit;
+    lblBS: TLabel;
+    tbBS: TAccTrackBar;
+    BSEdit: TAccEdit;
+    lblBV: TLabel;
+    tbBV: TAccTrackBar;
+    BVEdit: TAccEdit;
+    grdFHex: TGridPanel;
+    Label1: TLabel;
+    Label3: TLabel;
+    FJColor: TColorDrop;
+    Edit1: TAccMaskEdit;
+    grdBHex: TGridPanel;
+    Label2: TLabel;
+    Label4: TLabel;
+    BColor: TColorDrop;
+    Edit2: TAccMaskEdit;
+    sbtnFore: TAccButton;
+    sbtnBack: TAccButton;
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure Edit2KeyPress(Sender: TObject; var Key: Char);
     procedure mnuHexClick(Sender: TObject);
     procedure FJColorChanged(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure acrFColorDropExecute(Sender: TObject);
     procedure actBColorDropExecute(Sender: TObject);
     procedure actFColorPickExecute(Sender: TObject);
@@ -203,17 +212,13 @@ type
       Shift: TShiftState);
     procedure mnufg1pxClick(Sender: TObject);
     procedure mnubg1pxClick(Sender: TObject);
-    procedure chkExpandClick(Sender: TObject);
     procedure bbFGSCClick(Sender: TObject);
     procedure bbBGSCClick(Sender: TObject);
     procedure bbRNSCClick(Sender: TObject);
     procedure bbRBSCClick(Sender: TObject);
-    procedure actExpandAllExecute(Sender: TObject);
     procedure PopupMenu1Popup(Sender: TObject);
     procedure PopupMenu2Popup(Sender: TObject);
     procedure btnForeClick(Sender: TObject);
-    procedure bbDD2Click(Sender: TObject);
-    procedure bbDD1Click(Sender: TObject);
     procedure mnuShowBlindClick(Sender: TObject);
     procedure chkExpandEnter(Sender: TObject);
     procedure mnuSliderClick(Sender: TObject);
@@ -224,15 +229,22 @@ type
     procedure mnuHelpDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure tbFHChange(Sender: TObject);
+    procedure tbBHChange(Sender: TObject);
+    procedure FHEditChange(Sender: TObject);
+    procedure BHEditChange(Sender: TObject);
+    procedure FSEditChange(Sender: TObject);
+    procedure FVEditChange(Sender: TObject);
+    procedure BSEditChange(Sender: TObject);
+    procedure BVEditChange(Sender: TObject);
   private
     { Private declare }
     Hex, RGB, copied: string;
     bSetValue: Boolean;
     Transpath, APPDir, SPath, TransDir: string;
     LangList: TStringList;
-    DefFont: integer;
+    DefFont, iEventCtrl: integer; //iEventCtrl  0=none, 1=dropdown, 2=HexEdit, 3=RGBSlider, 4=RGBEdit, 5=HSVSlider, 6=HSVEdit
     ScaleX, ScaleY, DefX, DefY: double;
-    procedure SetRGB;
     procedure OnSHint(Sender: TObject);
     procedure SetTBPos;
     procedure FGGroupSizeChange(Large: boolean = True);
@@ -269,6 +281,99 @@ var
 
 {$R *.dfm}
 
+procedure RGBtoHSV(R, G, B: integer; var Hue, Satu, Value: extended);
+var
+  iMax, iMin: integer;
+  eR, eG, eB: Extended;
+begin
+  iMax := Max(Max(R, G), B);
+  iMin := Min(Min(R, G), B);
+
+  Value := iMax / 255.0;
+  if iMax = 0 then
+    Satu := 0
+  else
+    Satu := (iMax - iMin) / iMax;
+
+  if Satu = 0 then
+    Hue := 0
+  else
+  begin
+    eR := (iMax - R) / (iMax - iMin);
+    eG := (iMax - G) / (iMax - iMin);
+    eB := (iMax - B) / (iMax - iMin);
+    if R = iMax then
+      Hue := eB - eG
+    else if G = iMax then
+      Hue := 2.0 + eR - eB
+    else
+      Hue := 4.0 + eG - eR;
+
+    Hue := Hue / 6.0;
+    if Hue < 0 then
+      Hue := Hue + 1.0;
+  end;
+end;
+
+procedure HSVtoRGB(Hue, Satu, Value: Extended; var R, G, B:integer);
+var
+  h, e: Extended;
+  j, k, l: integer;
+begin
+  if Satu = 0 then
+  begin
+    R := Floor(Value * 255.0 + 0.5);
+    G := R;
+    B := R;
+  end
+  else
+  begin
+    h := (Hue - Floor(Hue)) * 6.0;
+    e := h - Floor(h);
+
+    j := Trunc((Value * (1.0 - satu)) * 255.0 + 0.5);
+    k := Trunc((Value * (1.0 - satu * e)) * 255.0 + 0.5);
+    l := Trunc((Value * (1.0 - (satu * (1.0 - e)))) * 255.0 + 0.5);
+
+    R := Trunc(Value * 255.0 + 0.5);
+    G := Trunc(Value * 255.0 + 0.5);
+    B := Trunc(Value * 255.0 + 0.5);
+    case trunc(h) of
+      0:
+      begin
+        G := l;
+        B := j;
+      end;
+      1:
+      begin
+        R := k;
+        B := j;
+      end;
+      2:
+      begin
+        R := j;
+        B := l;
+      end;
+      3:
+      begin
+        R := j;
+        G := k;
+      end;
+      4:
+      begin
+        R := l;
+        G := j;
+      end;
+      5:
+      begin
+        G := j;
+        B := k;
+      end;
+    end;
+
+  end;
+end;
+
 function DoubleToInt(d: double): integer;
 begin
   SetRoundMode(rmUP);
@@ -291,503 +396,230 @@ begin
   Result := StrPas(Buffer);
 end;
 
-procedure TMainForm.chkExpandClick(Sender: TObject);
-begin
-    ResGroupSizeChange(ChkExpand.Checked);
-    chkExpand2.Checked := True;
-end;
-
 procedure TMainForm.ResizeCtrls;
 var
   iHeight, sWidth, sHeight, iLeft, tw, mH, iTop, i: integer;
   sz: TSize;
   dc: HDC;
-    procedure GetStrSize(Cap: string);
+  ACanvas: TCanvas;
+    procedure GetStrSize(Cap: string; cv: TCanvas);
     begin
-
-      sWidth := DoubleToInt(Canvas.TextWidth(Cap));
-      sHeight := DoubleToInt(Canvas.TextHeight(Cap));
-
+      sWidth := cv.TextWidth(Cap);
+      sHeight := cv.TextHeight(Cap);
     end;
 begin
   Font.Size := DoubleToInt(DefFont * ScaleY);
+  Canvas.Font := Font;
   iHeight := DoubleToInt(25 * ScaleX);
   mH := iHeight;
 
-    GetStrSize(Label1.Caption);
-    Label1.Width := sWidth;
-    Label1.Height := sHeight;
-    Label2.Width := sWidth;
-    Label2.Height := sHeight;
-    tw := Label1.Width + 8;
-    mh := MAX(mH, Label1.Height);
-
-    FJColor.ItemHeight := iHeight - 5;
-    FJColor.Width := DoubleToInt(70 * ScaleX);
-    FJColor.Font := Font;
-    BColor.ItemHeight := iHeight - 5;
-    BColor.Width := DoubleToInt(70 * ScaleX);
-    BColor.Font := Font;
-    mh := MAX(mH, FJColor.Height);
-    tw := tw + FJColor.Width + 3;
-    if mnuHex.Checked then
-    begin
-      GetStrSize(Label3.Caption + ' ');
-      Label3.Width := sWidth;
-      Label3.Height := sHeight;
-      Label4.Width := sWidth;
-      Label4.Height := sHeight;
-      tw := tw + Label3.Width + 5;
-
-      GetStrSize('255 255 255');
-
-      Edit1.Height := sHeight + 6;
-      Edit1.Width := sWidth + 30;
-      Edit2.Height := sHeight + 6;
-      Edit2.Width := sWidth + 30;
-      mh := MAX(mH, Edit1.Height);
-      tw := tw + Edit1.Width + 3;
-
-
-    end
-    else if mnuRGB.Checked then
-    begin
-
-      GetStrSize(Label3.Caption + ' ');
-      Label3.Width := sWidth;
-      Label3.Height := sHeight;
-      Label4.Width := sWidth;
-      Label4.Height := sHeight;
-      GetStrSize('255 255 255');
-      tw := tw + Label3.Width + 5;
-
-      Panel1.Height := sHeight;
-      Panel1.Width := sWidth + 30;
-      Panel2.Height := sHeight;
-      Panel2.Width := sWidth + 30;
-      mh := MAX(mH, Panel1.Height);
-
-      sWidth := (sWidth + 30) div 3;
-      FREdit.Height := sHeight + 4;
-      FREdit.Width := sWidth;
-
-      FGEdit.Height := sHeight + 4;
-      FGEdit.Width := sWidth;
-
-      FBEdit.Height := sHeight + 4;
-      FBEdit.Width := sWidth;
-
-      BREdit.Height := sHeight + 4;
-      BREdit.Width := sWidth;
-
-      BGEdit.Height := sHeight + 4;
-      BGEdit.Width := sWidth;
-
-      BBEdit.Height := sHeight + 4;
-      BBEdit.Width := sWidth;
-
-      tw := tw + Panel1.Width + 5;
-    end;
-
-    GetStrSize(lblFR.Caption + ' ');
-    lblFR.Width := sWidth;
-    lblFR.Height := sHeight + 6;
-    lblBR.Width := sWidth;
-    lblBR.Height := sHeight + 6;
-
-
-    GetStrSize(lblFG.Caption + ' ');
-    lblFG.Width := sWidth;
-    lblFG.Height := sHeight + 6;
-    lblBG.Width := sWidth;
-    lblBG.Height := sHeight + 6;
-
-    GetStrSize(lblFB.Caption + ' ');
-    lblFB.Width := sWidth;
-    lblFB.Height := sHeight + 6;
-    lblBB.Width := sWidth;
-    lblBB.Height := sHeight + 6;
-
-    tbFR.Height := iHeight;
-    tbFG.Height := iHeight;
-    tbFB.Height := iHeight;
-    tbBR.Height := iHeight;
-    tbBG.Height := iHeight;
-    tbBB.Height := iHeight;
-
-    iTop := (mH + 25) div 2;
-
-
-    btnFore.Width := iHeight;
-    btnFore.Height := iHeight;
-    bbDD1.Height := iHeight;
-
-    btnBack.Width := iHeight;
-    btnBack.Height := iHeight;
-    bbDD2.Height := iHeight;
-    tw := tw + btnFore.Width + bbDD1.Width + 1;
-
-    if mnuSlider.Checked then
-    begin
-      gbFore.Height := mH + (sHeight * 3 ) + 45;// + DoubleToInt(5 * ScaleY);
-      gbBack.Height := mH + (sHeight * 3 ) + 45;// + DoubleToInt(5 * ScaleY);
-    end
-    else
-    begin
-      gbFore.Height :=mH + 15 + DoubleToInt(10 * ScaleY);
-      gbBack.Height :=mH + 15 + DoubleToInt(10 * ScaleY);
-    end;
-    gbFore.Width := tw + 10;
-    gbBack.Width := tw + 10;
-
-
-    ClientWidth := gbFore.Width + 15;
-
-
-    Label1.Top := iTop - (Label1.Height div 4);
-    Label1.Left := 8;
-
-    Label2.Top := iTop - (Label2.Height div 4);
-    Label2.Left := 8;
-
-    FJColor.Top := iTop - (FJColor.Height div 4);
-    FJColor.Left := Label1.Left + Label1.Width + 3;
-
-    BColor.Top := iTop - (BColor.Height div 4);
-    BColor.Left := Label2.Left + Label2.Width + 3;
-    iLeft := 0;
-    if mnuHex.Checked then
-    begin
-      Label3.Left := FJColor.Left + FJColor.Width + 5;
-      Label3.Top := iTop - (Label3.Height div 4);
-
-      Label4.Left := BColor.Left + BColor.Width + 5;
-      Label4.Top := iTop - (Label4.Height div 4);
-
-      Edit1.Left := Label3.Left + Label3.Width + 3;
-      Edit1.Top :=  iTop - (Edit1.Height div 4);
-
-      Edit2.Left := Label4.Left + Label4.Width + 3;
-      Edit2.Top :=  iTop - (Edit2.Height div 4);
-
-      iLeft := Edit1.Left + Edit1.Width + 5;
-    end
-    else if mnuRGB.Checked then
-    begin
-      Label3.Left := FJColor.Left + FJColor.Width + 5;
-      Label3.Top := iTop - (Label3.Height div 4);
-
-      Label4.Left := BColor.Left + BColor.Width + 5;
-      Label4.Top := iTop - (Label4.Height div 4);
-
-      Panel1.Left := Label3.Left + Label3.Width + 3;
-      Panel1.Top :=  iTop - (panel1.Height div 4);
-
-      Panel2.Left := Label3.Left + Label3.Width + 3;
-      Panel2.Top :=  iTop - (panel2.Height div 4);
-
-      FREdit.Top := 0;
-      FREdit.Left := 0;
-
-      FGEdit.Top := 0;
-      FGEdit.Left := FREdit.Left + FREdit.Width;
-
-      FBEdit.Top := 0;
-      FBEdit.Left := FGEdit.Left + FGEdit.Width;
-
-      BREdit.Top := 0;
-      BREdit.Left := 0;
-
-      BGEdit.Top := 0;
-      BGEdit.Left := BREdit.Left + BREdit.Width;
-
-      BBEdit.Top := 0;
-      BBEdit.Left := BGEdit.Left + BGEdit.Width;
-
-      iLeft := Panel1.Left + Panel1.Width + 5;
-    end;
-    btnFore.Left := iLEft;
-    btnFore.Top := iTop - (btnFore.Height div 4);
-    bbDD1.Top := iTop - (bbDD1.Height div 4);
-    bbDD1.Left := btnFore.Left + btnFore.Width + 1;
-
-    btnBack.Left := iLEft;
-    btnBack.Top := iTop - (btnBack.Height div 4);
-    bbDD2.Top := iTop - (bbDD2.Height div 4);
-    bbDD2.Left := btnBack.Left + btnBack.Width + 1;
-
-    lblFR.Left := 8;
-    lblFG.Left := 8;
-    lblFB.Left := 8;
-    lblFR.Top := mh + 25;
-    lblFG.Top := lblFR.Top + lblFR.Height;
-    lblFB.Top := lblFG.Top + lblFG.Height;
-
-    lblBR.Left := 8;
-    lblBG.Left := 8;
-    lblBB.Left := 8;
-    lblBR.Top := mh + 25;
-    lblBG.Top := lblBR.Top + lblBR.Height;
-    lblBB.Top := lblBG.Top + lblBG.Height;
-
-    mh := lblFR.Width;
-    mh := MAX(mh, lblFG.Width);
-    mh := MAX(mh, lblFB.Width);
-    tbFR.Left := mh + 5;
-    tbFR.Top := lblFR.Top + 5;
-    tbFG.Left := mh + 5;
-    tbFG.Top := lblFG.Top + 5;
-    tbFB.Left := mh + 5;
-    tbFB.Top := lblFB.Top + 5;
-    tbFR.Width := gbFore.Width -mh - 5;
-    tbFG.Width := tbFR.Width;
-    tbFB.Width := tbFR.Width;
-
-    tbBR.Left := mh + 5;
-    tbBR.Top := lblBR.Top + 5;
-    tbBG.Left := mh + 5;
-    tbBG.Top := lblBG.Top + 5;
-    tbBB.Left := mh + 5;
-    tbBB.Top := lblBB.Top + 5;
-    tbBR.Width := gbBack.Width -mh - 5;
-    tbBG.Width := tbBR.Width;
-    tbBB.Width := tbBR.Width;
-
-    gbBack.Top := gbFore.Top + gbFore.Height + 7;
-
-    GetStrSize(chkBlind.Caption + ' ');
-    chkBlind.Top := gbBack.Top + gbBack.Height + (sHeight div 2);
-    if sHeight > DoubleToInt(20 * ScaleY) then
-      chkBlind.Height := sHeight
-    else
-      chkBlind.Height := DoubleToInt(20 * ScaleY);
-    chkBlind.Width := ClientWidth;
-
-
-
-    gbResBlind.Top := chkBlind.Top + chkBlind.Height + (sHeight div 2);
-    gbResNormal.Top := gbResBlind.Top;
-
-    GetStrSize(lblRatio.Caption + ' ');
-
-    lblRatio.Height := sHeight + 5;
-    lblRatio.Width := (gbResNormal.Width div 2) - 8;
-
-    GetStrSize(chkExpand.Caption + ' ');
-
-    chkExpand.Height := sHeight + 5;
-    chkExpand.Width := (gbResNormal.Width div 2) - 10;
-
-
-
-    gbText.Width := (gbResNormal.Width div 2) - 8;
-
-
-
-    gbLText.Width := (gbResNormal.Width div 2) - 10;
-
-
-
-
-    with edtNormal_T do
-    begin
-        Font.Size :=  DoubleToInt(DefFont * ScaleY);
-    end;
-    with edtNormal_T2 do
-    begin
-        Font.Size :=  DoubleToInt(DefFont * ScaleY);
-    end;
-    with edtNormal_LT do
-    begin
-        Font.Size :=  DoubleToInt((DefFont + 5) * ScaleY);
-        Font.Style := [fsBold];
-    end;
-    with edtNormal_LT2 do
-    begin
-        Font.Size :=  DoubleToInt((DefFont + 5) * ScaleY);
-        Font.Style := [fsBold];
-    end;
-
-
-    Font.Size :=  DoubleToInt((DefFont + 5) * ScaleY);
-    Font.Style := [fsBold];
-    GetStrSize(edtNormal_Lt2.Text + ' ');
-    Font.Size :=  DoubleToInt(DefFont * ScaleY);
-    Font.Style := [];
-    //caption := inttostr(sHeight);
-    if sHeight < 15 then
-      sHeight := 15;
-    edtNormal_t.Height :=  sHeight + 5;
-
-
-    edtNormal_t2.Height :=  sHeight + 5;
-
-
-    edtNormal_Lt.Height :=  sHeight + 5;
-
-
-    edtNormal_Lt2.Height :=  sHeight + 5;
-
-
-
-
-    if edtNormal_T.Height >= DoubleToInt(20 * ScaleY) then
-    begin
-
-      Image1.Height := DoubleToInt(20 * ScaleY);
-      Image1.Width := DoubleToInt(20 * ScaleX);
-      Image7.Height := DoubleToInt(20 * ScaleY);
-      Image7.Width := DoubleToInt(20 * ScaleX);
-    end
-    else
-    begin
-      Image1.Height := edtNormal_T.Height;
-      Image1.Width := edtNormal_T.Height;
-      Image7.Height := edtNormal_T.Height;
-      Image7.Width := edtNormal_T.Height;
-    end;
-    if edtNormal_LT.Height >= DoubleToInt(20 * ScaleY) then
-    begin
-
-      Image8.Height := DoubleToInt(20 * ScaleY);
-      Image8.Width := DoubleToInt(20 * ScaleX);
-      Image9.Height := DoubleToInt(20 * ScaleY);
-      Image9.Width := DoubleToInt(20 * ScaleX);
-    end
-    else
-    begin
-      Image8.Height := edtNormal_LT.Height;
-      Image8.Width := edtNormal_LT.Height;
-      Image9.Height := edtNormal_LT.Height;
-      Image9.Width := edtNormal_LT.Height;
-    end;
-
-    with edtNormal_T do
-    begin
-        Width := gbText.Width - Image1.Width - 18;
-    end;
-    with edtNormal_T2 do
-    begin
-        Width := gbText.Width - Image7.Width - 18;
-    end;
-    with edtNormal_LT do
-    begin
-        Width := gbLText.Width - Image8.Width - 18;
-    end;
-    with edtNormal_LT2 do
-    begin
-        Width := gbLText.Width - Image9.Width - 18;
-    end;
-
-    //GetStrSize(gbText.Caption + ' ');
-    gbText.Height := sHeight + edtNormal_T.Height + edtNormal_T2.Height;
-    gbLText.Height := sHeight + edtNormal_LT.Height + edtNormal_LT2.Height;
-
-
-    GetStrSize(btnCopyRes.Caption + ' ');
-    btnCopyRes.Height := sHeight + 10;
-    btnCopyRes.Width := sWidth + 10;
-
-    Memo1.Width := gbResNormal.Width - 15;
-    Memo1.Height := sHeight * 10;
-
-    //edtNormal2.Font := Font;
-    edtNormal2.Font.Size :=  DoubleToInt(DefFont * ScaleY);
-    //edtProta.Font := Font;
-    edtProta.Font.Size :=  DoubleToInt(DefFont * ScaleY);
-    //edtDeutera.Font := Font;
-    edtDeutera.Font.Size :=  DoubleToInt(DefFont * ScaleY);
-    //edtTrita.Font := Font;
-    edtTrita.Font.Size :=  DoubleToInt(DefFont * ScaleY);
-
-    GetStrSize(edtNormal2.Text + ' ');
-
-    edtNormal2.Height := sHeight + 5;
-    edtNormal2.Width := gbResBlind.Width - (edtNormal2.Left * 2);
-    edtProta.Height := sHeight + 5;
-    edtProta.Width := gbResBlind.Width - (edtProta.Left * 2);
-    edtDeutera.Height := sHeight + 5;
-    edtDeutera.Width := gbResBlind.Width - (edtDeutera.Left * 2);
-    edtTrita.Height := sHeight + 5;
-    edtTrita.Width := gbResBlind.Width - (edtTrita.Left * 2);
-
-    gbResBlind.Height := (edtNormal2.Height * 4) + (edtNormal2.EditLabel.Height * 4) + sHeight + 25;
-
-    if not chkExpand.Checked then
-    begin
-      gbResNormal.Height := lblRatio.Height + gbLText.Height{ + Memo1.Height + btnCopyRes.Height} + 25;
-    end
-    else
-    begin
-      gbResNormal.Height := lblRatio.Height + gbText.Height + Memo1.Height + btnCopyRes.Height + 35;
-    end;
-    if not mnuShowBlind.Checked then
-    begin
-        ClientHeight := gbResNormal.Top + gbResNormal.Height + StatusBar1.height + 5;
-    end
-    else
-    begin
-        ClientHeight := gbResBlind.Top + gbResBlind.Height + StatusBar1.height;
-    end;
-    GetStrSize(gbResNormal.Caption + ' ');
-    lblRatio.Top :=  sHeight;
-    lblRatio.Left := 8;
-    chkExpand.Top := sHeight - 3;
-    chkExpand.Left := (gbResNormal.Width div 2) + 5;
-    gbText.Top := chkExpand.Top + chkExpand.Height;
-    gbText.Left := 8;
-    gbLText.Top := chkExpand.Top + chkExpand.Height;
-    gbLText.Left := (gbResNormal.Width div 2) + 5;
-
-    //GetStrSize(gbText.Caption + ' ');
-
-    edtNormal_T.Left := Image1.Left + Image1.Width + 4;
-    edtNormal_T.Top := sHeight;
-
-    edtNormal_T2.Left := Image7.Left + Image7.Width + 4;
-    edtNormal_T2.Top := edtNormal_T.Top + edtNormal_T.Height;
-
-    edtNormal_LT.Left := Image8.Left + Image8.Width + 4;
-    edtNormal_LT.Top := sHeight;
-
-    edtNormal_LT2.Left := Image9.Left + Image9.Width + 4;
-    edtNormal_LT2.Top := edtNormal_LT.Top + edtNormal_LT.Height;
-
-    Image1.Top := edtNormal_T.Top + ((edtNormal_T.Height - Image1.Height) div 4);
-    Image7.Top := edtNormal_T2.Top + ((edtNormal_T2.Height - Image7.Height) div 4);
-    Image8.Top := edtNormal_LT.Top + ((edtNormal_LT.Height - Image8.Height) div 4);
-    Image9.Top := edtNormal_LT2.Top + ((edtNormal_LT2.Height - Image9.Height) div 4);
-
-    Memo1.Top := gbText.Top + gbText.Height + 7;
-
-    btnCopyRes.Top := Memo1.Top + Memo1.Height + 5;
-    btnCopyRes.Left := gbResNormal.Width - btnCopyRes.Width -5;
-
-    GetStrSize(gbResBlind.Caption + ' ');
-    edtNormal2.Top := sHeight + edtNormal2.EditLabel.Height;
-    edtProta.Top := edtNormal2.Top + edtNormal2.Height + edtNormal2.EditLabel.Height + 5;
-    edtDeutera.Top := edtProta.Top + edtProta.Height + edtProta.EditLabel.Height + 5;
-    edtTrita.Top := edtDeutera.Top + edtDeutera.Height + edtDeutera.EditLabel.Height + 5;
-     //caption := floattostr(scaley);
-    //ClientHeight := DoubleToInt(ClientHeight * ScaleY);
-
+  GetStrSize(label1.Caption, Canvas);
+  if (ScaleY > 1.0) and (sWidth < 125) then
+    sWidth := 130;
+
+  if (sWidth > 125) then
+  begin
+    grdFHex.Width := (sWidth) * 2 + 50;
+  end
+  else
+    grdFHex.Width := 300;
+  if sHeight > 25 then
+  begin
+    grdFHex.Height := (sHeight + 5) * 2;
+    grdFHex.Top := DoubleToInt(sHeight);
+    grdBHex.Top := DoubleToInt(sHeight);
+  end
+  else
+  begin
+    grdFHex.Height := 55;
+    grdFHex.Top := sHeight div 2 + 10;
+    grdBHex.Top := sHeight div 2 + 10;
+  end;
+
+  sHeight := grdFHex.Height div 2;
+
+
+
+  FJColor.Align := alClient;
+  FJColor.ItemHeight := sHeight - 12;
+
+  BColor.Align := alClient;
+  BColor.ItemHeight := sHeight - 12;
+
+  grdBHex.Width := grdFHex.Width;
+  grdBHex.Height := grdFHex.Height;
+
+  gbFore.Width := grdFHex.Width + 17;
+  gbBack.Width := gbFore.Width;
+  gbBack.Left := gbFore.BoundsRect.Right + 6;
+
+  grdFRGB.Width := grdFHex.Width;
+  grdFRGB.Height := grdFHex.Height * 3;
+  grdFHSV.Width := grdFRGB.Width;
+  grdFHSV.Height := grdFRGB.Height;
+  grdFRGB.Top := grdFHex.BoundsRect.Bottom;
+  grdFHSV.Top := grdFRGB.BoundsRect.Bottom;
+
+  grdBRGB.Width := grdFRGB.Width;
+  grdBRGB.Height := grdFRGB.Height;
+  grdBHSV.Width := grdBRGB.Width;
+  grdBHSV.Height := grdBRGB.Height;
+  grdBRGB.Top := grdBHex.BoundsRect.Bottom;
+  grdBHSV.Top := grdBRGB.BoundsRect.Bottom;
+
+  if mnuSlider.Checked then
+  begin
+    gbFore.Height := grdFHSV.BoundsRect.Bottom + 10;
+  end
+  else
+  begin
+    gbFore.Height := grdFRGB.BoundsRect.Bottom + 10;
+  end;
+  gbBack.Height := gbFore.Height;
+
+  gbresNormal.Top := gbFore.BoundsRect.Bottom + 5;
+  gbresNormal.Width := gbBack.BoundsRect.Right - gbresNormal.Left;
+
+  edtnormal_lt2.Font.Size := DoubleToInt((DefFont + 5) * ScaleY);
+  edtnormal_lt2.Font.Style := [fsBold];
+  dc := GetDC(edtnormal_lt2.Handle);
+  ACanvas := TCanvas.Create;
+  try
+    ACanvas.Handle :=DC;
+    ACanvas.Font := edtnormal_lt2.Font;
+    GetStrSize(edtnormal_lt2.Text, ACanvas);
+    edtnormal_lt2.Width := sWidth + 15;
+    edtnormal_lt2.Height := sHeight + 5;
+  finally
+    ACanvas.Free;
+    ReleaseDC(edtnormal_lt2.Handle, dc);
+  end;
+
+  sHeight := grdFHex.Height div 2;
+  if sHeight > 25 then
+  begin
+    gbText.Top := DoubleToInt(sHeight * 0.75);
+    Image1.Top := DoubleToInt(sHeight * 0.75);
+    Image8.Top := DoubleToInt(sHeight * 0.75);
+  end
+  else
+  begin
+    gbText.Top := sHeight div 2 + 5;
+    Image1.Top := sHeight div 2 + 5;
+    Image8.Top := Image1.Top;
+  end;
+  gbText.ClientWidth := edtnormal_lt2.Width + Image1.Width + 20; //sWidth;
+  Memo1.Left := gbText.BoundsRect.Right + 8;
+  Memo1.Top := gbText.Top;
+  Memo1.Width := gbResNormal.ClientWidth - gbText.Width - 24;
+
+  edtnormal_t.Top := Image1.Top;
+  edtnormal_t.Left := Image1.BoundsRect.Right + 5;
+  edtnormal_t.Height := sHeight;
+  edtnormal_t.Width := gbText.ClientWidth - Image1.BoundsRect.Right - 15;
+  edtnormal_t.Font.Size :=  DoubleToInt(DefFont * ScaleY);
+
+
+  Image7.Top := edtnormal_t.BoundsRect.Bottom + 3;
+  edtnormal_t2.Top := Image7.Top;
+  edtnormal_t2.Left := Image7.BoundsRect.Right + 5;
+  edtnormal_t2.Height := sHeight;
+  edtnormal_t2.Width := gbText.ClientWidth - Image7.BoundsRect.Right - 15;
+  edtnormal_t2.Font.Size := DoubleToInt(DefFont * ScaleY);
+  gbTExt.Height := edtNormal_T2.BoundsRect.Bottom + 8;
+
+  gbLText.Top := gbText.BoundsRect.Bottom + 5;
+  gbLText.ClientWidth := gbText.ClientWidth;
+  edtnormal_lt.Top := Image8.Top;
+  edtnormal_lt.Left := Image8.BoundsRect.Right + 5;
+  edtnormal_lt.Height := edtnormal_lt2.Height;
+  edtnormal_lt.Width := edtnormal_lt2.Width;
+  edtnormal_lt.Font.Size :=  DoubleToInt((DefFont + 5) * ScaleY);
+  edtnormal_lt.Font.Style := [fsBold];
+
+  Image9.Top := edtnormal_lt.BoundsRect.Bottom + 3;
+  edtnormal_lt2.Top := Image9.Top;
+  edtnormal_lt2.Left := Image9.BoundsRect.Right + 5;
+
+  gblTExt.Height := edtNormal_lT2.BoundsRect.Bottom + 8;
+  if Image1.Height < edtnormal_t.Height then
+  begin
+    Image1.Top := edtnormal_t.Top + ((edtnormal_t.Height - Image1.Height) div 2);
+    Image7.Top := edtnormal_t2.Top + ((edtnormal_t2.Height - Image7.Height) div 2);
+  end;
+
+  if Image8.Height < edtnormal_lt.Height then
+  begin
+    Image8.Top := edtnormal_lt.Top + ((edtnormal_lt.Height - Image8.Height) div 2);
+    Image9.Top := edtnormal_lt2.Top + ((edtnormal_lt2.Height - Image9.Height) div 2);
+  end;
+
+
+  chkBlind.Top := gblText.BoundsRect.Bottom + 5;
+  chkBlind.Height := sHeight;
+  GetStrSize(btnCopyRes.Caption, Canvas);
+  if sHeight < 25 then
+    sHeight := 25;
+  btnCopyRes.Height := sHeight;
+  btnCopyRes.Width := sWidth + 10;
+  btnCopyRes.Top := gblText.BoundsRect.Bottom + 5;
+  btnCopyRes.Left := Memo1.BoundsRect.Right - btnCopyRes.Width;
+
+  chkBlind.Width := gbResnormal.ClientWidth - btnCopyRes.Width - 24;
+  gbResNormal.Height := btnCopyRes.BoundsRect.Bottom + 8;
+  Memo1.Height := gbLtext.BoundsRect.Bottom - Memo1.Top;
+
+  gbResBlind.Top := Memo1.Top;
+  gbResBlind.Left := Memo1.Left;
+  gbResBlind.Width := Memo1.Width;
+  gbResBlind.Height := Memo1.Height;
+
+  if sHeight > 25 then
+  begin
+    edtNormal2.Top := DoubleToInt(sHeight * 1.5);
+  end
+  else
+  begin
+    edtNormal2.Top := sHeight + 8;
+  end;
+
+  mH := (gbResBlind.ClientHeight - edtNormal2.Top - 20) div 8;
+  edtNormal2.Height := mH;
+  edtNormal2.EditLabel.Height := edtNormal2.Height;
+  edtNormal2.Left := 8;
+  edtNormal2.Width := gbResBlind.Width - 16;
+  edtNormal2.Font.Size := DoubleToInt(DefFont * ScaleY);
+
+  edtProta.Height := mH;
+  edtProta.EditLabel.Height := mH;
+  edtProta.Left := 8;
+  edtProta.Width := gbResBlind.Width - 16;
+  edtProta.Top := edtNormal2.BoundsRect.Bottom + 5 + mH;
+  edtProta.Font.Size := DoubleToInt(DefFont * ScaleY);
+
+  edtDeutera.Height := mH;
+  edtDeutera.EditLabel.Height := mH;
+  edtDeutera.Left := 8;
+  edtDeutera.Width := gbResBlind.Width - 16;
+  edtDeutera.Top := edtProta.BoundsRect.Bottom + 5 + mH;
+  edtDeutera.Font.Size := DoubleToInt(DefFont * ScaleY);
+
+  edtTrita.Height := mH;
+  edtTrita.EditLabel.Height := mH;
+  edtTrita.Left := 8;
+  edtTrita.Width := gbResBlind.Width - 16;
+  edtTrita.Top := edtDeutera.BoundsRect.Bottom + 5 + mH;
+  edtTrita.Font.Size := DoubleToInt(DefFont * ScaleY);
+
+  clientWidth := gbBack.BoundsRect.Right + 10;
+  clientHeight := gbResnormal.BoundsRect.Bottom + Statusbar1.Height + 10;
 end;
 
 procedure TMainForm.ResGroupSizeChange(Large: boolean = True);
 begin
     Memo1.Visible := Large;
     btnCopyRes.Visible := Large;
-    {if Large then
-    begin
-
-        gbResBlind.Height := DoubleToInt((edtTrita.Top + edtTrita.Height + 8) * ScaleY);
-        gbResNormal.Height := DoubleToInt((btnCopyRes.Top + btnCopyRes.Height + 8) * ScaleY);
-    end
-    else
-    begin
-        gbResBlind.Height := DoubleToInt((edtTrita.Top + edtTrita.Height + 8) * ScaleY);
-        gbResNormal.Height := DoubleToInt((gbText.Top + gbText.Height + 8) * ScaleY);
-    end;       }
+    
     ResizeCtrls;
 end;
 
@@ -805,22 +637,19 @@ end;
 
 procedure TMainForm.FGGroupSizeChange(Large: boolean = True);
 begin
-    lblFR.Visible := Large;
-    lblFG.Visible := Large;
-    lblFB.Visible := Large;
-    tbFR.Visible := Large;
-    tbFG.Visible := Large;
-    tbFB.Visible := Large;
-    if Large then
-    begin
-        gbFore.Height := tbFB.Top + tbFB.Height + 8;
-    end
-    else
-    begin
-        gbFore.Height := FJColor.Top + FJColor.Height + 5;
-    end;
-    ResizeCtrls;
+  grdFHSV.Visible := Large;
+  if Large then
+  begin
+    gbFore.Height := grdFRGB.Height + grdFHSV.Height + grdFHex.Height + 30;
+  end
+  else
+  begin
+    gbFore.Height := grdFRGB.Height + grdFHex.Height + 30;
+  end;
+  ResizeCtrls;
 end;
+
+
 
 procedure TMainForm.bbFGSCClick(Sender: TObject);
 begin
@@ -830,21 +659,16 @@ end;
 
 procedure TMainForm.BGGroupSizeChange(Large: boolean = True);
 begin
-    lblBR.Visible := Large;
-    lblBG.Visible := Large;
-    lblBB.Visible := Large;
-    tbBR.Visible := Large;
-    tbBG.Visible := Large;
-    tbBB.Visible := Large;
-    if Large then
-    begin
-        gbBack.Height := tbBB.Top + tbBB.Height + 8;
-    end
-    else
-    begin
-        gbBack.Height := BColor.Top + BColor.Height + 5;
-    end;
-    ResizeCtrls;
+  grdBHSV.Visible := Large;
+  if Large then
+  begin
+    gbBack.Height := grdBRGB.Height + grdBHSV.Height + grdBHex.Height + 30;
+  end
+  else
+  begin
+    gbBack.Height := grdBRGB.Height + grdBHex.Height + 30;
+  end;
+  ResizeCtrls;
 end;
 
 procedure TMainForm.bbBGSCClick(Sender: TObject);
@@ -856,35 +680,60 @@ end;
 procedure TMainForm.SetTBPos;
 var
     RGBColor: LongInt;
+    dMin, dMax, dH, dS, dV, delta: Extended;
+    R, G, B, H, S, V: integer;
+
 begin
     bSetValue := True;
     RGBColor := ColorToRGB(FJColor.ActiveColor);
-    tbFR.Position := ($000000FF and RGBColor);
-    tbFG.Position := ($0000FF00 and RGBColor) shr 8;
-    tbFB.Position := ($00FF0000 and RGBColor) shr 16;
+    R := ($000000FF and RGBColor);
+    G := ($0000FF00 and RGBColor) shr 8;
+    B := ($00FF0000 and RGBColor) shr 16;
+
+    FBEdit.Text := Inttostr(B);
+    FGEdit.Text := Inttostr(G);
+    FREdit.Text := Inttostr(R);
+
+    tbFR.Position := R;
+    tbFG.Position := G;
+    tbFB.Position := B;
+    if iEventCtrl <> 5 then
+    begin
+      RGBtoHSV(R, G, B, dH, dS, dV);
+      tbFH.Position := Doubletoint(dH * 360);
+      tbFS.Position := Doubletoint(dS * 100);
+      tbFV.Position := Doubletoint(dV * 100);
+
+    end;
+
 
     RGBColor := ColorToRGB(BColor.ActiveColor);
-    tbBR.Position := ($000000FF and RGBColor);
-    tbBG.Position := ($0000FF00 and RGBColor) shr 8;
-    tbBB.Position := ($00FF0000 and RGBColor) shr 16;
+    R := ($000000FF and RGBColor);
+    G := ($0000FF00 and RGBColor) shr 8;
+    B := ($00FF0000 and RGBColor) shr 16;
 
-end;
+    BBEdit.Text := Inttostr(B);
+    BGEdit.Text := Inttostr(G);
+    BREdit.Text := Inttostr(R);
 
-procedure TMainForm.SetRGB;
-var
-    RGBColor: LongInt;
-begin
-    bSetValue := True;
-    RGBColor := ColorToRGB(FJColor.ActiveColor);
-    FBEdit.Text := InttoStr(($00FF0000 and RGBColor) shr 16);
-    FGEdit.Text := InttoStr(($0000FF00 and RGBColor) shr 8);
-    FREdit.Text := InttoStr(($000000FF and RGBColor));
+    tbBR.Position := R;
+    tbBG.Position := G;
+    tbBB.Position := B;
+    if iEventCtrl <> 5 then
+    begin
+      RGBtoHSV(R, G, B, dH, dS, dV);
+      tbBH.Position := Doubletoint(dH * 360);
+      tbBS.Position := Doubletoint(dS * 100);
+      tbBV.Position := Doubletoint(dV * 100);
+    end;
 
+    FHEdit.Text := InttoStr(tbFH.Position);
+    FSEdit.Text := InttoStr(tbFS.Position);
+    FVEdit.Text := InttoStr(tbFV.Position);
 
-    RGBColor := ColorToRGB(BColor.ActiveColor);
-    BBEdit.Text := InttoStr(($00FF0000 and RGBColor) shr 16);
-    BGEdit.Text := InttoStr(($0000FF00 and RGBColor) shr 8);
-    BREdit.Text := InttoStr(($000000FF and RGBColor));
+    BHEdit.Text := InttoStr(tbBH.Position);
+    BSEdit.Text := InttoStr(tbBS.Position);
+    BVEdit.Text := InttoStr(tbBV.Position);
 
 end;
 
@@ -892,9 +741,10 @@ end;
 
 procedure TMainForm.FJColorChanged(Sender: TObject);
 begin
-    if not PickForm.Showing then
+    if (not PickForm.Showing) then
     begin
-        CalcColor;
+      if iEventCtrl = 0 then iEventCtrl := 1;
+      CalcColor;
     end;
 
 end;
@@ -924,7 +774,7 @@ end;
 
 
 procedure TMainForm.CreateParams(var Params: TCreateParams);
-begin  
+begin
     inherited CreateParams(Params);
 
 end;
@@ -1051,8 +901,8 @@ begin
         RGB := ini.ReadString('Translations', 'rgb', 'RGB:');
         mnuHex.Caption := ini.ReadString('Translations', 'hex_menu', 'Hex');
         mnuRGB.Caption := ini.ReadString('Translations', 'rgb_menu', 'RGB');
-        btnFore.Hint := ini.ReadString('Translations', 'pick_forebtn', 'F11|F11 is pick foreground colour.');
-        btnBack.Hint := ini.ReadString('Translations', 'pick_backbtn', 'F12|F12 is pick background colour.');
+        sbtnFore.Hint := ini.ReadString('Translations', 'pick_forebtn', 'F11|F11 is pick foreground colour.');
+        sbtnBack.Hint := ini.ReadString('Translations', 'pick_backbtn', 'F12|F12 is pick background colour.');
         FJColor.Hint := ini.ReadString('Translations', 'fore_dropdown', 'F9|The dropdown is the F9 key. Afterwards, please select the colour.');
         BColor.Hint := ini.ReadString('Translations', 'back_dropdown', 'F10|The dropdown is the F10 key. Afterwards, please select the colour.');
         Edit1.Hint := ini.ReadString('Translations', 'fore_edit', '|The picked colour is displayed. And, the value can be input.');
@@ -1120,23 +970,16 @@ begin
         mnubg8px.Caption := ini.ReadString('Translations', '8px', '8 x 8 pixels');
 
         mnuLang.Caption := ini.ReadString('Translations', 'mnuLang', 'English');
-        chkExpand.Caption := ini.ReadString('Translations', 'chkExpand_Collapse', 'Short / Full');
-        chkExpand.Hint := ini.ReadString('Translations', 'chkExpand_Collapse_Hint', '');
-        chkExpand2.Caption := ini.ReadString('Translations', 'chkExpand_Collapse', 'Short / Full');
-        chkExpand2.Hint := ini.ReadString('Translations', 'chkExpand_Collapse_Hint', '');
-        bbDD1.Hint := ini.ReadString('Translations', 'Dropdown1_Hint', 'pixel range');
-        bbDD2.Hint := ini.ReadString('Translations', 'Dropdown2_Hint', 'pixel range');
+
 
         mnuSlider.Caption := ini.ReadString('Translations', 'Show_Sliders', 'Show color sliders');
+        lblFH.Caption := ini.ReadString('Translations', 'Hue', 'Hue:');
+        lblBH.Caption := lblFH.Caption;
+        lblFS.Caption := ini.ReadString('Translations', 'Saturation', 'Saturation:');
+        lblBS.Caption := lblFS.Caption;
+        lblFV.Caption := ini.ReadString('Translations', 'Value', 'Value:');
+        lblBV.Caption := lblFV.Caption;
 
-
-        gbTextFor.Caption := ini.ReadString('Translations', 'Text_for', 'Text for');
-        rb_least3.Caption := ini.ReadString('Translations', 'at_least_3', 'Large text AA (at least 3:1)');
-        rb_least5.Caption := ini.ReadString('Translations', 'at_least_5', 'Text AA and Large text AAA (at least 5:1)');
-        rb_least7.Caption := ini.ReadString('Translations', 'at_least_7', 'Text AAA (at least 7:1)');
-        rb_least3.Hint := ini.ReadString('Translations', 'at_least_3_hint', '');
-        rb_least5.Hint := ini.ReadString('Translations', 'at_least_5_hint', '');
-        rb_least7.Hint := ini.ReadString('Translations', 'at_least_7_hint', '');
     finally
         ini.Free;
     end;
@@ -1156,7 +999,7 @@ begin
     SystemCanSupportPerMonitorDpi(true);
     GetDCap(handle, Defx, Defy);
     GetWindowScale(Handle, DefX, DefY, ScaleX, ScaleY);
-
+    iEventCtrl := 0;
     {dc := GetDC(0);
     scaleX := GetDeviceCaps(dc, LOGPIXELSX) / 96.0;
     scaleY := GetDeviceCaps(dc, LOGPIXELSY) / 96.0;
@@ -1172,16 +1015,7 @@ begin
     SPath := IncludeTrailingPathDelimiter(GetMyDocPath) + 'CCA.ini';
     bSetValue := False;
     SelFore := True;
-    i := GetWindowLong(edtNormal_T.Handle, GWL_STYLE);
-    i := i or ES_CENTER;
-    SetWindowLong(edtNormal_T.Handle, GWL_STYLE, i);
-    SetWindowLong(edtNormal_T2.Handle, GWL_STYLE, i);
-    SetWindowLong(edtNormal_LT.Handle, GWL_STYLE, i);
-    SetWindowLong(edtNormal_LT2.Handle, GWL_STYLE, i);
-    SetWindowLong(edtNormal2.Handle, GWL_STYLE, i);
-    SetWindowLong(edtDeutera.Handle, GWL_STYLE, i);
-    SetWindowLong(edtProta.Handle, GWL_STYLE, i);
-    SetWindowLong(edtTrita.Handle, GWL_STYLE, i);
+
     Application.OnHint := OnSHint;
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
@@ -1204,6 +1038,9 @@ begin
             mnuRGB.Checked := False;
             mnuHex.Checked := True;
         end;
+        mnuSlider.Checked := ini.ReadBool('Options', 'HSVSlider', False);
+        BGGroupSizeChange(mnuSlider.Checked);
+        FGGroupSizeChange(mnuSlider.Checked);
 
 
         mnuOnTopClick(self);
@@ -1220,10 +1057,10 @@ begin
     edtNormal_LT.Font.Size := 14;
     edtNormal_LT2.Font.Style := [fsBold];
     edtNormal_LT2.Font.Size := 14;
-    edtNormal2.Font.Style := [fsBold];
+    {edtNormal2.Font.Style := [fsBold];
     edtDeutera.Font.Style := [fsBold];
     edtProta.Font.Style := [fsBold];
-    edtTrita.Font.Style := [fsBold];
+    edtTrita.Font.Style := [fsBold];  }
     Hex := 'Hex';
     RGB := 'RGB';
 
@@ -1256,7 +1093,7 @@ begin
         mnuRGBClick(Self);
     end;
     //Num only
-    SetWindowLong(FREdit.Handle, GWL_STYLE,
+    {SetWindowLong(FREdit.Handle, GWL_STYLE,
                 GetWindowLong(FREdit.Handle, GWL_STYLE)
                 or ES_RIGHT
                 or ES_NUMBER);
@@ -1298,7 +1135,7 @@ begin
                 or ES_NUMBER);
     SetWindowPos(BBEdit.Handle, 0, 0, 0, 0, 0,
                SWP_NOMOVE or SWP_NOSIZE or
-               SWP_NOZORDER or SWP_FRAMECHANGED);
+               SWP_NOZORDER or SWP_FRAMECHANGED);   }
     CalcColor;
 
     Dither1 := 1;
@@ -1328,16 +1165,12 @@ begin
         ini.WriteBool('Options', 'HexValue', mnuHex.Checked);
         ini.WriteInteger('Window', 'Left', Left);
         ini.WriteInteger('Window', 'Top', Top);
+        ini.WriteBool('Options', 'HSVSlider', mnuSlider.Checked);
         ini.UpdateFile;
     finally
         ini.Free;
     end;
     CanClose := True;
-end;
-
-procedure TMainForm.FormShow(Sender: TObject);
-begin
-    //mnuOnTopClick(self);
 end;
 
 procedure TMainForm.acrFColorDropExecute(Sender: TObject);
@@ -1353,23 +1186,21 @@ end;
 procedure TMainForm.actFColorPickExecute(Sender: TObject);
 begin
     SelFore := True;
-    btnForeClick(btnFore);
+    btnForeClick(sbtnFore);
 end;
 
 procedure TMainForm.actBColorPickExecute(Sender: TObject);
 begin
     SelFore := False;
-    btnForeClick(btnBack);
+    btnForeClick(sbtnBack);
 end;
 
 procedure TMainForm.Edit1Change(Sender: TObject);
 begin
-    if mnuHex.Checked then
+    if (Length(Edit1.Text) = 7) and IsHex(Edit1.Text) then
     begin
-        if (Length(Edit1.Text) = 7) and IsHex(Edit1.Text) then
-        begin
-            FJColor.ActiveColor := HexToColor(Edit1.Text);
-        end;
+      if iEventCtrl = 0 then iEventCtrl := 2;
+      FJColor.ActiveColor := HexToColor(Edit1.Text);
     end;
 end;
 
@@ -1386,7 +1217,7 @@ var
     i: integer;
 begin
 
-    if (mnuRGB.Checked) and (not bSetValue) then
+    if (not bSetValue) then
     begin
         i := StrToIntDef(FREdit.Text, 0);
         R := IntToHex(Zeroto255(i), 2);
@@ -1394,7 +1225,7 @@ begin
         G := IntToHex(Zeroto255(i), 2);
         i := StrToIntDef(FBEdit.Text, 0);
         B := IntToHex(Zeroto255(i), 2);
-
+        if iEventCtrl = 0 then iEventCtrl := 4;
         FJColor.ActiveColor := StringToColor('$00' + B + G + R);
     end;
 end;
@@ -1405,7 +1236,7 @@ var
     i: integer;
 
 begin
-    if (mnuRGB.Checked) and (not bSetValue) then
+    if (not bSetValue) then
     begin
         i := StrToIntDef(BREdit.Text, 0);
 
@@ -1414,7 +1245,7 @@ begin
         G := IntToHex(Zeroto255(i), 2);
         i := StrToIntDef(BBEdit.Text, 0);
         B := IntToHex(Zeroto255(i), 2);
-
+        if iEventCtrl = 0 then iEventCtrl := 4;
         BColor.ActiveColor := StringToColor('$00' + B + G + R);
     end;
 end;
@@ -1424,22 +1255,17 @@ begin
     if Key = #$0D then
     begin
         key := #0;
-        if mnuHex.Checked then
-        begin
-            if (Length(Edit1.Text) = 7) and IsHex(Edit1.Text) then
-                FJColor.ActiveColor := HexToColor(Edit1.Text);
-        end;
+        if (Length(Edit1.Text) = 7) and IsHex(Edit1.Text) then
+          FJColor.ActiveColor := HexToColor(Edit1.Text);
     end;
 
 end;
 
 procedure TMainForm.Edit2Change(Sender: TObject);
 begin
-    if mnuHex.Checked then
-    begin
-        if (Length(Edit2.Text) = 7) and IsHex(Edit2.Text) then
-            BColor.ActiveColor := HexToColor(Edit2.Text);
-    end;
+
+  if (Length(Edit2.Text) = 7) and IsHex(Edit2.Text) then
+    BColor.ActiveColor := HexToColor(Edit2.Text);
 end;
 
 procedure TMainForm.Edit2KeyPress(Sender: TObject; var Key: Char);
@@ -1448,11 +1274,12 @@ begin
     if Key = #$0D then
     begin
         key := #0;
-        if mnuHex.Checked then
+        if (Length(Edit2.Text) = 7) and IsHex(Edit2.Text) then
         begin
-            if (Length(Edit2.Text) = 7) and IsHex(Edit2.Text) then
-                BColor.ActiveColor := HexToColor(Edit2.Text);
+            if iEventCtrl = 0 then iEventCtrl := 1;
+            BColor.ActiveColor := HexToColor(Edit2.Text);
         end;
+
     end;
 end;
 
@@ -1548,9 +1375,7 @@ begin
     if mnuHex.Checked then
     begin
         bSetValue := False;
-        Panel1.Visible := False;
         Edit1.Visible := True;
-        Panel2.Visible := False;
         Edit2.Visible := True;
         Label3.Caption := Hex;
         Label4.Caption := Hex;
@@ -1572,9 +1397,7 @@ begin
     if mnuRGB.Checked then
     begin
         bSetValue := False;
-        Panel1.Visible := True;
         Edit1.Visible := False;
-        Panel2.Visible := True;
         Edit2.Visible := False;
         Label3.Caption := RGB;
         Label4.Caption := RGB;
@@ -1646,10 +1469,8 @@ begin
     pass := GetTranslation('passed', 'passed');
     fail := GetTranslation('failed', 'failed');
     Image1.Picture := nil;
-    Image2.Picture := nil;
-    Image3.Picture := nil;
-    Image4.Picture := nil;
-    Image5.Picture := nil;
+
+
     Back := Calc(BColor.ActiveColor);
     Fore := Calc(FJColor.ActiveColor);
     High := Max(Back, Fore) + 0.05;
@@ -1661,15 +1482,8 @@ begin
         eRes := 0.0;
     end;
     Result := eRes;
-    if mnuHex.Checked then
-    begin
-        Edit1.Text := ColortoHex2(FJColor.ActiveColor);
-        Edit2.Text := ColortoHex2(BColor.ActiveColor);
-    end
-    else
-    begin
-        SetRGB;
-    end;
+    Edit1.Text := ColortoHex2(FJColor.ActiveColor);
+    Edit2.Text := ColortoHex2(BColor.ActiveColor);
     SetTBPos;
     with edtNormal_T do
     begin
@@ -1740,27 +1554,7 @@ begin
     edtProta.Text := Format(latio_is, [FormatFloat('0.0#', eRes) + ':1']);
     edtProta.Color := BC;
     edtProta.Font.Color := FC;
-    if rb_least3.Checked then
-    begin
-        if eRes >= 3 then
-            Image2.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image2.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end
-    else if rb_least5.Checked then
-    begin
-        if eRes >= 4.5 then
-            Image2.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image2.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end
-    else if rb_least7.Checked then
-    begin
-        if eRes >= 7 then
-            Image2.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image2.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end;
+
 
     //DEUTERANOPIA
     FC := ConvertDichromatColors(FJColor.ActiveColor, 1);
@@ -1779,27 +1573,7 @@ begin
     edtDeutera.Text := Format(latio_is, [FormatFloat('0.0#', eRes) + ':1']);
     edtDeutera.Color := BC;
     edtDeutera.Font.Color := FC;
-    if rb_least3.Checked then
-    begin
-        if eRes >= 3 then
-            Image3.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image3.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end
-    else if rb_least5.Checked then
-    begin
-        if eRes >= 4.5 then
-            Image3.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image3.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end
-    else if rb_least7.Checked then
-    begin
-        if eRes >= 7 then
-            Image3.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image3.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end;
+
 
     //TRITANOPIA
      FC := ConvertDichromatColors(FJColor.ActiveColor, 2);
@@ -1818,27 +1592,7 @@ begin
     edtTrita.Text := Format(latio_is, [FormatFloat('0.0#', eRes) + ':1']);
     edtTrita.Color := BC;
     edtTrita.Font.Color := FC;
-    if rb_least3.Checked then
-    begin
-        if eRes >= 3 then
-            Image4.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image4.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end
-    else if rb_least5.Checked then
-    begin
-        if eRes >= 4.5 then
-            Image4.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image4.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end
-    else if rb_least7.Checked then
-    begin
-        if eRes >= 7 then
-            Image4.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image4.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end;
+
 
     Back := Calc(BColor.ActiveColor);
     Fore := Calc(FJColor.ActiveColor);
@@ -1849,27 +1603,7 @@ begin
     except
         eRes := 0.0;
     end;
-    if rb_least3.Checked then
-    begin
-        if eRes >= 3 then
-            Image5.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image5.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end
-    else if rb_least5.Checked then
-    begin
-        if eRes >= 4.5 then
-            Image5.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image5.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end
-    else if rb_least7.Checked then
-    begin
-        if eRes >= 7 then
-            Image5.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_OK')
-        else
-            Image5.Picture.Bitmap.LoadFromResourceName(hInstance, 'RES_FAIL');
-    end;
+
     if eRes < 3.0 then
     begin
         d := d + #13#10 + Format(lcr, [fail]);
@@ -1922,6 +1656,7 @@ begin
     d := gbFore.Caption + ':' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ':' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(latio_is, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
     Memo1.Text := d;// + #13#10#13#10 + lcr_note + #13#10#13#10 + lcr_note2 + #13#10#13#10 + lcr_note3;
     bSetValue := False;
+    iEventCtrl := 0;
 end;
 
 Procedure TMainForm.SetAbsoluteForegroundWindow(HWND: hWnd);
@@ -1941,8 +1676,19 @@ begin
 
 end;
 
+function Zeroto100(Num: Integer): integer;
+begin
+    result := Num;
+    if (Num > 100) then result := 100
+    else if (Num < 0) then result := 0;
+end;
 
-
+function Zeroto360(Num: Integer): integer;
+begin
+    result := Num;
+    if (Num > 360) then result := 360
+    else if (Num < 0) then result := 0;
+end;
 
 procedure TMainForm.tbFRChange(Sender: TObject);
 var
@@ -1953,9 +1699,87 @@ begin
         R := IntToHex(tbFR.Position, 2);
         G := IntToHex(tbFG.Position, 2);
         B := IntToHex(tbFB.Position, 2);
-
+        if iEventCtrl = 0 then iEventCtrl := 3;
         FJColor.ActiveColor := StringToColor('$00' + B + G + R);
     end;
+end;
+
+procedure TMainForm.FHEditChange(Sender: TObject);
+begin
+  tbFH.Position := Zeroto360(StrtoIntDef(FHEdit.Text, 0));
+end;
+
+procedure TMainForm.FSEditChange(Sender: TObject);
+begin
+  tbFS.Position := Zeroto100(StrtoIntDef(FSEdit.Text, 0));
+end;
+
+procedure TMainForm.FVEditChange(Sender: TObject);
+begin
+  tbFV.Position := Zeroto100(StrtoIntDef(FVEdit.Text, 0));
+end;
+
+procedure TMainForm.BHEditChange(Sender: TObject);
+begin
+  tbBH.Position := Zeroto360(StrtoIntDef(BHEdit.Text, 0));
+end;
+
+procedure TMainForm.BSEditChange(Sender: TObject);
+begin
+  tbBS.Position := Zeroto100(StrtoIntDef(BSEdit.Text, 0));
+end;
+
+procedure TMainForm.BVEditChange(Sender: TObject);
+begin
+  tbBV.Position := Zeroto100(StrtoIntDef(BVEdit.Text, 0));
+end;
+
+procedure TMainForm.tbFHChange(Sender: TObject);
+var
+  dH, dS, dV, f: extended;
+  i, iR, iG, iB: integer;
+  R, G, B: string;
+begin
+  if (not bSetValue) then
+  begin
+    dH := tbFH.Position / 360;
+    dS := tbFS.Position / 100;
+    dV := tbFV.Position / 100;
+    HSVtoRGB(dH, dS, dV, iR, iG, iB);
+
+
+    R := IntToHex(iR, 2);
+    G := IntToHex(iG, 2);
+    B := IntToHex(iB, 2);
+    if iEventCtrl = 0 then iEventCtrl := 5;
+    FJColor.ActiveColor := StringToColor('$00' + B + G + R);
+  end;
+end;
+
+
+
+procedure TMainForm.tbBHChange(Sender: TObject);
+var
+  dH, dS, dV, f: extended;
+  i, iR, iG, iB: integer;
+  R, G, B: string;
+begin
+  if (not bSetValue) then
+  begin
+    dH := tbBH.Position / 360;
+    dS := tbBS.Position / 100;
+    dV := tbBV.Position / 100;
+    HSVtoRGB(dH, dS, dV, iR, iG, iB);
+
+
+    R := IntToHex(iR, 2);
+    G := IntToHex(iG, 2);
+    B := IntToHex(iB, 2);
+
+    if iEventCtrl = 0 then iEventCtrl := 5;
+    BColor.ActiveColor := StringToColor('$00' + B + G + R);
+  end;
+
 end;
 
 procedure TMainForm.tbBRChange(Sender: TObject);
@@ -1967,7 +1791,7 @@ begin
         R := IntToHex(tbBR.Position, 2);
         G := IntToHex(tbBG.Position, 2);
         B := IntToHex(tbBB.Position, 2);
-
+        if iEventCtrl = 0 then iEventCtrl := 3;
         BColor.ActiveColor := StringToColor('$00' + B + G + R);
     end;
 end;
@@ -2047,7 +1871,7 @@ begin
 
     if (Sender is TMenuItem) then
     begin
-        
+
         if (Sender as TMenuItem) = mnufg2px then
             Dither1 := 2
         else if (Sender as TMenuItem) = mnufg3px then
@@ -2088,14 +1912,6 @@ begin
         else
             Dither2 := 1;
     end;
-end;
-
-procedure TMainForm.actExpandAllExecute(Sender: TObject);
-begin
-    chkExpand.Checked := not chkExpand.Checked;
-    chkExpand2.Checked := not chkExpand2.Checked;
-    ChkExpandClick(self);
-    chkExpand.Refresh;
 end;
 
 procedure TMainForm.PopupMenu1Popup(Sender: TObject);
@@ -2214,9 +2030,9 @@ var
     pt: TPoint;
     monEx: TMonitorInfoEx;
 begin
-    if (Sender is TBitBtn) then
+    if (Sender is TButton) then
     begin
-        if (Sender as TBitBtn) = btnFore then
+        if (Sender as TButton) = sbtnFore then
             SelFore := True
         else
             SelFore := False;
@@ -2277,59 +2093,20 @@ begin
     end;
 end;
 
-procedure TMainForm.bbDD2Click(Sender: TObject);
-var
-    PO: TPoint;
-begin
-    PO.X := gbBack.Left + bbDD2.Left;
-    PO.Y := gbBack.Top + bbDD2.Top + bbDD2.Height;
-    PO := ClientToScreen(PO);
-    PopupMenu2.Popup(PO.X, PO.Y);
-
-end;
-
-procedure TMainForm.bbDD1Click(Sender: TObject);
-var
-    PO: TPoint;
-begin
-    PO.X := gbFore.Left + bbDD1.Left;
-    PO.Y := gbFore.Top + bbDD1.Top + bbDD1.Height;
-    PO := ClientToScreen(PO);
-    PopupMenu1.Popup(PO.X, PO.Y);
-
-end;
-
 procedure TMainForm.mnuShowBlindClick(Sender: TObject);
 begin
     mnuShowBlind.Checked := not mnuShowBlind.Checked;
     chkBlind.Checked := mnuShowBlind.Checked;
-    gbResNormal.Visible := False;
-    gbResBlind.Visible := False;
-    if mnuShowBlind.Checked then
-        gbResBlind.Visible := mnuShowBlind.Checked
-    else
-    begin
-        gbResNormal.Visible := True;
-    end;
-    ResizeCtrls;
-    if mnuShowBlind.Checked then
-        ResGroupSizeChange(True)
-    else
-        ResGroupSizeChange(chkExpand.Checked);
+    gbResBlind.Visible := mnuShowBlind.Checked;
+    Memo1.Visible := not mnuShowBlind.Checked;
+
 end;
 
 procedure TMainForm.chkblindClick(Sender: TObject);
 begin
     mnuShowBlind.Checked := chkblind.Checked;
-    gbResNormal.Visible := False;
-    gbResBlind.Visible := False;
-    gbResBlind.Visible := mnuShowBlind.Checked;
-    gbResNormal.Visible := not mnuShowBlind.Checked;
-    //ResizeCtrls;
-    if mnuShowBlind.Checked then
-        ResGroupSizeChange(True)
-    else
-        ResGroupSizeChange(chkExpand.Checked);
+    gbResBlind.Visible := chkblind.Checked;
+    Memo1.Visible := not chkblind.Checked;
 end;
 
 procedure TMainForm.chkExpandEnter(Sender: TObject);
@@ -2343,9 +2120,20 @@ end;
 
 procedure TMainForm.mnuSliderClick(Sender: TObject);
 begin
-    mnuSlider.Checked := not mnuSlider.Checked;
-    BGGroupSizeChange(mnuSlider.Checked);
-    FGGroupSizeChange(mnuSlider.Checked);
+  mnuSlider.Checked := not mnuSlider.Checked;
+  grdFHSV.Visible := mnuSlider.Checked;
+  grdBHSV.Visible := grdFHSV.Visible;
+  if mnuSlider.Checked then
+  begin
+    gbFore.Height := grdFHSV.Top + grdFHSV.Height + 10;
+  end
+  else
+  begin
+    gbFore.Height := grdFRGB.Top + grdFRGB.Height + 10;
+  end;
+  gbBack.Height := gbFore.Height;
+  gbresNormal.Top := gbFore.Top + gbFore.Height + 5;
+  MainForm.ClientHeight := gbResNormal.Top + gbResNormal.Height + 5 + StatusBar1.Height;
 end;
 
 procedure TMainForm.rb_least3Click(Sender: TObject);

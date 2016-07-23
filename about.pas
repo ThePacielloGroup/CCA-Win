@@ -93,7 +93,8 @@ begin
             List.Text := StringReplace(List.Text, '%charset%', Charset, [rfReplaceAll, rfIgnoreCase]);
             List.Text := StringReplace(List.Text, '%lang%', Lang, [rfReplaceAll, rfIgnoreCase]);
             s := List.Text;
-            s := s + #13#10 + '<h1><img src="' + IconPath + '" height="32" width="32" alt="CCA Icon" />' + VTxt + '</h1>';
+            //s := s + #13#10 + '<h1><img src="' + IconPath + '" height="32" width="32" alt="CCA Icon" />' + VTxt + '</h1>';
+            s := s + #13#10 + '<h1><img src="res://' + Application.ExeName + '/CCA" height="32" width="32" alt="CCA Icon" />' + VTxt + '</h1>';
             //s := '<h1>' + VTxt + '</h1>';
             s := s + #13#10 + '<hr />';
             s := s + #13#10 + '<p>' +  Note + '</p>';
