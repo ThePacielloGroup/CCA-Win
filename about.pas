@@ -30,15 +30,17 @@ type
     BitBtn1: TBitBtn;
     Panel2: TPanel;
     WB1: TWebBrowser;
-    procedure FormCreate(Sender: TObject);
     procedure WB1BeforeNavigate2(Sender: TObject; const pDisp: IDispatch;
       var URL, Flags, TargetFrameName, PostData, Headers: OleVariant;
       var Cancel: WordBool);
   private
     { Private êÈåæ }
 
+
   public
     { Public êÈåæ }
+    TransPath: string;
+    procedure LoadINI;
   end;
 
 var
@@ -53,12 +55,12 @@ uses Main;
 
 {$R *.dfm}
 
-procedure TAboutForm.FormCreate(Sender: TObject);
+procedure TAboutForm.LoadINI;
 var
-    ini: TIniFile;
+    ini: TMemIniFile;
     Charset, Lang, EN, JP, s, WATC, EN_Mail, EN_Address, JP_Mail, JP_Address: widestring;
     T_Site, T_Mail, T_Name: widestring;
-    VTxt, Add, Note, IconPath: widestring;
+    VTxt, Add, Note: widestring;
     List: TStringList;
     RS:TResourceStream;
     bTrans: Boolean;
@@ -66,8 +68,7 @@ var
     iDoc: IHTMLDocument2;
 begin
     WB1.Navigate('about:blank');
-    IconPath := ChangeFileExt(Application.ExeName, '.ico');
-    ini := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+    ini := TMemIniFile.Create(TransPath, TEncoding.UTF8);
     List := TStringList.Create;
     try
         Charset := ini.ReadString('HTML', 'Charset', 'utf-8');

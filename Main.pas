@@ -166,16 +166,18 @@ type
     BVEdit: TAccEdit;
     grdFHex: TGridPanel;
     Label1: TLabel;
-    Label3: TLabel;
     FJColor: TColorDrop;
-    Edit1: TAccMaskEdit;
     grdBHex: TGridPanel;
     Label2: TLabel;
-    Label4: TLabel;
     BColor: TColorDrop;
-    Edit2: TAccMaskEdit;
+    mnuRGBSlider: TMenuItem;
+    mnuHSVSlider: TMenuItem;
+    Label3: TLabel;
     sbtnFore: TAccButton;
+    Edit1: TAccMaskEdit;
+    Label4: TLabel;
     sbtnBack: TAccButton;
+    Edit2: TAccMaskEdit;
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure Edit2KeyPress(Sender: TObject; var Key: Char);
     procedure mnuHexClick(Sender: TObject);
@@ -221,7 +223,6 @@ type
     procedure btnForeClick(Sender: TObject);
     procedure mnuShowBlindClick(Sender: TObject);
     procedure chkExpandEnter(Sender: TObject);
-    procedure mnuSliderClick(Sender: TObject);
     procedure rb_least3Click(Sender: TObject);
     procedure rb_least3Enter(Sender: TObject);
     procedure chkblindClick(Sender: TObject);
@@ -237,6 +238,8 @@ type
     procedure FVEditChange(Sender: TObject);
     procedure BSEditChange(Sender: TObject);
     procedure BVEditChange(Sender: TObject);
+    procedure mnuRGBSliderClick(Sender: TObject);
+    procedure mnuHSVSliderClick(Sender: TObject);
   private
     { Private declare }
     Hex, RGB, copied: string;
@@ -398,8 +401,7 @@ end;
 
 procedure TMainForm.ResizeCtrls;
 var
-  iHeight, sWidth, sHeight, iLeft, tw, mH, iTop, i: integer;
-  sz: TSize;
+  iHeight, sWidth, sHeight, mH: integer;
   dc: HDC;
   ACanvas: TCanvas;
     procedure GetStrSize(Cap: string; cv: TCanvas);
@@ -410,8 +412,6 @@ var
 begin
   Font.Size := DoubleToInt(DefFont * ScaleY);
   Canvas.Font := Font;
-  iHeight := DoubleToInt(25 * ScaleX);
-  mH := iHeight;
 
   GetStrSize(label1.Caption, Canvas);
   if (ScaleY > 1.0) and (sWidth < 125) then
@@ -439,7 +439,6 @@ begin
   sHeight := grdFHex.Height div 2;
 
 
-
   FJColor.Align := alClient;
   FJColor.ItemHeight := sHeight - 12;
 
@@ -453,28 +452,46 @@ begin
   gbBack.Width := gbFore.Width;
   gbBack.Left := gbFore.BoundsRect.Right + 6;
 
+  grdFRGB.Visible := mnuRGBSlider.Checked;
+  grdBRGB.Visible := mnuRGBSlider.Checked;
+
   grdFRGB.Width := grdFHex.Width;
   grdFRGB.Height := grdFHex.Height * 3;
+
+  grdFHSV.Visible := mnuHSVSlider.Checked;
+  grdBHSV.Visible := mnuHSVSlider.Checked;
+
   grdFHSV.Width := grdFRGB.Width;
   grdFHSV.Height := grdFRGB.Height;
-  grdFRGB.Top := grdFHex.BoundsRect.Bottom;
-  grdFHSV.Top := grdFRGB.BoundsRect.Bottom;
 
   grdBRGB.Width := grdFRGB.Width;
   grdBRGB.Height := grdFRGB.Height;
   grdBHSV.Width := grdBRGB.Width;
   grdBHSV.Height := grdBRGB.Height;
-  grdBRGB.Top := grdBHex.BoundsRect.Bottom;
-  grdBHSV.Top := grdBRGB.BoundsRect.Bottom;
 
-  if mnuSlider.Checked then
+
+  gbFore.Height := grdFHex.BoundsRect.Bottom + 10;
+  if mnuRGBSlider.Checked then
   begin
-    gbFore.Height := grdFHSV.BoundsRect.Bottom + 10;
+    grdFRGB.Top := grdFHex.BoundsRect.Bottom;
+    gbFore.Height := grdFRGB.BoundsRect.Bottom + 10;
+    if mnuHSVSlider.Checked then
+    begin
+      grdFHSV.Top := grdFRGB.BoundsRect.Bottom;
+      gbFore.Height := grdFHSV.BoundsRect.Bottom + 10;
+    end;
   end
   else
   begin
-    gbFore.Height := grdFRGB.BoundsRect.Bottom + 10;
+    if mnuHSVSlider.Checked then
+    begin
+      grdFHSV.Top := grdFHex.BoundsRect.Bottom;
+      gbFore.Height := grdFHSV.BoundsRect.Bottom + 10;
+    end;
   end;
+  grdBRGB.Top := grdFRGB.Top;
+  grdBHSV.Top := grdFHSV.Top;
+
   gbBack.Height := gbFore.Height;
 
   gbresNormal.Top := gbFore.BoundsRect.Bottom + 5;
@@ -680,10 +697,11 @@ end;
 procedure TMainForm.SetTBPos;
 var
     RGBColor: LongInt;
-    dMin, dMax, dH, dS, dV, delta: Extended;
-    R, G, B, H, S, V: integer;
+    dH, dS, dV: Extended;
+    R, G, B: integer;
 
 begin
+
     bSetValue := True;
     RGBColor := ColorToRGB(FJColor.ActiveColor);
     R := ($000000FF and RGBColor);
@@ -734,15 +752,15 @@ begin
     BHEdit.Text := InttoStr(tbBH.Position);
     BSEdit.Text := InttoStr(tbBS.Position);
     BVEdit.Text := InttoStr(tbBV.Position);
-
 end;
 
 
 
 procedure TMainForm.FJColorChanged(Sender: TObject);
 begin
-    if (not PickForm.Showing) then
+    if (not PickForm.Showing) and (not bSetValue) then
     begin
+      caption := inttostr(iEventCtrl);
       if iEventCtrl = 0 then iEventCtrl := 1;
       CalcColor;
     end;
@@ -972,14 +990,15 @@ begin
         mnuLang.Caption := ini.ReadString('Translations', 'mnuLang', 'English');
 
 
-        mnuSlider.Caption := ini.ReadString('Translations', 'Show_Sliders', 'Show color sliders');
+        mnuSlider.Caption := ini.ReadString('Translations', 'Show_Sliders', 'Show colour sliders');
         lblFH.Caption := ini.ReadString('Translations', 'Hue', 'Hue:');
         lblBH.Caption := lblFH.Caption;
         lblFS.Caption := ini.ReadString('Translations', 'Saturation', 'Saturation:');
         lblBS.Caption := lblFS.Caption;
         lblFV.Caption := ini.ReadString('Translations', 'Value', 'Value:');
         lblBV.Caption := lblFV.Caption;
-
+        mnuRGBSlider.Caption := ini.ReadString('Translations', 'rgb_menu', '&RGB');
+        mnuHSVSlider.Caption := ini.ReadString('Translations', 'hsv_menu', '&HSV');
     finally
         ini.Free;
     end;
@@ -989,12 +1008,8 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
-    i: Integer;
     ini: TMemIniFile;
     Rec     : TSearchRec;
-    dc: HDC;
-    monEx: TMonitorInfoEx;
-    hm: HMonitor;
 begin
     SystemCanSupportPerMonitorDpi(true);
     GetDCap(handle, Defx, Defy);
@@ -1038,7 +1053,8 @@ begin
             mnuRGB.Checked := False;
             mnuHex.Checked := True;
         end;
-        mnuSlider.Checked := ini.ReadBool('Options', 'HSVSlider', False);
+        mnuHSVSlider.Checked := ini.ReadBool('Options', 'HSVSlider', False);
+        mnuRGBSlider.Checked := ini.ReadBool('Options', 'RGBSlider', False);
         BGGroupSizeChange(mnuSlider.Checked);
         FGGroupSizeChange(mnuSlider.Checked);
 
@@ -1092,55 +1108,10 @@ begin
     begin
         mnuRGBClick(Self);
     end;
-    //Num only
-    {SetWindowLong(FREdit.Handle, GWL_STYLE,
-                GetWindowLong(FREdit.Handle, GWL_STYLE)
-                or ES_RIGHT
-                or ES_NUMBER);
-    SetWindowPos(FREdit.Handle, 0, 0, 0, 0, 0,
-               SWP_NOMOVE or SWP_NOSIZE or
-               SWP_NOZORDER or SWP_FRAMECHANGED);
-    SetWindowLong(FGEdit.Handle, GWL_STYLE,
-                GetWindowLong(FGEdit.Handle, GWL_STYLE)
-                or ES_RIGHT
-                or ES_NUMBER);
-    SetWindowPos(FGEdit.Handle, 0, 0, 0, 0, 0,
-               SWP_NOMOVE or SWP_NOSIZE or
-               SWP_NOZORDER or SWP_FRAMECHANGED);
-    SetWindowLong(FBEdit.Handle, GWL_STYLE,
-                GetWindowLong(FBEdit.Handle, GWL_STYLE)
-                or ES_RIGHT
-                or ES_NUMBER);
-    SetWindowPos(FBEdit.Handle, 0, 0, 0, 0, 0,
-               SWP_NOMOVE or SWP_NOSIZE or
-               SWP_NOZORDER or SWP_FRAMECHANGED);
-
-    SetWindowLong(BREdit.Handle, GWL_STYLE,
-                GetWindowLong(BREdit.Handle, GWL_STYLE)
-                or ES_RIGHT
-                or ES_NUMBER);
-    SetWindowPos(BREdit.Handle, 0, 0, 0, 0, 0,
-               SWP_NOMOVE or SWP_NOSIZE or
-               SWP_NOZORDER or SWP_FRAMECHANGED);
-    SetWindowLong(BGEdit.Handle, GWL_STYLE,
-                GetWindowLong(BGEdit.Handle, GWL_STYLE)
-                or ES_RIGHT
-                or ES_NUMBER);
-    SetWindowPos(BGEdit.Handle, 0, 0, 0, 0, 0,
-               SWP_NOMOVE or SWP_NOSIZE or
-               SWP_NOZORDER or SWP_FRAMECHANGED);
-    SetWindowLong(BBEdit.Handle, GWL_STYLE,
-                GetWindowLong(BBEdit.Handle, GWL_STYLE)
-                or ES_RIGHT
-                or ES_NUMBER);
-    SetWindowPos(BBEdit.Handle, 0, 0, 0, 0, 0,
-               SWP_NOMOVE or SWP_NOSIZE or
-               SWP_NOZORDER or SWP_FRAMECHANGED);   }
     CalcColor;
 
     Dither1 := 1;
     Dither2 := 1;
-    //ResGroupSizeChange(False);
 
 end;
 
@@ -1165,7 +1136,8 @@ begin
         ini.WriteBool('Options', 'HexValue', mnuHex.Checked);
         ini.WriteInteger('Window', 'Left', Left);
         ini.WriteInteger('Window', 'Top', Top);
-        ini.WriteBool('Options', 'HSVSlider', mnuSlider.Checked);
+        ini.WriteBool('Options', 'HSVSlider', mnuHSVSlider.Checked);
+        ini.WriteBool('Options', 'RGBSlider', mnuRGBSlider.Checked);
         ini.UpdateFile;
     finally
         ini.Free;
@@ -1362,7 +1334,8 @@ begin
     AboutForm := TAboutForm.Create(self);
     AboutForm.PopupParent := Self;
     AboutForm.Font := Font;
-
+    AboutForm.TransPath := TransPath;
+    AboutForm.LoadINI;
     AboutForm.ShowModal;
     AboutForm.Free;
 end;
@@ -1406,6 +1379,7 @@ begin
         CalcColor;
     end;
 end;
+
 
 function TMainForm.CalcColor: Extended;
 var
@@ -1485,6 +1459,7 @@ begin
     Edit1.Text := ColortoHex2(FJColor.ActiveColor);
     Edit2.Text := ColortoHex2(BColor.ActiveColor);
     SetTBPos;
+
     with edtNormal_T do
     begin
         Color := BColor.ActiveColor;
@@ -1655,8 +1630,10 @@ begin
     lblRatio.Caption := Format(ratio_short, [FormatFloat('0.0#', eRes) + ':1']);
     d := gbFore.Caption + ':' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ':' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(latio_is, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
     Memo1.Text := d;// + #13#10#13#10 + lcr_note + #13#10#13#10 + lcr_note2 + #13#10#13#10 + lcr_note3;
-    bSetValue := False;
+
     iEventCtrl := 0;
+    bSetValue := False;
+
 end;
 
 Procedure TMainForm.SetAbsoluteForegroundWindow(HWND: hWnd);
@@ -1736,8 +1713,8 @@ end;
 
 procedure TMainForm.tbFHChange(Sender: TObject);
 var
-  dH, dS, dV, f: extended;
-  i, iR, iG, iB: integer;
+  dH, dS, dV: extended;
+  iR, iG, iB: integer;
   R, G, B: string;
 begin
   if (not bSetValue) then
@@ -1752,7 +1729,10 @@ begin
     G := IntToHex(iG, 2);
     B := IntToHex(iB, 2);
     if iEventCtrl = 0 then iEventCtrl := 5;
+    bSetValue := True;
     FJColor.ActiveColor := StringToColor('$00' + B + G + R);
+    bSetValue := False;
+    CalcColor;
   end;
 end;
 
@@ -1760,8 +1740,8 @@ end;
 
 procedure TMainForm.tbBHChange(Sender: TObject);
 var
-  dH, dS, dV, f: extended;
-  i, iR, iG, iB: integer;
+  dH, dS, dV: extended;
+  iR, iG, iB: integer;
   R, G, B: string;
 begin
   if (not bSetValue) then
@@ -1777,7 +1757,10 @@ begin
     B := IntToHex(iB, 2);
 
     if iEventCtrl = 0 then iEventCtrl := 5;
+    bSetValue := True;
     BColor.ActiveColor := StringToColor('$00' + B + G + R);
+    bSetValue := False;
+    CalcColor;
   end;
 
 end;
@@ -2118,22 +2101,17 @@ begin
     end;
 end;
 
-procedure TMainForm.mnuSliderClick(Sender: TObject);
+procedure TMainForm.mnuRGBSliderClick(Sender: TObject);
 begin
-  mnuSlider.Checked := not mnuSlider.Checked;
-  grdFHSV.Visible := mnuSlider.Checked;
-  grdBHSV.Visible := grdFHSV.Visible;
-  if mnuSlider.Checked then
-  begin
-    gbFore.Height := grdFHSV.Top + grdFHSV.Height + 10;
-  end
-  else
-  begin
-    gbFore.Height := grdFRGB.Top + grdFRGB.Height + 10;
-  end;
-  gbBack.Height := gbFore.Height;
-  gbresNormal.Top := gbFore.Top + gbFore.Height + 5;
-  MainForm.ClientHeight := gbResNormal.Top + gbResNormal.Height + 5 + StatusBar1.Height;
+  mnuRGBSlider.Checked := not mnuRGBSlider.Checked;
+  ResizeCtrls;
+end;
+
+
+procedure TMainForm.mnuHSVSliderClick(Sender: TObject);
+begin
+  mnuHSVSlider.Checked := not mnuHSVSlider.Checked;
+  ResizeCtrls;
 end;
 
 procedure TMainForm.rb_least3Click(Sender: TObject);

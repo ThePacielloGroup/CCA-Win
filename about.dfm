@@ -14,7 +14,6 @@ object AboutForm: TAboutForm
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 12
   object Panel1: TPanel

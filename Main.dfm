@@ -568,13 +568,13 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       ColumnCollection = <
         item
-          Value = 41.749331979729420000
+          Value = 41.861586865913780000
         end
         item
-          Value = 41.421462643234750000
+          Value = 16.989331912442960000
         end
         item
-          Value = 16.829205377035830000
+          Value = 41.149081221643260000
         end>
       ControlCollection = <
         item
@@ -583,23 +583,23 @@ object MainForm: TMainForm
           Row = 0
         end
         item
-          Column = 1
-          Control = Label3
-          Row = 0
-        end
-        item
           Column = 0
           Control = FJColor
           Row = 1
         end
         item
+          Column = 2
+          Control = Label3
+          Row = 0
+        end
+        item
           Column = 1
-          Control = Edit1
+          Control = sbtnFore
           Row = 1
         end
         item
           Column = 2
-          Control = sbtnFore
+          Control = Edit1
           Row = 1
         end>
       RowCollection = <
@@ -627,20 +627,6 @@ object MainForm: TMainForm
         ExplicitWidth = 3
         ExplicitHeight = 13
       end
-      object Label3: TLabel
-        Left = 125
-        Top = 0
-        Width = 124
-        Height = 25
-        Align = alClient
-        AutoSize = False
-        Caption = 'Hex:'
-        Layout = tlBottom
-        ExplicitLeft = 181
-        ExplicitTop = 6
-        ExplicitWidth = 3
-        ExplicitHeight = 13
-      end
       object FJColor: TColorDrop
         AlignWithMargins = True
         Left = 1
@@ -663,38 +649,29 @@ object MainForm: TMainForm
         Font.Style = []
         Other = '&Others...'
         AccName = 'Foreground Colour'
-        CtrlNext = Edit1
-        CtrlRight = Edit1
+        CtrlNext = sbtnFore
+        CtrlRight = sbtnFore
         CtrlDown = tbFR
       end
-      object Edit1: TAccMaskEdit
-        AlignWithMargins = True
-        Left = 126
-        Top = 28
-        Width = 118
-        Height = 20
-        Hint = '|The picked colour is displayed. And, the value can be input.'
-        Margins.Left = 1
-        Margins.Right = 5
+      object Label3: TLabel
+        Left = 175
+        Top = 0
+        Width = 125
+        Height = 25
         Align = alClient
         AutoSize = False
-        EditMask = '\#aaaaaa;1;_'
-        MaxLength = 7
-        TabOrder = 1
-        Text = '#000000'
-        OnChange = Edit1Change
-        OnKeyPress = Edit1KeyPress
-        AccName = 'Foreground Hex Edit'
-        CtrlNext = sbtnFore
-        CtrlPrev = FJColor
-        CtrlLeft = FJColor
-        CtrlDown = tbFR
+        Caption = 'Hex:'
+        Layout = tlBottom
+        ExplicitLeft = 236
+        ExplicitTop = 6
+        ExplicitWidth = 3
+        ExplicitHeight = 13
       end
       object sbtnFore: TAccButton
         AlignWithMargins = True
-        Left = 252
+        Left = 128
         Top = 28
-        Width = 45
+        Width = 44
         Height = 20
         Align = alClient
         DropDownMenu = PopupMenu1
@@ -702,16 +679,37 @@ object MainForm: TMainForm
         ImageIndex = 0
         Images = ImageList2
         Style = bsSplitButton
-        TabOrder = 2
+        TabOrder = 1
         OnClick = btnForeClick
         AccName = 'Foreground Colour picker'
         AccActionDesc = 'Button Click'
         AccShortCut = 'F11'
+        CtrlNext = Edit1
+        CtrlPrev = FJColor
+        CtrlRight = Edit1
+        CtrlLeft = FJColor
+        CtrlDown = tbFR
+      end
+      object Edit1: TAccMaskEdit
+        AlignWithMargins = True
+        Left = 178
+        Top = 28
+        Width = 119
+        Height = 20
+        Hint = '|The picked colour is displayed. And, the value can be input.'
+        Align = alClient
+        AutoSize = False
+        EditMask = '\#aaaaaa;1;_'
+        MaxLength = 7
+        TabOrder = 2
+        Text = '#000000'
+        OnChange = Edit1Change
+        OnKeyPress = Edit1KeyPress
+        AccName = 'Foreground Hex Edit'
         CtrlNext = tbFR
-        CtrlPrev = Edit1
-        CtrlRight = BColor
-        CtrlLeft = Edit1
-        CtrlDown = FREdit
+        CtrlPrev = sbtnFore
+        CtrlLeft = sbtnFore
+        CtrlDown = tbFR
       end
     end
   end
@@ -1478,13 +1476,13 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       ColumnCollection = <
         item
-          Value = 41.561834787306720000
+          Value = 41.375162014215150000
         end
         item
-          Value = 41.699640194193400000
+          Value = 17.271941478039070000
         end
         item
-          Value = 16.738525018499890000
+          Value = 41.352896507745780000
         end>
       ControlCollection = <
         item
@@ -1493,23 +1491,23 @@ object MainForm: TMainForm
           Row = 0
         end
         item
-          Column = 1
-          Control = Label4
-          Row = 0
-        end
-        item
           Column = 0
           Control = BColor
           Row = 1
         end
         item
+          Column = 2
+          Control = Label4
+          Row = 0
+        end
+        item
           Column = 1
-          Control = Edit2
+          Control = sbtnBack
           Row = 1
         end
         item
           Column = 2
-          Control = sbtnBack
+          Control = Edit2
           Row = 1
         end>
       RowCollection = <
@@ -1534,17 +1532,6 @@ object MainForm: TMainForm
         ExplicitWidth = 66
         ExplicitHeight = 13
       end
-      object Label4: TLabel
-        Left = 124
-        Top = 0
-        Width = 125
-        Height = 25
-        Align = alClient
-        Caption = 'Hex:'
-        Layout = tlBottom
-        ExplicitWidth = 23
-        ExplicitHeight = 13
-      end
       object BColor: TColorDrop
         AlignWithMargins = True
         Left = 2
@@ -1567,39 +1554,26 @@ object MainForm: TMainForm
         Font.Style = []
         Other = '&Others...'
         AccName = 'Background Colour'
-        CtrlNext = Edit2
+        CtrlNext = sbtnBack
         CtrlPrev = FVEdit
-        CtrlRight = Edit2
-        CtrlLeft = sbtnFore
+        CtrlRight = sbtnBack
+        CtrlLeft = Edit1
         CtrlDown = tbBR
       end
-      object Edit2: TAccMaskEdit
-        AlignWithMargins = True
-        Left = 125
-        Top = 28
-        Width = 119
-        Height = 20
-        Hint = '|The picked colour is displayed. And, the value can be input.'
-        Margins.Left = 1
-        Margins.Right = 5
+      object Label4: TLabel
+        Left = 175
+        Top = 0
+        Width = 125
+        Height = 25
         Align = alClient
-        AutoSize = False
-        EditMask = '\#aaaaaa;1;_'
-        MaxLength = 7
-        TabOrder = 1
-        Text = '#ffffff'
-        OnChange = Edit2Change
-        OnKeyPress = Edit2KeyPress
-        AccName = 'Background Hex Edit'
-        CtrlNext = sbtnBack
-        CtrlPrev = BColor
-        CtrlRight = sbtnBack
-        CtrlLeft = BColor
-        CtrlDown = tbBR
+        Caption = 'Hex:'
+        Layout = tlBottom
+        ExplicitWidth = 23
+        ExplicitHeight = 13
       end
       object sbtnBack: TAccButton
         AlignWithMargins = True
-        Left = 252
+        Left = 127
         Top = 28
         Width = 45
         Height = 20
@@ -1609,15 +1583,36 @@ object MainForm: TMainForm
         ImageIndex = 0
         Images = ImageList2
         Style = bsSplitButton
-        TabOrder = 2
+        TabOrder = 1
         OnClick = btnForeClick
         AccName = 'Background Colour picker'
         AccActionDesc = 'Button Click'
         AccShortCut = 'F12'
+        CtrlNext = Edit2
+        CtrlPrev = BColor
+        CtrlLeft = BColor
+        CtrlDown = tbBR
+      end
+      object Edit2: TAccMaskEdit
+        AlignWithMargins = True
+        Left = 178
+        Top = 28
+        Width = 119
+        Height = 20
+        Hint = '|The picked colour is displayed. And, the value can be input.'
+        Align = alClient
+        AutoSize = False
+        EditMask = '\#aaaaaa;1;_'
+        MaxLength = 7
+        TabOrder = 2
+        Text = '#ffffff'
+        OnChange = Edit2Change
+        OnKeyPress = Edit2KeyPress
+        AccName = 'Background Hex Edit'
         CtrlNext = tbBR
-        CtrlPrev = Edit2
-        CtrlLeft = Edit2
-        CtrlDown = BREdit
+        CtrlPrev = sbtnBack
+        CtrlLeft = sbtnBack
+        CtrlDown = tbBR
       end
     end
   end
@@ -1627,7 +1622,7 @@ object MainForm: TMainForm
     Left = 448
     Top = 396
     Bitmap = {
-      494C010102000400700114001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020004007C0114001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000500000001400000001002000000000000019
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1952,10 +1947,18 @@ object MainForm: TMainForm
       object mnuSlider: TMenuItem
         Caption = 'Show color sliders'
         GroupIndex = 4
-        ShortCut = 118
-        OnClick = mnuSliderClick
         OnDrawItem = mnuHelpDrawItem
         OnMeasureItem = mnuHelpMeasureItem
+        object mnuRGBSlider: TMenuItem
+          Caption = '&RGB'
+          ShortCut = 118
+          OnClick = mnuRGBSliderClick
+        end
+        object mnuHSVSlider: TMenuItem
+          Caption = '&HSV'
+          ShortCut = 119
+          OnClick = mnuHSVSliderClick
+        end
       end
       object mnuLang: TMenuItem
         Caption = '&Language'
@@ -2124,7 +2127,7 @@ object MainForm: TMainForm
     Left = 312
     Top = 408
     Bitmap = {
-      494C010101000400700110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101010004007C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       00000000000000000000000000000000000000000000BFBF0000BFBF0000BFBF
       0000BFBF0000BFBF0000BFBF0000BFBF00000000000000000000000000000000
