@@ -1043,16 +1043,6 @@ begin
         Left := ini.ReadInteger('Window', 'Left', (Screen.WorkAreaWidth div 2) - (Width div 2));
         Top := ini.ReadInteger('Window', 'Top', (Screen.WorkAreaHeight div 2) - (Height div 2));
         mnuOnTop.Checked := ini.ReadBool('Options', 'Stayontop', False);
-        if ini.ReadBool('Options', 'HexValue', True) then
-        begin
-            mnuHex.Checked := False;
-            mnuRGB.Checked := True;
-        end
-        else
-        begin
-            mnuRGB.Checked := False;
-            mnuHex.Checked := True;
-        end;
         mnuHSVSlider.Checked := ini.ReadBool('Options', 'HSVSlider', False);
         mnuRGBSlider.Checked := ini.ReadBool('Options', 'RGBSlider', False);
         BGGroupSizeChange(mnuSlider.Checked);
@@ -1073,10 +1063,6 @@ begin
     edtNormal_LT.Font.Size := 14;
     edtNormal_LT2.Font.Style := [fsBold];
     edtNormal_LT2.Font.Size := 14;
-    {edtNormal2.Font.Style := [fsBold];
-    edtDeutera.Font.Style := [fsBold];
-    edtProta.Font.Style := [fsBold];
-    edtTrita.Font.Style := [fsBold];  }
     Hex := 'Hex';
     RGB := 'RGB';
 
@@ -1133,7 +1119,6 @@ begin
     ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
         ini.WriteBool('Options', 'Stayontop', mnuOnTop.Checked);
-        ini.WriteBool('Options', 'HexValue', mnuHex.Checked);
         ini.WriteInteger('Window', 'Left', Left);
         ini.WriteInteger('Window', 'Top', Top);
         ini.WriteBool('Options', 'HSVSlider', mnuHSVSlider.Checked);
