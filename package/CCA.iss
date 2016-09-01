@@ -17,6 +17,7 @@ DefaultDirName={pf}\{#MyAppName}
 DisableDirPage=yes
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
+OutputDir=release
 OutputBaseFilename={#MyAppShortName}{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
