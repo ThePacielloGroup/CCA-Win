@@ -77,13 +77,13 @@ begin
         JP := ini.ReadString('Translations', 'jp_ver', '');
         EN_Mail := ini.ReadString('Translations', 'en_mail', 'sfaulkner@paciellogroup.com');
         JP_Mail := ini.ReadString('Translations', 'jp_mail', '');
-        EN_Address := ini.ReadString('Translations', 'en_website', 'http://www.paciellogroup.com/resources/contrast-analyser.html');
+        EN_Address := ini.ReadString('Translations', 'en_website', 'https://www.paciellogroup.com/resources/contrastanalyser/');
         JP_Address := ini.ReadString('Translations', 'jp_website', '');
         Caption := ini.ReadString('Translations', 'aboutwnd', 'About');
         T_Name := ini.ReadString('Translations', 'translator_name', '');
         T_Site := ini.ReadString('Translations', 'translator_site', '');
         T_Mail := ini.ReadString('Translations', 'translator_mail', '');
-        VTxt := ini.ReadString('Translations', 'versiontext', 'Colour Contrast Analyser version 2.2a');
+        VTxt := ini.ReadString('Translations', 'versiontext', 'Colour Contrast Analyser version 2.4');
         Add := ini.ReadString('Translations', 'address_group', 'E-Mail & Web site address');
         Note := ini.ReadString('Translations', 'abouttext', 'The Colour Contrast Analyser was developed by Jun in collaboration with Steve Faulkner.');
         RS := TResourceStream.Create(hInstance,'ABOUT',PChar('TEXT'));
