@@ -2,7 +2,7 @@
 #define MyAppShortName "CCA"
 #define MyAppVersion "2.4"
 #define MyAppPublisher "The Paciello Group"
-#define MyAppURL "https://www.example.com/"
+#define MyAppURL "https://www.paciellogroup.com/"
 #define MyAppExeName "Colour_Contrast_Analyser.exe"
 
 [Setup]
