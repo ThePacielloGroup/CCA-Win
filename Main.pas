@@ -859,10 +859,21 @@ var
     d: string;
     i: integer;
     mItem: TMenuItem;
+    slist: TStringList;
+    enc: TEncoding;
 begin
     if mnuCreate then
     begin
+      sList := TStringList.Create;
+      try
+        sList.LoadFromFile(sPath);
+        if sList.Encoding <> TEncoding.Unicode then
+          sList.SaveToFile(sPath, TEncoding.Unicode);
+      finally
+        sList.Free;
+      end;
         ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+
         try
             if mnuLang.Visible then
             begin
