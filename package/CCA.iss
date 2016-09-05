@@ -42,7 +42,7 @@ Name: "Spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Files]
 Source: "./Colour_Contrast_Analyser64bit.exe"; DestDir: "{pf}\{#MyAppName}"; DestName: "{#MyAppExeName}"; Check: Is64BitInstallMode; Flags: ignoreversion
-Source: "./Colour_Contrast_Analyser32bit.exe"; DestDir: "{pf}\{#MyAppName}"; DestName: "{#MyAppExeName}"; Check: Is64BitInstallMode; Flags: ignoreversion
+Source: "./Colour_Contrast_Analyser32bit.exe"; DestDir: "{pf}\{#MyAppName}"; DestName: "{#MyAppExeName}"; Check: not Is64BitInstallMode; Flags: ignoreversion
 Source: "./lang\*.ini"; DestDir: "{pf}\{#MyAppName}\lang"; Flags: ignoreversion
 
 [Dirs]
