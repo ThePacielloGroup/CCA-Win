@@ -256,8 +256,6 @@ type
     procedure ResizeCtrls;
     procedure LoadLang(mnuCreate: boolean = true);
     procedure mnuLangChildClick(Sender: TObject);
-    procedure ItemMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width, Height: Integer);
-    procedure ItemDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
     procedure WMDPIChanged(var Message: TMessage); message WM_DPICHANGED;
   public
     { Public declare }
@@ -401,7 +399,7 @@ end;
 
 procedure TMainForm.ResizeCtrls;
 var
-  iHeight, sWidth, sHeight, mH: integer;
+  sWidth, sHeight, mH: integer;
   dc: HDC;
   ACanvas: TCanvas;
     procedure GetStrSize(Cap: string; cv: TCanvas);
@@ -760,7 +758,6 @@ procedure TMainForm.FJColorChanged(Sender: TObject);
 begin
     if (not PickForm.Showing) and (not bSetValue) then
     begin
-      caption := inttostr(iEventCtrl);
       if iEventCtrl = 0 then iEventCtrl := 1;
       CalcColor;
     end;
@@ -927,8 +924,6 @@ begin
         Edit2.Hint := ini.ReadString('Translations', 'back_edit', '|The picked colour is displayed. And, the value can be input.');
         btnCopyRes.Hint := ini.ReadString('Translations', 'Copy_hint', '|The text of the result is copied to the clipboard.');
         edtProta.EditLabel.Caption := ini.ReadString('Translations', 'protanopia', 'Protanopia');
-        //edtNormal.EditLabel.Caption := ini.ReadString('Translations', 'normal', 'Normal');
-        //edtNormal3.EditLabel.Caption := edtNormal.EditLabel.Caption;
         gbText.Caption := ini.ReadString('Translations', 'Text', 'Text');
         gbLText.Caption := ini.ReadString('Translations', 'Large_Text', 'Large text');
         edtNormal2.EditLabel.Caption := ini.ReadString('Translations', 'normal', 'Normal');
@@ -1248,16 +1243,6 @@ begin
        FormStyle := fsNormal;
 end;
 
-procedure TMainForm.ItemDrawItem(Sender: TObject; ACanvas: TCanvas; ARect: TRect; Selected: Boolean);
-begin
-
-end;
-
-procedure TMainForm.ItemMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width, Height: Integer);
-begin
-
-end;
-
 procedure TMainForm.mnuHelp1Click(Sender: TObject);
 begin
     if GetTranslation('docurl', 'http://www.nils.org.au/ais/web/resources/contrast_analyser/index.html') <> '' then
@@ -1269,7 +1254,6 @@ begin
   aCanvas.font := Font;
   aCanvas.fillrect(aRect);
   acanvas.textrect(aRect, arect.left+20, arect.top+2, TMenuItem(Sender).caption );
-  selected := true;
 end;
 
 procedure TMainForm.mnuHelpMeasureItem(Sender: TObject; ACanvas: TCanvas; var Width, Height: Integer);
