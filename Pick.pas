@@ -35,7 +35,6 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormShow(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
     { Private êÈåæ }
@@ -181,9 +180,9 @@ begin
     if Button = mbLeft then
     begin
         ReleaseCapture;
-        ShowCursor(True);
+        //ShowCursor(True);
         MainForm.CalcColor;
-        Hide;
+        Close;
     end;
 end;
 
@@ -196,7 +195,6 @@ end;
 procedure TPickForm.WMDPIChanged(var Message: TMessage);
 begin
   scaleX := Message.WParamLo / 96.0;
-  //scaleY := Message.WParamHi / 96.0;
 
 end;
 
@@ -222,20 +220,12 @@ end;
 procedure TPickForm.FormShow(Sender: TObject);
 begin
     SetWindowPos(Handle,HWND_TOPMOST,Left,Top,Width,Height,SWP_SHOWWINDOW);
-    ShowCursor(False);
-end;
-
-procedure TPickForm.FormCreate(Sender: TObject);
-begin
-    //Screen.Cursors[1] := LoadCursor(MainInstance, 'CROSS');
-    //Self.Cursor := 1;
-
+    //ShowCursor(False);
 end;
 
 procedure TPickForm.FormDestroy(Sender: TObject);
 begin
-    //Self.Cursor :=  crDefault;
-    ShowCursor(True);
+    //ShowCursor(True);
 end;
 
 end.

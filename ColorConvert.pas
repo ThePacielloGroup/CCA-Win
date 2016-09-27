@@ -21,7 +21,7 @@ const
     
     function ColortoHex(Color: TColor; ResIsRGB: Boolean = True): String;
     function ColortoHex2(Color: TColor; ResIsRGB: Boolean = True): String;
-    function HexToColor(RGBHex: String; HexIsRGB: Boolean = True): TColor;
+    function HexToColor(RGBHex: String; ResIsRGB: Boolean = False): TColor;
     function IsHex(RGBHex: String): Boolean;
     function ByteToColor(R: Byte; G: Byte; B: Byte): TColor;
     function ConvertDichromatColors(Color: TColor; DichromatType: Integer): TColor;
@@ -66,7 +66,7 @@ begin
         Result := '#' + IntToHex(B, 2) + IntToHex(G, 2) + IntToHex(R, 2);
 end;
 
-function HexToColor(RGBHex: String; HexIsRGB: Boolean = True): TColor;
+function HexToColor(RGBHex: String; ResIsRGB: Boolean = False): TColor;
 var
     d, R, G, B: String;
 begin
@@ -78,7 +78,7 @@ begin
     R := Copy(d, 1, 2);
     G := Copy(d, 3, 2);
     B := Copy(d, 5, 2);
-    if not HexIsRGB then
+    if ResIsRGB then
         Result := StringToColor('$' + R + G + B)
     else
         Result := StringToColor('$' + B + G + R);

@@ -23,7 +23,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Math,
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorConvert,
   ImgList, Buttons, IniFiles, ActnList, AccCtrls, ShellAPI, Menus, MultiMon,
-  Mask, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, Actions, PermonitorApi, Funcs;
+  Mask, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, Actions, PermonitorApi,
+  System.ImageList;
 resourcestring
   B_Difference = 'brightness difference :';
   C_Difference = 'colour difference :';
@@ -2046,13 +2047,20 @@ begin
             DeleteDC(SC_hdc);
           end;
         end;
-        PickForm.ScaleX := ScaleX;
-        PickForm.ScaleY := ScaleY;
+        PickForm := TPickform.Create(self);
+        try
+          PickForm.ScaleX := ScaleX;
+          PickForm.ScaleY := ScaleY;
 
-        GetCursorPos(pt);
-        MoveWindow(PickForm.Handle, pt.x - (DoubleToInt(200 * ScaleX) div 2 + 1), pt.y - (DoubleToInt(200 * ScaleY) div 2 + 1), DoubleToInt(200 * ScaleX) + 2, DoubleToInt(200 * Scaley) + 2, TRUE);
-        ShowCursor(False);
-        PickForm.Show;
+          GetCursorPos(pt);
+          MoveWindow(PickForm.Handle, pt.x - (DoubleToInt(200 * ScaleX) div 2 + 1), pt.y - (DoubleToInt(200 * ScaleY) div 2 + 1), DoubleToInt(200 * ScaleX) + 2, DoubleToInt(200 * Scaley) + 2, TRUE);
+          ShowCursor(False);
+          PickForm.ShowModal;
+
+        finally
+          PickForm.Free;
+          ShowCursor(True);
+        end;
     end;
 end;
 
