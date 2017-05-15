@@ -51,6 +51,7 @@ Name: "{pf}\{#MyAppName}\lang"; Permissions: users-readexec;
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 
 [UninstallDelete]
 Type: files; Name: "{pf}\{#MyAppName}\*.*";
