@@ -1,6 +1,7 @@
 #define MyAppName "Colour Contrast Analyser"
 #define MyAppShortName "CCA"
-#define MyAppVersion "2.4"
+#define MyAppVersion GetFileProductVersion('./Colour_Contrast_Analyser64bit.exe')
+;defined in ISPPBuiltins.iss
 #define MyAppPublisher "The Paciello Group"
 #define MyAppURL "https://www.paciellogroup.com/"
 #define MyAppExeName "Colour_Contrast_Analyser.exe"
