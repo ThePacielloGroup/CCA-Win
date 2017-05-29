@@ -10,8 +10,10 @@
 AppId={{3FD4A409-58B0-4C87-8122-57588A587F2A}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+VersionInfoVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
+AppCopyright={#MyAppPublisher}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
@@ -22,7 +24,6 @@ OutputDir=release
 OutputBaseFilename={#MyAppShortName}{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
-ShowUndisplayableLanguages=yes
 ShowLanguageDialog=yes
 ArchitecturesInstallIn64BitMode=x64
 
