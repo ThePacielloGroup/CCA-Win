@@ -261,6 +261,7 @@ type
     procedure LoadLang(mnuCreate: boolean = true);
     procedure mnuLangChildClick(Sender: TObject);
     procedure WMDPIChanged(var Message: TMessage); message WM_DPICHANGED;
+    procedure SetThumbHeight;
   public
     { Public declare }
     arSS_HDC: array of HDC;
@@ -269,6 +270,7 @@ type
     Dither1, Dither2: byte;
     function CalcColor: Extended;
     Procedure SetAbsoluteForegroundWindow(HWND: hWnd);
+    procedure GetSS;
     function GetTranslation(Key, Default: string): string;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -621,6 +623,37 @@ begin
 
   clientWidth := gbBack.BoundsRect.Right + 10;
   clientHeight := gbResnormal.BoundsRect.Bottom + Statusbar1.Height + 10;
+  SetThumbHeight;
+end;
+
+procedure TMainForm.SetThumbHeight;
+var
+	i, iHeight: integer;
+begin
+	iHeight := tbFR.Height - 5;
+	for i := 0 to grdFRGB.ControlCount - 1 do
+  begin
+    if grdFRGB.Controls[i] is TAccTrackBar then
+    	TAccTrackBar(grdFRGB.Controls[i]).ThumbLength := iHeight;
+  end;
+
+  for i := 0 to grdFHSV.ControlCount - 1 do
+  begin
+    if grdFHSV.Controls[i] is TAccTrackBar then
+    	TAccTrackBar(grdFHSV.Controls[i]).ThumbLength := iHeight;
+  end;
+
+  for i := 0 to grdBRGB.ControlCount - 1 do
+  begin
+    if grdBRGB.Controls[i] is TAccTrackBar then
+    	TAccTrackBar(grdBRGB.Controls[i]).ThumbLength := iHeight;
+  end;
+
+  for i := 0 to grdBHSV.ControlCount - 1 do
+  begin
+    if grdBHSV.Controls[i] is TAccTrackBar then
+    	TAccTrackBar(grdBHSV.Controls[i]).ThumbLength := iHeight;
+  end;
 end;
 
 procedure TMainForm.ResGroupSizeChange(Large: boolean = True);
@@ -1121,11 +1154,11 @@ procedure TMainForm.FormDestroy(Sender: TObject);
 var
   i: integer;
 begin
-    for i := Low(arSS_HDC) to High(arSS_HDC) do
-        	DeleteDC(arSS_HDC[i]);
+	for i := Low(arSS_HDC) to High(arSS_HDC) do
+		DeleteDC(arSS_HDC[i]);
 
-    if SS_bmp <> 0 then
-        DeleteObject(SS_bmp);
+	if SS_bmp <> 0 then
+		DeleteObject(SS_bmp);
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -1555,12 +1588,12 @@ begin
     if ((2.95 <= eRaw) and (3 > eRaw)) or ((4.45 <= eRaw) and (4.5 > eRaw)) then
     begin
       edtNormal2.Text := Format(ratio_below, [FormatFloat('0.0#', eRes) + ':1']);
-      d := gbFore.Caption + ':' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ':' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(ratio_below, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
+      d := gbFore.Caption + ': ' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ': ' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(ratio_below, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
     end
     else
     begin
       edtNormal2.Text := Format(ratio_is, [FormatFloat('0.0#', eRes) + ':1']);
-      d := gbFore.Caption + ':' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ':' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(ratio_is, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
+      d := gbFore.Caption + ': ' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ': ' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(ratio_is, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
     end;
 
     Memo1.Text := d;// + #13#10#13#10 + lcr_note + #13#10#13#10 + lcr_note2 + #13#10#13#10 + lcr_note3;
@@ -2038,32 +2071,6 @@ begin
   result := true;
 end;
 
-procedure TMainForm.mnuScreenClick(Sender: TObject);
-begin
-    Hide;
-    Sleep(300);
-
-
-    ConvWndForm := TConvWndForm.Create(nil);
-    try
-      ConvWndForm.Font := Font;
-      ConvWndForm.Font.Size := DefFont;
-      ConvWndForm.DefFont := DefFont;
-      ConvWndForm.Dy := DefY;
-      ConvWndForm.Dx := DefX;
-      ConvWndForm.ScaleX := ScaleX;
-      ConvWndForm.ScaleY := ScaleY;
-      ConvWndForm.Exec := False;
-
-      ConvWndForm.Execute(1);
-      ConvWndForm.ShowModal;
-    finally
-      Show;
-      ConvWndForm.Free;
-    end;
-
-end;
-
 procedure TMainForm.mnuSelListClick(Sender: TObject);
 begin
 
@@ -2105,6 +2112,67 @@ begin
     end;
 end;
 
+procedure TMainForm.mnuScreenClick(Sender: TObject);
+begin
+    Hide;
+    Sleep(300);
+
+
+    ConvWndForm := TConvWndForm.Create(nil);
+    try
+      ConvWndForm.Font := Font;
+      ConvWndForm.Font.Size := DefFont;
+      ConvWndForm.DefFont := DefFont;
+      ConvWndForm.Dy := DefY;
+      ConvWndForm.Dx := DefX;
+      ConvWndForm.ScaleX := ScaleX;
+      ConvWndForm.ScaleY := ScaleY;
+      ConvWndForm.Exec := False;
+
+      ConvWndForm.Execute(1);
+      ConvWndForm.ShowModal;
+    finally
+      Show;
+      ConvWndForm.Free;
+    end;
+
+end;
+
+procedure TMainForm.GetSS;
+var
+	SC_hdc: HDC;
+  i: Integer;
+  pt: TPoint;
+  monEx: TMonitorInfoEx;
+begin
+	for i := Low(arSS_HDC) to High(arSS_HDC) do
+  	DeleteDC(arSS_HDC[i]);
+
+  monEx.cbSize := SizeOf(monEx);
+
+	SetLength(arSS_HDC, 0);
+	SetLength(arSS_HDC, Screen.MonitorCount);
+	for i := Low(arSS_HDC) to High(arSS_HDC) do
+	begin
+
+		GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
+
+		SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
+		arSS_HDC[i] := CreateCompatibleDC(SC_hdc);
+		SS_bmp := CreateCompatibleBitmap(SC_hdc, monEx.rcMonitor.Width,
+			monEx.rcMonitor.Height);
+		SelectObject(arSS_HDC[i], SS_bmp);
+
+		try
+			BitBlt(arSS_HDC[i], 0, 0, monEx.rcMonitor.Width, monEx.rcMonitor.Height,
+				SC_hdc, 0, 0, SRCCOPY);
+		finally
+			DeleteObject(SS_bmp);
+			DeleteDC(SC_hdc);
+		end;
+	end;
+end;
+
 procedure TMainForm.btnForeClick(Sender: TObject);
 var
     SC_hdc: HDC;
@@ -2119,31 +2187,7 @@ begin
         else
             SelFore := False;
 
-
-
-        FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
-        monEx.cbSize := SizeOf(monEx);
-
-        SetLength(arSS_HDC, 0);
-        SetLength(arSS_HDC, Screen.MonitorCount);
-        for i := Low(arSS_HDC) to High(arSS_HDC) do
-        begin
-
-
-    			GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
-
-    			SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
-          arSS_HDC[i] := CreateCompatibleDC(SC_hdc);
-        	SS_bmp := CreateCompatibleBitmap(SC_hdc, Monex.rcMonitor.Width , monex.rcMonitor.Height);
-        	SelectObject(arSS_HDC[i], SS_bmp);
-
-          try
-            BitBlt(arSS_HDC[i], 0,0, Monex.rcMonitor.Width , monex.rcMonitor.Height, SC_hdc, 0, 0, SRCCOPY);
-          finally
-        	  DeleteObject(SS_bmp);
-            DeleteDC(SC_hdc);
-          end;
-        end;
+        GetSS;
 
 
         PickForm.ScaleX := ScaleX;
@@ -2219,6 +2263,7 @@ begin
   self.ScaleBy(OriW, CurW);
   self.ScaleBy(DoubleToInt(OriW * ScaleX), OriW);
   CurW := DoubleToInt(OriW * ScaleX);
+  SetThumbHeight;
 end;
 
 end.
