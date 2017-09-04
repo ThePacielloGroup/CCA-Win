@@ -68,7 +68,7 @@ type
     { Public éŒ¾ }
     ScaleY, ScaleX, Dx, Dy: double;
     DefFont: integer;
-    Exec, MoveFlag: Boolean;
+    ftime, MoveFlag: Boolean;
     SPath: string;
     procedure Execute(Mode: Integer);
     procedure ResizeCtrls;
@@ -112,13 +112,14 @@ end;
 
 procedure TConvWndForm.Execute(Mode: Integer);
 begin
-    Exec := True;
+    ftime := True;
     ResizeCtrls;
     OriW := Width;
     CurW := Width;
     self.ScaleBy(DoubleToInt(OriW * ScaleX), OriW);
     CurW := DoubleToInt(OriW * ScaleX);
     iMode := Mode;
+
 end;
 
 Procedure TConvWndForm.SetRGN(Create: Boolean = True);
@@ -199,116 +200,27 @@ begin
   cmbColorChange(self);
 end;
 
-procedure TConvWndForm.cmbColorChange(Sender: TObject);
-var
-    Mode, i: integer;
-    TP: TPoint;
-    SC_hdc, Comp_HDC: HDC;
-    hm: HMonitor;
-    hBMP: hBitmap;
-    FMonitor: TMonitor;
-begin
-    MoveFlag := False;
-    TP.X := Xx;
-    TP.Y := Yy;
-    //FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
-    //monEx.cbSize := SizeOf(monEx);
-    {for i := 0 to Screen.MonitorCount - 1 do
-  	begin
-  		hm := MonitorFromWindow(Handle, MONITOR_DEFAULTTONEAREST);
-
-
-    	if hm = Screen.Monitors[i].Handle then
-    	begin
-    		GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
-
-    		try
-    			SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
-      		BitBlt(BMP.Canvas.Handle, 0, 0, Image1.Width, Image1.Height, SC_hdc, TP.X, TP.Y, SRCCOPY);
-    		finally
-      		DeleteDC(SC_HDC);
-    		end;
-        Break;
-      end;
-    end;   }
-
-    MainForm.GetSS;
-    //FMonitor := Screen.MonitorFromWindow(Handle);
-    hm := MonitorFromWindow(Handle , MONITOR_DEFAULTTONEAREST);
-    for i := 0 to Screen.MonitorCount - 1 do
-    begin
-    	//if PtInRect(monEx.rcMonitor , TP) then
-      if hm = Screen.Monitors[i].Handle then
-      begin
-        TP.X := TP.X - Screen.Monitors[i].Left;// * lx;
-        TP.Y := TP.Y - Screen.Monitors[i].Top;// * ly;
-       	BitBlt(BMP.Canvas.Handle, 0, 0, Image1.Width, Image1.Height, MainForm.arSS_hdc[i], TP.X, TP.Y, SRCCOPY);
-        break;
-      end;
-    end;
-    {GetMonitorInfo(hm, @monEx);
-    try
-    			SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
-      		BitBlt(BMP.Canvas.Handle, 0, 0, Image1.Width, Image1.Height, SC_hdc, TP.X, TP.Y, SRCCOPY);
-    		finally
-      		DeleteDC(SC_HDC);
-    		end; }
-    try
-
-      BMP1.Assign(BMP);
-    if cmbColor.ItemIndex = 0 then
-        Mode := 1
-    else if cmbColor.ItemIndex = 1 then
-        Mode := 2
-    else if cmbColor.ItemIndex = 2 then
-        Mode := 3
-    else if cmbColor.ItemIndex = 3 then
-        Mode := 0
-    else if cmbColor.ItemIndex = 4 then
-        Mode := 4
-    else if cmbColor.ItemIndex = 5 then
-        Mode := 5
-    else
-        Mode := 1;
-
-    ThFlag := True;
-    ThFlag2 := False;
-    Image1.Picture.Bitmap.Width := image1.Width;
-    Image1.Picture.Bitmap.Height := image1.Height;
-    btnPV.Enabled := False;
-    if Assigned(ThImg) then
-    begin
-      ThImg.Terminate;
-      while ThFlag do
-        Application.ProcessMessages;
-    end;
-
-    ThIMG := IMG_Conv2.Create(BMP1.ReleaseHandle, Mode, bmp1);
-    ThIMG.OnTerminate := ThDone;
-    ThIMG.Start;
-
-    finally
-
-    end;
-end;
-
 
 procedure TConvWndForm.OnMove(var msg: TWMMove);
 begin
     inherited;
     Xx := Msg.XPos;
-    Yy := Msg.YPos;
-    if not MoveFlag then
-    begin
-        if Assigned(ThImg) then ThIMG.Terminate;
-        if Assigned(ThImg2) then ThIMG2.Terminate;
-        SetRGN;
-    end;
-    MoveFlag := True;
-
+    Yy := msg.YPos;
+		if not ftime then
+		begin
+			if (not MoveFlag) then
+			begin
+				if assigned(ThIMG) then
+					ThIMG.Terminate;
+				if assigned(ThIMG2) then
+					ThIMG2.Terminate;
+				SetRGN;
+			end;
+			MoveFlag := True;
+		end;
 end;
 
-procedure TConvWndForm.ThDone(Sender: TObject);
+	procedure TConvWndForm.ThDone(Sender: TObject);
 begin
     if Sender is IMG_Conv2 then
       ThIMG := nil;
@@ -323,6 +235,7 @@ begin
       Image1.Picture.Bitmap.Canvas.Draw(0, 0, BMP1);
       btnPV.Enabled := True;
     end;
+    ftime := False;
 end;
 
 
@@ -429,8 +342,8 @@ end;
 
 procedure TConvWndForm.FormShow(Sender: TObject);
 begin
-    SetRGN;
-    MoveFlag := False;
+    cmbColorChange(self);
+
 end;
 
 procedure TConvWndForm.FormKeyPress(Sender: TObject; var Key: Char);
@@ -463,13 +376,85 @@ begin
     SetRGN(True);
 end;
 
+procedure TConvWndForm.cmbColorChange(Sender: TObject);
+var
+    Mode, i: integer;
+    TP: TPoint;
+    SC_hdc, Comp_HDC: HDC;
+    hm: HMonitor;
+    hBMP: hBitmap;
+    FMonitor: TMonitor;
+begin
+    MoveFlag := False;
+    TP.X := Xx;
+    TP.Y := Yy;
+
+    SetRGN;
+    MainForm.GetSS;
+    SetRGN(False);
+    hm := MonitorFromWindow(Handle , MONITOR_DEFAULTTONEAREST);
+    for i := 0 to Screen.MonitorCount - 1 do
+    begin
+      if hm = Screen.Monitors[i].Handle then
+      begin
+        TP.X := TP.X - Screen.Monitors[i].Left;// * lx;
+        TP.Y := TP.Y - Screen.Monitors[i].Top;// * ly;
+       	BitBlt(BMP.Canvas.Handle, 0, 0, Image1.Width, Image1.Height, MainForm.arSS_hdc[i], TP.X, TP.Y, SRCCOPY);
+        break;
+      end;
+    end;
+
+    try
+
+      BMP1.Assign(BMP);
+    if cmbColor.ItemIndex = 0 then
+        Mode := 1
+    else if cmbColor.ItemIndex = 1 then
+        Mode := 2
+    else if cmbColor.ItemIndex = 2 then
+        Mode := 3
+    else if cmbColor.ItemIndex = 3 then
+        Mode := 0
+    else if cmbColor.ItemIndex = 4 then
+        Mode := 4
+    else if cmbColor.ItemIndex = 5 then
+        Mode := 5
+    else
+        Mode := 1;
+
+    ThFlag := True;
+    ThFlag2 := False;
+    Image1.Picture.Bitmap.Width := image1.Width;
+    Image1.Picture.Bitmap.Height := image1.Height;
+    btnPV.Enabled := False;
+    if Assigned(ThImg) then
+    begin
+      ThImg.Terminate;
+      while ThFlag do
+        Application.ProcessMessages;
+    end;
+
+    ThIMG := IMG_Conv2.Create(BMP1.ReleaseHandle, Mode, bmp1);
+    ThIMG.OnTerminate := ThDone;
+    ThIMG.Start;
+
+    finally
+
+    end;
+end;
+
 procedure TConvWndForm.btnPVClick(Sender: TObject);
 var
   iWidth, iHeight, pvm, i, t, w, h: integer;
   monEx: TMonitorInfoEx;
   hm: HMonitor;
-
+  TP: TPoint;
 begin
+	MoveFlag := False;
+    TP.X := Xx;
+    TP.Y := Yy;
+	SetRGN;
+  MainForm.GetSS;
   if not Assigned(pvForm) then
   begin
     pvForm := TpvForm.Create(nil);
@@ -478,20 +463,24 @@ begin
   end;
   pvForm.Show;
   pvForm.WindowState := wsMaximized;
-  //for i := 0 to Screen.MonitorCount - 1 do
-  //begin
-  	//hm := MonitorFromWindow(Handle, MONITOR_DEFAULTTONEAREST);
 
 
-    //if hm = Screen.Monitors[i].Handle then
-    //begin
-    	//GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
-    	monEx.cbSize := SizeOf(monEx);
-      hm := MonitorFromWindow(Handle, MONITOR_DEFAULTTONEAREST);
-    	GetMonitorInfo(hm, @monEx);
+    hm := MonitorFromWindow(Handle , MONITOR_DEFAULTTONEAREST);
+    for i := 0 to Screen.MonitorCount - 1 do
+    begin
+      if hm = Screen.Monitors[i].Handle then
+      begin
+      	monEx.cbSize := SizeOf(monEx);
+      	GetMonitorInfo(hm, @monEx);
+        TP.X := TP.X - Screen.Monitors[i].Left;// * lx;
+        TP.Y := TP.Y - Screen.Monitors[i].Top;// * ly;
+       	BitBlt(BMP.Canvas.Handle, 0, 0, Image1.Width, Image1.Height, MainForm.arSS_hdc[i], TP.X, TP.Y, SRCCOPY);
 
 
-      
+
+
+
+
       if monEx.rcMonitor.Right >= monEx.rcMonitor.Bottom then
       begin
         iWidth := pvForm.ClientWidth div 3;// Screen.Monitors[i].Width div 3;
@@ -586,9 +575,9 @@ begin
 
       end;
 
-      //Break;
-    //end;
-  //end;
+      Break;
+    end;
+  end;
 end;
 
 procedure TConvWndForm.DrawImageName(Mode: integer; RC: TRect);
