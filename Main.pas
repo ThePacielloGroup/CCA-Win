@@ -666,6 +666,7 @@ var
 	i, w, iHeight: integer;
   dBMP, mBMP: TBitmap;
   tpColor: TColor;
+  dx: double;
 begin
 	iHeight := (grdfrgb.ClientHeight div 6) - 5;
 
@@ -695,21 +696,7 @@ begin
     	TAccTrackBar(grdBHSV.Controls[i]).ThumbLength := iHeight;
   end;
 
-  i := DoubleToInt(50 * ScaleX);
-  w := (grdFHex.ClientWidth - i) div 2;
-  grdFHex.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
-  grdFHex.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
-  grdFHex.ColumnCollection.Items[2].SizeStyle := TSizeStyle.ssAbsolute;
-  grdFHex.ColumnCollection.Items[0].Value := w;
-  grdFHex.ColumnCollection.Items[1].Value := i;
-  grdFHex.ColumnCollection.Items[2].Value := w;
 
-  grdBHex.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
-  grdBHex.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
-  grdBHex.ColumnCollection.Items[2].SizeStyle := TSizeStyle.ssAbsolute;
-  grdBHex.ColumnCollection.Items[0].Value := w;
-  grdBHex.ColumnCollection.Items[1].Value := i;
-  grdBHex.ColumnCollection.Items[2].Value := w;
 
   dBMP := TBitmap.Create;
   mBMP := TBitmap.Create;
@@ -738,6 +725,27 @@ begin
  		dBMP.Free;
   	mBMP.Free;
   end;
+  if (ScaleX = 1.0) and (cDPI > 96) then
+  	dx := cDPI / 96
+  else
+  	dx := ScaleX;
+  i := DoubleToInt(50 * dx);
+  if i < 50 then
+  	i := 50;
+  w := (grdFHex.ClientWidth - i) div 2;
+  grdFHex.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHex.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHex.ColumnCollection.Items[2].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHex.ColumnCollection.Items[0].Value := w;
+  grdFHex.ColumnCollection.Items[1].Value := i;
+  grdFHex.ColumnCollection.Items[2].Value := w;
+
+  grdBHex.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHex.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHex.ColumnCollection.Items[2].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHex.ColumnCollection.Items[0].Value := w;
+  grdBHex.ColumnCollection.Items[1].Value := i;
+  grdBHex.ColumnCollection.Items[2].Value := w;
 end;
 
 procedure TMainForm.ResGroupSizeChange(Large: boolean = True);
@@ -1242,6 +1250,7 @@ begin
     self.ChangeScale(DoubleToInt(width * ScaleX), width);
     SetThumbHeight;
     cDPI := DoubleToInt(DefY * ScaleY);
+
     bFirstTime := False;
 end;
 
@@ -2360,9 +2369,8 @@ end;
 
 procedure  TMainForm.WMDPIChanged(var Message: TMessage);
 begin
-
-  scaleX := Message.WParamLo / DefX;//96.0;
-  scaleY := Message.WParamHi / DefY;//96.0;
+  scaleX := Message.WParamLo / DefX;
+  scaleY := Message.WParamHi / DefY;
   if (not bFirstTime) and (cDPI <> Message.WParamLo) then
   begin
 		self.ChangeScale(Message.WParamLo, cDPI);
