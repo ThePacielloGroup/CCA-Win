@@ -4,7 +4,7 @@ object MainForm: TMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Colour Contrast Analyser'
-  ClientHeight = 608
+  ClientHeight = 675
   ClientWidth = 730
   Color = clBtnFace
   DoubleBuffered = True
@@ -4389,7 +4389,7 @@ object MainForm: TMainForm
   TextHeight = 14
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 589
+    Top = 656
     Width = 730
     Height = 19
     Panels = <>
@@ -4471,6 +4471,7 @@ object MainForm: TMainForm
           Control = chkFGSync
           Row = 0
         end>
+      ParentBackground = False
       RowCollection = <
         item
           Value = 16.650862524577660000
@@ -4683,7 +4684,7 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       ColumnCollection = <
         item
-          Value = 80.578211862068210000
+          Value = 80.578211862068220000
         end
         item
           Value = 19.421788137931780000
@@ -4957,6 +4958,7 @@ object MainForm: TMainForm
           Control = Edit1
           Row = 1
         end>
+      ParentBackground = False
       RowCollection = <
         item
           Value = 50.000000000000000000
@@ -5046,10 +5048,6 @@ object MainForm: TMainForm
         CtrlRight = Edit1
         CtrlLeft = FJColor
         CtrlDown = tbFR
-        ExplicitLeft = 127
-        ExplicitTop = 22
-        ExplicitWidth = 50
-        ExplicitHeight = 26
       end
       object Edit1: TAccMaskEdit
         AlignWithMargins = True
@@ -5075,10 +5073,6 @@ object MainForm: TMainForm
         CtrlPrev = sbtnFore
         CtrlLeft = sbtnFore
         CtrlDown = tbFR
-        ExplicitLeft = 178
-        ExplicitTop = 28
-        ExplicitWidth = 119
-        ExplicitHeight = 20
       end
     end
   end
@@ -5613,7 +5607,7 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       ColumnCollection = <
         item
-          Value = 80.473545220278390000
+          Value = 80.473545220278380000
         end
         item
           Value = 19.526454779721620000
@@ -5976,10 +5970,6 @@ object MainForm: TMainForm
         CtrlPrev = BColor
         CtrlLeft = BColor
         CtrlDown = tbBR
-        ExplicitLeft = 127
-        ExplicitTop = 28
-        ExplicitWidth = 45
-        ExplicitHeight = 20
       end
       object Edit2: TAccMaskEdit
         AlignWithMargins = True
@@ -6005,10 +5995,6 @@ object MainForm: TMainForm
         CtrlPrev = sbtnBack
         CtrlLeft = sbtnBack
         CtrlDown = tbBR
-        ExplicitLeft = 178
-        ExplicitTop = 28
-        ExplicitWidth = 119
-        ExplicitHeight = 20
       end
     end
   end
@@ -6018,7 +6004,7 @@ object MainForm: TMainForm
     Left = 448
     Top = 396
     Bitmap = {
-      494C0101020004004C0214001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020004005C0214001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000500000001400000001002000000000000019
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -6387,6 +6373,60 @@ object MainForm: TMainForm
         OnMeasureItem = mnuHelpMeasureItem
       end
     end
+    object mnuFilter: TMenuItem
+      Caption = '&Colour filter'
+      OnClick = mnuFilterClick
+      object mnuFilOff: TMenuItem
+        AutoCheck = True
+        Caption = '&Off'
+        Checked = True
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilOffClick
+      end
+      object mnuFilGrey: TMenuItem
+        AutoCheck = True
+        Caption = '&Greyscale'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilGreyClick
+      end
+      object mnuFilInv: TMenuItem
+        AutoCheck = True
+        Caption = '&Invert'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilInvClick
+      end
+      object mnuFilGInv: TMenuItem
+        AutoCheck = True
+        Caption = 'G&reyscale Inverted'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilGInvClick
+      end
+      object mnuFilD: TMenuItem
+        AutoCheck = True
+        Caption = '&Deuteranopia'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilDClick
+      end
+      object mnuFilP: TMenuItem
+        AutoCheck = True
+        Caption = '&Protanopia'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilPClick
+      end
+      object mnuFilT: TMenuItem
+        AutoCheck = True
+        Caption = '&Tritanopia'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilTClick
+      end
+    end
     object mnuHelp: TMenuItem
       Caption = '&Help'
       OnDrawItem = mnuHelpDrawItem
@@ -6525,7 +6565,7 @@ object MainForm: TMainForm
     Left = 312
     Top = 408
     Bitmap = {
-      494C0101010004004C0210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101010004005C0210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       00000000000000000000000000000000000000000000BFBF0000BFBF0000BFBF
       0000BFBF0000BFBF0000BFBF0000BFBF00000000000000000000000000000000

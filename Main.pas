@@ -24,7 +24,7 @@ uses
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorConvert,
   ImgList, Buttons, IniFiles, ActnList, AccCtrls, ShellAPI, Menus, MultiMon,
   Mask, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, Actions, PermonitorApi,
-  System.ImageList;
+  System.ImageList, System.Win.Registry;
 resourcestring
   B_Difference = 'brightness difference :';
   C_Difference = 'colour difference :';
@@ -180,6 +180,14 @@ type
     Edit2: TAccMaskEdit;
     chkFGSync: TTransCheckBox;
     chkBGSync: TTransCheckBox;
+    mnuFilter: TMenuItem;
+    mnuFilOff: TMenuItem;
+    mnuFilGrey: TMenuItem;
+    mnuFilInv: TMenuItem;
+    mnuFilGInv: TMenuItem;
+    mnuFilD: TMenuItem;
+    mnuFilP: TMenuItem;
+    mnuFilT: TMenuItem;
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure Edit2KeyPress(Sender: TObject; var Key: Char);
     procedure mnuHexClick(Sender: TObject);
@@ -242,6 +250,14 @@ type
     procedure BVEditChange(Sender: TObject);
     procedure mnuRGBSliderClick(Sender: TObject);
     procedure mnuHSVSliderClick(Sender: TObject);
+    procedure mnuFilterClick(Sender: TObject);
+    procedure mnuFilOffClick(Sender: TObject);
+    procedure mnuFilGreyClick(Sender: TObject);
+    procedure mnuFilInvClick(Sender: TObject);
+    procedure mnuFilGInvClick(Sender: TObject);
+    procedure mnuFilDClick(Sender: TObject);
+    procedure mnuFilPClick(Sender: TObject);
+    procedure mnuFilTClick(Sender: TObject);
   private
     { Private declare }
     FR, FG, FB, BR, BG, BB: integer;
@@ -406,7 +422,7 @@ end;
 
 procedure TMainForm.ResizeCtrls;
 var
-  sWidth, sHeight, mH: integer;
+  sWidth, sHeight, mH, wSync: integer;
   dc: HDC;
   ACanvas: TCanvas;
     procedure GetStrSize(Cap: string; cv: TCanvas);
@@ -423,21 +439,16 @@ begin
   if (ScaleY > 1.0) and (sWidth < 125) then
     sWidth := 130;
 
-  if (sWidth > 125) then
-  begin
-    grdFHex.Width := (sWidth) * 2 + 50;
-  end
-  else
-    grdFHex.Width := 310;
+  sWidth := sWidth + 10;
+  grdFHex.Width := (sWidth) * 2 + 50;
+
   if sHeight > 25 then
   begin
-    //grdFHex.Height := (sHeight + 10) * 2;
     grdFHex.Top := sHeight;
     grdBHex.Top := sHeight;
   end
   else
   begin
-    //grdFHex.Height := 55;
     grdFHex.Top := sHeight {div 2 + 10};
     grdBHex.Top := sHeight {div 2 + 10};
   end;
@@ -468,9 +479,6 @@ begin
 
 
 
-
-
-
   gbFore.Height := grdFHex.BoundsRect.Bottom + 10;
   if mnuRGBSlider.Checked then
   begin
@@ -495,6 +503,8 @@ begin
   grdBRGB.Height := grdFRGB.Height;
   grdBHSV.Width := grdBRGB.Width;
   grdBHSV.Height := grdBRGB.Height;
+
+
 
   if mnuRGBSlider.Checked then
   begin
@@ -663,7 +673,7 @@ end;
 
 procedure TMainForm.SetThumbHeight;
 var
-	i, w, iHeight: integer;
+	i, w, iHeight, wSync: integer;
   dBMP, mBMP: TBitmap;
   tpColor: TColor;
   dx: double;
@@ -746,6 +756,27 @@ begin
   grdBHex.ColumnCollection.Items[0].Value := w;
   grdBHex.ColumnCollection.Items[1].Value := i;
   grdBHex.ColumnCollection.Items[2].Value := w;
+
+  wSync := Canvas.TextWidth(chkFGSync.Caption + 'AA') + 5;
+  grdFRGB.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFRGB.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFRGB.ColumnCollection.Items[0].Value := grdFRGB.ClientWidth - wSync;
+  grdFRGB.ColumnCollection.Items[1].Value := wSync;
+
+  grdFHSV.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHSV.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHSV.ColumnCollection.Items[0].Value := grdFRGB.ColumnCollection.Items[0].Value;
+  grdFHSV.ColumnCollection.Items[1].Value := grdFRGB.ColumnCollection.Items[1].Value;
+
+  grdBRGB.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBRGB.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBRGB.ColumnCollection.Items[0].Value := grdBRGB.ClientWidth - wSync;
+  grdBRGB.ColumnCollection.Items[1].Value := wSync;
+
+  grdBHSV.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHSV.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHSV.ColumnCollection.Items[0].Value := grdBRGB.ColumnCollection.Items[0].Value;
+  grdBHSV.ColumnCollection.Items[1].Value := grdBRGB.ColumnCollection.Items[1].Value;
 end;
 
 procedure TMainForm.ResGroupSizeChange(Large: boolean = True);
@@ -1123,6 +1154,15 @@ begin
         lblBV.Caption := lblFV.Caption;
         mnuRGBSlider.Caption := ini.ReadString('Translations', 'rgb_menu', '&RGB');
         mnuHSVSlider.Caption := ini.ReadString('Translations', 'hsv_menu', '&HSV');
+
+        mnuFilter.Caption := ini.ReadString('Translations', 'ColourFilter', '&Colour Filter');
+        mnuFilGrey.Caption := ini.ReadString('Translations', 'Greyscale', '&Greyscale');
+        mnuFilInv.Caption := ini.ReadString('Translations', 'Invert', '&Invert');
+        mnuFilGInv.Caption := ini.ReadString('Translations', 'GInvert', 'G&reyscale Inverted');
+        mnuFilD.Caption := ini.ReadString('Translations', 'Deuteranopia', '&Deuteranopia');
+        mnuFilP.Caption := ini.ReadString('Translations', 'Protanopia', '&Protanopia');
+        mnuFilT.Caption := ini.ReadString('Translations', 'Tritanopia', '&Tritanopia');
+
     finally
         ini.Free;
     end;
@@ -1429,6 +1469,169 @@ begin
 
 end;
 
+function SendShortcut: cardinal;
+var
+	KIn: array[0..5] of TInput;
+  procedure KbdInput(iIndex: integer; VKey: Byte; Flags: DWORD);
+  begin
+
+    KIn[iIndex].Itype := INPUT_KEYBOARD;
+    with  KIn[iIndex].ki do
+    begin
+      wVk := VKey;
+      wScan := MapVirtualKey(wVk, 0);
+      dwFlags := KEYEVENTF_EXTENDEDKEY;
+      dwFlags := Flags or dwFlags;
+      time := 0;
+      dwExtraInfo := 0;
+    end;
+  end;
+begin
+	KbdInput(0, VK_LWIN, 0);
+  KbdInput(1, VK_CONTROL, 0);
+  KbdInput(2, Ord('C'), 0);
+  KbdInput(3, Ord('C'), KEYEVENTF_KEYUP);
+  KbdInput(4, VK_CONTROL, KEYEVENTF_KEYUP);
+  KbdInput(5, VK_LWIN, KEYEVENTF_KEYUP);
+  Result := SendInput(6, KIn[0], SizeOf(KIn[0]));
+end;
+
+procedure FilterRegSetting(iIdx: integer);
+var
+	Reg: TRegistry;
+begin
+  if TOSVersion.Build >= 16215 then
+  begin
+		Reg := TRegistry.Create;
+    try
+			try
+				Reg.RootKey := HKEY_CURRENT_USER;
+				if Reg.OpenKey('Software\Microsoft\ColorFiltering', False) then
+				begin
+        	Reg.WriteInteger('HotkeyEnabled', 1);
+					if Reg.ReadInteger('Active') = 0 then
+          begin
+          	Reg.WriteInteger('FilterType', iIdx);
+          	SendShortcut;
+          end
+          else
+          begin
+          	SendShortcut;
+            Reg.WriteInteger('FilterType', iIdx);
+            SendShortcut;
+          end;
+				end;
+			finally
+				Reg.Free;
+			end;
+		except
+		end;
+  end;
+end;
+
+procedure TMainForm.mnuFilGreyClick(Sender: TObject);
+begin
+	FilterRegSetting(0);
+end;
+
+procedure TMainForm.mnuFilInvClick(Sender: TObject);
+begin
+	FilterRegSetting(1);
+end;
+
+procedure TMainForm.mnuFilGInvClick(Sender: TObject);
+begin
+	FilterRegSetting(2);
+end;
+
+procedure TMainForm.mnuFilDClick(Sender: TObject);
+begin
+	FilterRegSetting(3);
+end;
+
+procedure TMainForm.mnuFilPClick(Sender: TObject);
+begin
+	FilterRegSetting(4);
+end;
+
+procedure TMainForm.mnuFilTClick(Sender: TObject);
+begin
+	FilterRegSetting(5);
+end;
+
+procedure TMainForm.mnuFilOffClick(Sender: TObject);
+var
+	Reg: TRegistry;
+begin
+  if TOSVersion.Build >= 16215 then
+  begin
+		Reg := TRegistry.Create;
+    try
+			try
+				Reg.RootKey := HKEY_CURRENT_USER;
+				if Reg.OpenKey('Software\Microsoft\ColorFiltering', False) then
+				begin
+        	if Reg.ReadInteger('Active') = 1 then
+          	SendShortcut;
+
+				end;
+			finally
+				Reg.Free;
+			end;
+		except
+    	mnuFilOff.Checked := True;
+		end;
+  end;
+end;
+
+
+procedure TMainForm.mnuFilterClick(Sender: TObject);
+var
+	Reg: TRegistry;
+  i, iFil: integer;
+begin
+	for i := 0 to mnuFilter.Count - 1 do
+      mnuFilter.Items[i].Enabled := False;
+	if TOSVersion.Build >= 16215 then
+  begin
+		Reg := TRegistry.Create;
+    try
+			try
+				Reg.RootKey := HKEY_CURRENT_USER;
+				if Reg.OpenKey('Software\Microsoft\ColorFiltering', False) then
+				begin
+        	Reg.WriteInteger('HotkeyEnabled', 1);
+					if Reg.ReadInteger('Active') = 0 then
+          begin
+          	mnuFilOff.Checked := True;
+          end
+          else
+          begin
+          	iFil := Reg.ReadInteger('FilterType');
+            case iFil of
+            	0: mnuFilGrey.Checked := True;
+              1: mnuFilInv.Checked := True;
+              2: mnuFilGInv.Checked := True;
+              3: mnuFilD.Checked := True;
+              4: mnuFilP.Checked := True;
+              5: mnuFilT.Checked := True;
+            else
+              mnuFilOff.Checked := True;
+            end;
+          end;
+          for i := 0 to mnuFilter.Count - 1 do
+      			mnuFilter.Items[i].Enabled := True;
+				end;
+			finally
+				Reg.Free;
+			end;
+		except
+    	mnuFilOff.Checked := True;
+		end;
+  end;
+
+end;
+
 procedure TMainForm.mnuFontClick(Sender: TObject);
 var
     ini: TMemIniFile;
@@ -1465,18 +1668,7 @@ begin
 
 end;
 
-procedure TMainForm.mnuAboutClick(Sender: TObject);
-var
-    AboutForm: TAboutForm;
-begin
-    AboutForm := TAboutForm.Create(self);
-    AboutForm.PopupParent := Self;
-    AboutForm.Font := Font;
-    AboutForm.TransPath := TransPath;
-    AboutForm.LoadINI;
-    AboutForm.ShowModal;
-    AboutForm.Free;
-end;
+
 
 procedure TMainForm.mnuHexClick(Sender: TObject);
 begin
@@ -2223,6 +2415,24 @@ begin
         FreeAndNil(frmIMGConvert);
         mnuOnTopClick(self);
     end;
+end;
+
+procedure TMainForm.mnuAboutClick(Sender: TObject);
+var
+    AboutForm: TAboutForm;
+begin
+    AboutForm := TAboutForm.Create(self);
+    AboutForm.PopupParent := Self;
+    AboutForm.Font := Font;
+    AboutForm.DefFont := DefFont;
+    AboutForm.Dy := DefY;
+    AboutForm.Dx := DefX;
+    AboutForm.ScaleX := ScaleX;
+    AboutForm.ScaleY := ScaleY;
+    AboutForm.TransPath := TransPath;
+    AboutForm.LoadINI;
+    AboutForm.ShowModal;
+    AboutForm.Free;
 end;
 
 procedure TMainForm.mnuScreenClick(Sender: TObject);
