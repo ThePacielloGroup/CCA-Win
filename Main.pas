@@ -24,7 +24,7 @@ uses
   Dialogs, StdCtrls, ExtCtrls, ComCtrls, ColorConvert,
   ImgList, Buttons, IniFiles, ActnList, AccCtrls, ShellAPI, Menus, MultiMon,
   Mask, FormIMGConvert, ToolWin, Clipbrd, ShlObj, ComObj, Actions, PermonitorApi,
-  System.ImageList;
+  System.ImageList, System.Win.Registry;
 resourcestring
   B_Difference = 'brightness difference :';
   C_Difference = 'colour difference :';
@@ -180,6 +180,14 @@ type
     Edit2: TAccMaskEdit;
     chkFGSync: TTransCheckBox;
     chkBGSync: TTransCheckBox;
+    mnuFilter: TMenuItem;
+    mnuFilOff: TMenuItem;
+    mnuFilGrey: TMenuItem;
+    mnuFilInv: TMenuItem;
+    mnuFilGInv: TMenuItem;
+    mnuFilD: TMenuItem;
+    mnuFilP: TMenuItem;
+    mnuFilT: TMenuItem;
     procedure Edit1KeyPress(Sender: TObject; var Key: Char);
     procedure Edit2KeyPress(Sender: TObject; var Key: Char);
     procedure mnuHexClick(Sender: TObject);
@@ -242,16 +250,26 @@ type
     procedure BVEditChange(Sender: TObject);
     procedure mnuRGBSliderClick(Sender: TObject);
     procedure mnuHSVSliderClick(Sender: TObject);
+    procedure mnuFilterClick(Sender: TObject);
+    procedure mnuFilOffClick(Sender: TObject);
+    procedure mnuFilGreyClick(Sender: TObject);
+    procedure mnuFilInvClick(Sender: TObject);
+    procedure mnuFilGInvClick(Sender: TObject);
+    procedure mnuFilDClick(Sender: TObject);
+    procedure mnuFilPClick(Sender: TObject);
+    procedure mnuFilTClick(Sender: TObject);
   private
     { Private declare }
     FR, FG, FB, BR, BG, BB: integer;
-    OriW, CurW: integer;
+    cDPI, sDPI: integer;
     Hex, RGB, copied: string;
     bSetValue: Boolean;
     Transpath, APPDir, SPath, TransDir: string;
     LangList: TStringList;
     DefFont, iEventCtrl: integer; //iEventCtrl  0=none, 1=dropdown, 2=HexEdit, 3=RGBSlider, 4=RGBEdit, 5=HSVSlider, 6=HSVEdit
     ScaleX, ScaleY, DefX, DefY: double;
+    bFirstTime: boolean;
+    OriBMP: TBitmap;
     procedure OnSHint(Sender: TObject);
     procedure SetTBPos;
     procedure FGGroupSizeChange(Large: boolean = True);
@@ -261,6 +279,7 @@ type
     procedure LoadLang(mnuCreate: boolean = true);
     procedure mnuLangChildClick(Sender: TObject);
     procedure WMDPIChanged(var Message: TMessage); message WM_DPICHANGED;
+    procedure SetThumbHeight;
   public
     { Public declare }
     arSS_HDC: array of HDC;
@@ -269,6 +288,7 @@ type
     Dither1, Dither2: byte;
     function CalcColor: Extended;
     Procedure SetAbsoluteForegroundWindow(HWND: hWnd);
+    procedure GetSS;
     function GetTranslation(Key, Default: string): string;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -386,22 +406,23 @@ end;
 function GetMyDocPath: string;
 var
   IIDList: PItemIDList;
+  hr: hresult;
   buffer: array [0..MAX_PATH - 1] of char;
 begin
   IIDList := nil;
-
-  OleCheck(SHGetSpecialFolderLocation(Application.Handle,
-    CSIDL_PERSONAL, IIDList));
-  if not SHGetPathFromIDList(IIDList, buffer) then
+  Result := '';
+  hr := SHGetSpecialFolderLocation(Application.Handle,
+    CSIDL_PERSONAL, IIDList);
+  if SHGetPathFromIDList(IIDList, buffer) then
   begin
-    raise Exception.Create('The folder path cannot be acquired, because the folder is a virtual folder.');
+    Result := StrPas(Buffer);
   end;
-  Result := StrPas(Buffer);
+
 end;
 
 procedure TMainForm.ResizeCtrls;
 var
-  sWidth, sHeight, mH: integer;
+  sWidth, sHeight, mH, wSync: integer;
   dc: HDC;
   ACanvas: TCanvas;
     procedure GetStrSize(Cap: string; cv: TCanvas);
@@ -410,27 +431,24 @@ var
       sHeight := cv.TextHeight(Cap) + 2;
     end;
 begin
-  Font.Size := DefFont;//DoubleToInt(DefFont * ScaleY);
+	if (not bFirstTime) and (ScaleX <> 1) then
+		self.ChangeScale(sDPI, cDPI);
+  Font.Size := DefFont;
   Canvas.Font := Font;
   GetStrSize(label1.Caption, Canvas);
   if (ScaleY > 1.0) and (sWidth < 125) then
     sWidth := 130;
 
-  if (sWidth > 125) then
-  begin
-    grdFHex.Width := (sWidth) * 2 + 50;
-  end
-  else
-    grdFHex.Width := 310;
+  sWidth := sWidth + 10;
+  grdFHex.Width := (sWidth) * 2 + 50;
+
   if sHeight > 25 then
   begin
-    //grdFHex.Height := (sHeight + 10) * 2;
     grdFHex.Top := sHeight;
     grdBHex.Top := sHeight;
   end
   else
   begin
-    //grdFHex.Height := 55;
     grdFHex.Top := sHeight {div 2 + 10};
     grdBHex.Top := sHeight {div 2 + 10};
   end;
@@ -459,24 +477,15 @@ begin
   grdFHSV.Visible := mnuHSVSlider.Checked;
   grdBHSV.Visible := mnuHSVSlider.Checked;
 
-  grdFHSV.Width := grdFRGB.Width;
-  grdFHSV.Height := grdFRGB.Height;
-
-  grdBRGB.Width := grdFRGB.Width;
-  grdBRGB.Height := grdFRGB.Height;
-  grdBHSV.Width := grdBRGB.Width;
-  grdBHSV.Height := grdBRGB.Height;
 
 
   gbFore.Height := grdFHex.BoundsRect.Bottom + 10;
   if mnuRGBSlider.Checked then
   begin
     grdFRGB.Top := grdFHex.BoundsRect.Bottom;
-    gbFore.Height := grdFRGB.BoundsRect.Bottom + 10;
     if mnuHSVSlider.Checked then
     begin
       grdFHSV.Top := grdFRGB.BoundsRect.Bottom;
-      gbFore.Height := grdFHSV.BoundsRect.Bottom + 10;
     end;
   end
   else
@@ -484,11 +493,34 @@ begin
     if mnuHSVSlider.Checked then
     begin
       grdFHSV.Top := grdFHex.BoundsRect.Bottom;
-      gbFore.Height := grdFHSV.BoundsRect.Bottom + 10;
     end;
   end;
   grdBRGB.Top := grdFRGB.Top;
   grdBHSV.Top := grdFHSV.Top;
+  grdFHSV.Width := grdFRGB.Width;
+  grdFHSV.Height := grdFRGB.Height;
+  grdBRGB.Width := grdFRGB.Width;
+  grdBRGB.Height := grdFRGB.Height;
+  grdBHSV.Width := grdBRGB.Width;
+  grdBHSV.Height := grdBRGB.Height;
+
+
+
+  if mnuRGBSlider.Checked then
+  begin
+    gbFore.Height := grdFRGB.BoundsRect.Bottom + 10;
+    if mnuHSVSlider.Checked then
+    begin
+      gbFore.Height := grdFHSV.BoundsRect.Bottom + 10;
+    end;
+  end
+  else
+  begin
+    if mnuHSVSlider.Checked then
+    begin
+      gbFore.Height := grdFHSV.BoundsRect.Bottom + 10;
+    end;
+  end;
 
   gbBack.Height := gbFore.Height;
 
@@ -527,6 +559,14 @@ begin
   Memo1.Left := gbText.BoundsRect.Right + 8;
   Memo1.Top := gbText.Top;
   Memo1.Width := gbResNormal.ClientWidth - gbText.Width - 24;
+  Image1.Width := sHeight;
+  Image1.height := sHeight;
+  Image7.Width := sHeight;
+  Image7.height := sHeight;
+  Image8.Width := sHeight;
+  Image8.height := sHeight;
+  Image9.Width := sHeight;
+  Image9.height := sHeight;
 
   edtnormal_t.Top := Image1.Top;
   edtnormal_t.Left := Image1.BoundsRect.Right + 5;
@@ -619,8 +659,124 @@ begin
   edtTrita.Top := edtDeutera.BoundsRect.Bottom + 5 + mH;
   edtTrita.Font.Size := DefFont;//DoubleToInt(DefFont * ScaleY);
 
+
   clientWidth := gbBack.BoundsRect.Right + 10;
   clientHeight := gbResnormal.BoundsRect.Bottom + Statusbar1.Height + 10;
+
+  application.ProcessMessages;
+  if not bFirstTime then
+		self.ChangeScale(DoubleToInt(width * ScaleX), width);
+  SetThumbHeight;
+
+end;
+
+
+procedure TMainForm.SetThumbHeight;
+var
+	i, w, iHeight, wSync: integer;
+  dBMP, mBMP: TBitmap;
+  tpColor: TColor;
+  dx: double;
+begin
+	iHeight := (grdfrgb.ClientHeight div 6) - 5;
+
+  FJColor.Itemheight :=  iHeight - DoubletoInt(4 * ScaleX);
+  BColor.Itemheight :=  FJColor.Itemheight;
+	for i := 0 to grdFRGB.ControlCount - 1 do
+  begin
+    if grdFRGB.Controls[i] is TAccTrackBar then
+    	TAccTrackBar(grdFRGB.Controls[i]).ThumbLength := iHeight;
+  end;
+
+  for i := 0 to grdFHSV.ControlCount - 1 do
+  begin
+    if grdFHSV.Controls[i] is TAccTrackBar then
+    	TAccTrackBar(grdFHSV.Controls[i]).ThumbLength := iHeight;
+  end;
+
+  for i := 0 to grdBRGB.ControlCount - 1 do
+  begin
+    if grdBRGB.Controls[i] is TAccTrackBar then
+    	TAccTrackBar(grdBRGB.Controls[i]).ThumbLength := iHeight;
+  end;
+
+  for i := 0 to grdBHSV.ControlCount - 1 do
+  begin
+    if grdBHSV.Controls[i] is TAccTrackBar then
+    	TAccTrackBar(grdBHSV.Controls[i]).ThumbLength := iHeight;
+  end;
+
+
+
+  dBMP := TBitmap.Create;
+  mBMP := TBitmap.Create;
+  try
+  	iHeight := DoubleToInt(16 * ScaleX);
+  	dBMP.PixelFormat :=pf24bit;
+		mBMP.PixelFormat :=pf24bit;
+  	dBMP.Width := iHeight;
+  	dBMP.Height := iHeight;
+  	mBMP.Width := iHeight;
+  	mBMP.Height := iHeight;
+
+  	tpColor := OriBMP.Canvas.Pixels[0, 0];
+
+    StretchBlt(dBMP.Canvas.Handle, 0, 0, dBMP.Width, dBMP.Height, OriBMP.Canvas.Handle, 0, 0, OriBMP.Width, OriBMP.Height, SRCCOPY);
+  	StretchBlt(mBMP.Canvas.Handle, 0, 0, mBMP.Width, mBMP.Height, OriBMP.Canvas.Handle, 0, 0, OriBMP.Width, OriBMP.Height, SRCCOPY);
+  	mBMP.Mask(tpColor);
+
+    ImageList2.Delete(0);
+
+    ImageList2.Height := iHeight;
+  	ImageList2.Width := iHeight;
+  	ImageList2.Add(dBMP, mBMP);
+
+  finally
+ 		dBMP.Free;
+  	mBMP.Free;
+  end;
+  if (ScaleX = 1.0) and (cDPI > 96) then
+  	dx := cDPI / 96
+  else
+  	dx := ScaleX;
+  i := DoubleToInt(50 * dx);
+  if i < 50 then
+  	i := 50;
+  w := (grdFHex.ClientWidth - i) div 2;
+  grdFHex.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHex.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHex.ColumnCollection.Items[2].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHex.ColumnCollection.Items[0].Value := w;
+  grdFHex.ColumnCollection.Items[1].Value := i;
+  grdFHex.ColumnCollection.Items[2].Value := w;
+
+  grdBHex.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHex.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHex.ColumnCollection.Items[2].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHex.ColumnCollection.Items[0].Value := w;
+  grdBHex.ColumnCollection.Items[1].Value := i;
+  grdBHex.ColumnCollection.Items[2].Value := w;
+
+  wSync := Canvas.TextWidth(chkFGSync.Caption + 'AA') + 5;
+  grdFRGB.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFRGB.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFRGB.ColumnCollection.Items[0].Value := grdFRGB.ClientWidth - wSync;
+  grdFRGB.ColumnCollection.Items[1].Value := wSync;
+
+  grdFHSV.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHSV.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdFHSV.ColumnCollection.Items[0].Value := grdFRGB.ColumnCollection.Items[0].Value;
+  grdFHSV.ColumnCollection.Items[1].Value := grdFRGB.ColumnCollection.Items[1].Value;
+
+  grdBRGB.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBRGB.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBRGB.ColumnCollection.Items[0].Value := grdBRGB.ClientWidth - wSync;
+  grdBRGB.ColumnCollection.Items[1].Value := wSync;
+
+  grdBHSV.ColumnCollection.Items[0].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHSV.ColumnCollection.Items[1].SizeStyle := TSizeStyle.ssAbsolute;
+  grdBHSV.ColumnCollection.Items[0].Value := grdBRGB.ColumnCollection.Items[0].Value;
+  grdBHSV.ColumnCollection.Items[1].Value := grdBRGB.ColumnCollection.Items[1].Value;
 end;
 
 procedure TMainForm.ResGroupSizeChange(Large: boolean = True);
@@ -832,16 +988,19 @@ begin
             TransPath := TransDir + lf;
             //showmessage(Transpath);
             LoadLang(False);
-            ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
-            try
-                Ini.WriteString('Settings', 'FontName', Font.Name);
-                ini.WriteInteger('Settings', 'FontSize', Font.Size);
-                Ini.WriteInteger('Settings', 'Charset', Font.Charset);
-                Ini.WriteString('Settings', 'LangFile', lf);
-                ini.UpdateFile;
-            finally
-                ini.Free;
-            end;
+            if FileExists(SPath) then
+						begin
+							ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+							try
+								ini.WriteString('Settings', 'FontName', Font.Name);
+								ini.WriteInteger('Settings', 'FontSize', Font.Size);
+								ini.WriteInteger('Settings', 'Charset', Font.Charset);
+								ini.WriteString('Settings', 'LangFile', lf);
+								ini.UpdateFile;
+							finally
+								ini.Free;
+							end;
+						end;
         end;
     end;
 end;
@@ -855,19 +1014,21 @@ var
 begin
     if mnuCreate then
     begin
+    	if FileExists(SPath) then
+			begin
+				ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
 
-        ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+				try
+					if mnuLang.Visible then
+					begin
+						d := ini.ReadString('Settings', 'LangFile', 'Default.ini');
+						Transpath := TransDir + d;
+					end;
+				finally
+					ini.Free;
 
-        try
-            if mnuLang.Visible then
-            begin
-                d := Ini.ReadString('Settings', 'LangFile', 'Default.ini');
-                TransPath := TransDir + d;
-            end;
-        finally
-            ini.Free;
-
-        end;
+				end;
+			end;
         if mnuLang.Visible then
         begin
             if LangList.Count = 0 then
@@ -993,6 +1154,15 @@ begin
         lblBV.Caption := lblFV.Caption;
         mnuRGBSlider.Caption := ini.ReadString('Translations', 'rgb_menu', '&RGB');
         mnuHSVSlider.Caption := ini.ReadString('Translations', 'hsv_menu', '&HSV');
+
+        mnuFilter.Caption := ini.ReadString('Translations', 'ColourFilter', '&Colour Filter');
+        mnuFilGrey.Caption := ini.ReadString('Translations', 'Greyscale', '&Greyscale');
+        mnuFilInv.Caption := ini.ReadString('Translations', 'Invert', '&Invert');
+        mnuFilGInv.Caption := ini.ReadString('Translations', 'GInvert', 'G&reyscale Inverted');
+        mnuFilD.Caption := ini.ReadString('Translations', 'Deuteranopia', '&Deuteranopia');
+        mnuFilP.Caption := ini.ReadString('Translations', 'Protanopia', '&Protanopia');
+        mnuFilT.Caption := ini.ReadString('Translations', 'Tritanopia', '&Tritanopia');
+
     finally
         ini.Free;
     end;
@@ -1007,13 +1177,18 @@ var
     slist: TStringList;
     enc: TEncoding;
 begin
-
+    bFirstTime := True;
     SystemCanSupportPerMonitorDpi(true);
-    GetDCap(handle, Defx, Defy);
-    GetWindowScale(Handle, DefX, DefY, ScaleX, ScaleY);
+    GetDCap(self.Handle, Defx, Defy);
+    GetWindowScale(self.Handle, DefX, DefY, ScaleX, ScaleY);
+    cDPI := DoubleToInt(DefY * ScaleY);
+    sDPI := cDPI;
     iEventCtrl := 0;
     FJColor.Align := alClient;
     BColor.Align := alClient;
+
+    OriBMP := TBitmap.Create;
+    Imagelist2.GetBitmap(0, oriBMP);
     {dc := GetDC(0);
     scaleX := GetDeviceCaps(dc, LOGPIXELSX) / 96.0;
     scaleY := GetDeviceCaps(dc, LOGPIXELSY) / 96.0;
@@ -1031,41 +1206,43 @@ begin
     SelFore := True;
 
     Application.OnHint := OnSHint;
-
     if FileExists(SPath) then
-    begin
-      slist := TStringList.Create;
-      try
-        slist.LoadFromFile(SPath);
-        if slist.Encoding <> TEncoding.Unicode then
-          slist.SaveToFile(SPath, TEncoding.Unicode);
-      finally
-        slist.Free;
-      end;
+		begin
+			slist := TStringList.Create;
+			try
+				slist.LoadFromFile(SPath);
+				if slist.Encoding <> TEncoding.Unicode then
+					slist.SaveToFile(SPath, TEncoding.Unicode);
+			finally
+				slist.Free;
+			end;
     end;
-
-    ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
     try
-        Font.Charset := ini.ReadInteger('Font', 'Charset', 0);
-        Font.Name := ini.ReadString('Font', 'Name', 'Arial');
-        Font.Size := ini.ReadInteger('Font', 'Size', 9);
-        DefFont := Font.Size;
+			ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+			try
+				Font.Charset := ini.ReadInteger('Font', 'Charset', 0);
+				Font.Name := ini.ReadString('Font', 'Name', 'Arial');
+				Font.Size := ini.ReadInteger('Font', 'Size', 9);
+				DefFont := Font.Size;
 
-        FJColor.Font := Font;
-        BColor.Font := Font;
-        Left := ini.ReadInteger('Window', 'Left', (Screen.WorkAreaWidth div 2) - (Width div 2));
-        Top := ini.ReadInteger('Window', 'Top', (Screen.WorkAreaHeight div 2) - (Height div 2));
-        mnuOnTop.Checked := ini.ReadBool('Options', 'Stayontop', False);
-        mnuHSVSlider.Checked := ini.ReadBool('Options', 'HSVSlider', False);
-        mnuRGBSlider.Checked := ini.ReadBool('Options', 'RGBSlider', False);
-        BGGroupSizeChange(mnuSlider.Checked);
-        FGGroupSizeChange(mnuSlider.Checked);
+				FJColor.Font := Font;
+				BColor.Font := Font;
+				Left := ini.ReadInteger('Window', 'Left', (Screen.WorkAreaWidth div 2) -
+					(Width div 2));
+				Top := ini.ReadInteger('Window', 'Top', (Screen.WorkAreaHeight div 2) -
+					(Height div 2));
+				mnuOnTop.Checked := ini.ReadBool('Options', 'Stayontop', False);
+				mnuHSVSlider.Checked := ini.ReadBool('Options', 'HSVSlider', False);
+				mnuRGBSlider.Checked := ini.ReadBool('Options', 'RGBSlider', False);
+				BGGroupSizeChange(mnuSlider.Checked);
+				FGGroupSizeChange(mnuSlider.Checked);
 
-
-        mnuOnTopClick(self);
-    finally
-        ini.Free;
-    end;
+				mnuOnTopClick(self);
+			finally
+				ini.Free;
+			end;
+    except
+		end;
     Width := DoubleToInt(Width * ScaleX);
     Height := DoubleToInt(Height * ScaleY);
     edtNormal_T.Font.Style := [];
@@ -1108,42 +1285,49 @@ begin
         mnuRGBClick(Self);
     end;
     CalcColor;
-
     Dither1 := 1;
     Dither2 := 1;
-    OriW := Width;
-    CurW := Width;
-    self.ScaleBy(DoubleToInt(OriW * ScaleX), OriW);
-    CurW := DoubleToInt(OriW * ScaleX);
+    self.ChangeScale(DoubleToInt(width * ScaleX), width);
+    SetThumbHeight;
+    cDPI := DoubleToInt(DefY * ScaleY);
+
+    bFirstTime := False;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 var
   i: integer;
 begin
-    for i := Low(arSS_HDC) to High(arSS_HDC) do
-        	DeleteDC(arSS_HDC[i]);
+	for i := Low(arSS_HDC) to High(arSS_HDC) do
+		DeleteDC(arSS_HDC[i]);
 
-    if SS_bmp <> 0 then
-        DeleteObject(SS_bmp);
+	if SS_bmp <> 0 then
+		DeleteObject(SS_bmp);
+
+  oriBMP.Free;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 var
     ini: TMemIniFile;
 begin
-    ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
-    try
-        ini.WriteBool('Options', 'Stayontop', mnuOnTop.Checked);
-        ini.WriteInteger('Window', 'Left', Left);
-        ini.WriteInteger('Window', 'Top', Top);
-        ini.WriteBool('Options', 'HSVSlider', mnuHSVSlider.Checked);
-        ini.WriteBool('Options', 'RGBSlider', mnuRGBSlider.Checked);
-        ini.UpdateFile;
-    finally
-        ini.Free;
-    end;
-    CanClose := True;
+	try
+		ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+		try
+
+			ini.WriteBool('Options', 'Stayontop', mnuOnTop.Checked);
+			ini.WriteInteger('Window', 'Left', Left);
+			ini.WriteInteger('Window', 'Top', Top);
+			ini.WriteBool('Options', 'HSVSlider', mnuHSVSlider.Checked);
+			ini.WriteBool('Options', 'RGBSlider', mnuRGBSlider.Checked);
+			ini.UpdateFile;
+		finally
+			ini.Free;
+			CanClose := True;
+		end;
+	except
+
+	end;
 end;
 
 procedure TMainForm.acrFColorDropExecute(Sender: TObject);
@@ -1285,6 +1469,169 @@ begin
 
 end;
 
+function SendShortcut: cardinal;
+var
+	KIn: array[0..5] of TInput;
+  procedure KbdInput(iIndex: integer; VKey: Byte; Flags: DWORD);
+  begin
+
+    KIn[iIndex].Itype := INPUT_KEYBOARD;
+    with  KIn[iIndex].ki do
+    begin
+      wVk := VKey;
+      wScan := MapVirtualKey(wVk, 0);
+      dwFlags := KEYEVENTF_EXTENDEDKEY;
+      dwFlags := Flags or dwFlags;
+      time := 0;
+      dwExtraInfo := 0;
+    end;
+  end;
+begin
+	KbdInput(0, VK_LWIN, 0);
+  KbdInput(1, VK_CONTROL, 0);
+  KbdInput(2, Ord('C'), 0);
+  KbdInput(3, Ord('C'), KEYEVENTF_KEYUP);
+  KbdInput(4, VK_CONTROL, KEYEVENTF_KEYUP);
+  KbdInput(5, VK_LWIN, KEYEVENTF_KEYUP);
+  Result := SendInput(6, KIn[0], SizeOf(KIn[0]));
+end;
+
+procedure FilterRegSetting(iIdx: integer);
+var
+	Reg: TRegistry;
+begin
+  if TOSVersion.Build >= 16215 then
+  begin
+		Reg := TRegistry.Create;
+    try
+			try
+				Reg.RootKey := HKEY_CURRENT_USER;
+				if Reg.OpenKey('Software\Microsoft\ColorFiltering', False) then
+				begin
+        	Reg.WriteInteger('HotkeyEnabled', 1);
+					if Reg.ReadInteger('Active') = 0 then
+          begin
+          	Reg.WriteInteger('FilterType', iIdx);
+          	SendShortcut;
+          end
+          else
+          begin
+          	SendShortcut;
+            Reg.WriteInteger('FilterType', iIdx);
+            SendShortcut;
+          end;
+				end;
+			finally
+				Reg.Free;
+			end;
+		except
+		end;
+  end;
+end;
+
+procedure TMainForm.mnuFilGreyClick(Sender: TObject);
+begin
+	FilterRegSetting(0);
+end;
+
+procedure TMainForm.mnuFilInvClick(Sender: TObject);
+begin
+	FilterRegSetting(1);
+end;
+
+procedure TMainForm.mnuFilGInvClick(Sender: TObject);
+begin
+	FilterRegSetting(2);
+end;
+
+procedure TMainForm.mnuFilDClick(Sender: TObject);
+begin
+	FilterRegSetting(3);
+end;
+
+procedure TMainForm.mnuFilPClick(Sender: TObject);
+begin
+	FilterRegSetting(4);
+end;
+
+procedure TMainForm.mnuFilTClick(Sender: TObject);
+begin
+	FilterRegSetting(5);
+end;
+
+procedure TMainForm.mnuFilOffClick(Sender: TObject);
+var
+	Reg: TRegistry;
+begin
+  if TOSVersion.Build >= 16215 then
+  begin
+		Reg := TRegistry.Create;
+    try
+			try
+				Reg.RootKey := HKEY_CURRENT_USER;
+				if Reg.OpenKey('Software\Microsoft\ColorFiltering', False) then
+				begin
+        	if Reg.ReadInteger('Active') = 1 then
+          	SendShortcut;
+
+				end;
+			finally
+				Reg.Free;
+			end;
+		except
+    	mnuFilOff.Checked := True;
+		end;
+  end;
+end;
+
+
+procedure TMainForm.mnuFilterClick(Sender: TObject);
+var
+	Reg: TRegistry;
+  i, iFil: integer;
+begin
+	for i := 0 to mnuFilter.Count - 1 do
+      mnuFilter.Items[i].Enabled := False;
+	if TOSVersion.Build >= 16215 then
+  begin
+		Reg := TRegistry.Create;
+    try
+			try
+				Reg.RootKey := HKEY_CURRENT_USER;
+				if Reg.OpenKey('Software\Microsoft\ColorFiltering', False) then
+				begin
+        	Reg.WriteInteger('HotkeyEnabled', 1);
+					if Reg.ReadInteger('Active') = 0 then
+          begin
+          	mnuFilOff.Checked := True;
+          end
+          else
+          begin
+          	iFil := Reg.ReadInteger('FilterType');
+            case iFil of
+            	0: mnuFilGrey.Checked := True;
+              1: mnuFilInv.Checked := True;
+              2: mnuFilGInv.Checked := True;
+              3: mnuFilD.Checked := True;
+              4: mnuFilP.Checked := True;
+              5: mnuFilT.Checked := True;
+            else
+              mnuFilOff.Checked := True;
+            end;
+          end;
+          for i := 0 to mnuFilter.Count - 1 do
+      			mnuFilter.Items[i].Enabled := True;
+				end;
+			finally
+				Reg.Free;
+			end;
+		except
+    	mnuFilOff.Checked := True;
+		end;
+  end;
+
+end;
+
 procedure TMainForm.mnuFontClick(Sender: TObject);
 var
     ini: TMemIniFile;
@@ -1302,35 +1649,26 @@ begin
         edtDeutera.Font.Style := [fsBold];
         edtProta.Font.Style := [fsBold];
         edtTrita.Font.Style := [fsBold];
-
-        ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
         try
-            ini.WriteInteger('Font', 'Charset', Font.Charset);
-            ini.WriteString('Font', 'Name', Font.Name);
-            ini.WriteInteger('Font', 'Size', Font.Size);
-            ini.UpdateFile;
-        finally
-            ini.Free;
-        end;
+					ini := TMemIniFile.Create(SPath, TEncoding.Unicode);
+					try
+						ini.WriteInteger('Font', 'Charset', Font.Charset);
+						ini.WriteString('Font', 'Name', Font.Name);
+						ini.WriteInteger('Font', 'Size', Font.Size);
+						ini.UpdateFile;
+					finally
+						ini.Free;
+					end;
+        except
+				end;
         ResizeCtrls;
-        self.ScaleBy(DoubleToInt(OriW * ScaleX), OriW);
-        CurW := DoubleToInt(OriW * ScaleX);
+        //self.ScaleBy(DoubleToInt(OriW * ScaleX), OriW);
+        //CurW := DoubleToInt(OriW * ScaleX);
     end;
 
 end;
 
-procedure TMainForm.mnuAboutClick(Sender: TObject);
-var
-    AboutForm: TAboutForm;
-begin
-    AboutForm := TAboutForm.Create(self);
-    AboutForm.PopupParent := Self;
-    AboutForm.Font := Font;
-    AboutForm.TransPath := TransPath;
-    AboutForm.LoadINI;
-    AboutForm.ShowModal;
-    AboutForm.Free;
-end;
+
 
 procedure TMainForm.mnuHexClick(Sender: TObject);
 begin
@@ -1555,12 +1893,12 @@ begin
     if ((2.95 <= eRaw) and (3 > eRaw)) or ((4.45 <= eRaw) and (4.5 > eRaw)) then
     begin
       edtNormal2.Text := Format(ratio_below, [FormatFloat('0.0#', eRes) + ':1']);
-      d := gbFore.Caption + ':' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ':' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(ratio_below, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
+      d := gbFore.Caption + ': ' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ': ' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(ratio_below, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
     end
     else
     begin
       edtNormal2.Text := Format(ratio_is, [FormatFloat('0.0#', eRes) + ':1']);
-      d := gbFore.Caption + ':' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ':' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(ratio_is, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
+      d := gbFore.Caption + ': ' + ColortoHex2(FJColor.ActiveColor) + #13#10 + gbBack.Caption + ': ' + ColortoHex2(BColor.ActiveColor) + #13#10#13#10 + Format(ratio_is, [FormatFloat('0.0#', eRes) + ':1']) + #13#10 + d;
     end;
 
     Memo1.Text := d;// + #13#10#13#10 + lcr_note + #13#10#13#10 + lcr_note2 + #13#10#13#10 + lcr_note3;
@@ -2038,32 +2376,6 @@ begin
   result := true;
 end;
 
-procedure TMainForm.mnuScreenClick(Sender: TObject);
-begin
-    Hide;
-    Sleep(300);
-
-
-    ConvWndForm := TConvWndForm.Create(nil);
-    try
-      ConvWndForm.Font := Font;
-      ConvWndForm.Font.Size := DefFont;
-      ConvWndForm.DefFont := DefFont;
-      ConvWndForm.Dy := DefY;
-      ConvWndForm.Dx := DefX;
-      ConvWndForm.ScaleX := ScaleX;
-      ConvWndForm.ScaleY := ScaleY;
-      ConvWndForm.Exec := False;
-
-      ConvWndForm.Execute(1);
-      ConvWndForm.ShowModal;
-    finally
-      Show;
-      ConvWndForm.Free;
-    end;
-
-end;
-
 procedure TMainForm.mnuSelListClick(Sender: TObject);
 begin
 
@@ -2105,6 +2417,85 @@ begin
     end;
 end;
 
+procedure TMainForm.mnuAboutClick(Sender: TObject);
+var
+    AboutForm: TAboutForm;
+begin
+    AboutForm := TAboutForm.Create(self);
+    AboutForm.PopupParent := Self;
+    AboutForm.Font := Font;
+    AboutForm.DefFont := DefFont;
+    AboutForm.Dy := DefY;
+    AboutForm.Dx := DefX;
+    AboutForm.ScaleX := ScaleX;
+    AboutForm.ScaleY := ScaleY;
+    AboutForm.TransPath := TransPath;
+    AboutForm.LoadINI;
+    AboutForm.ShowModal;
+    AboutForm.Free;
+end;
+
+procedure TMainForm.mnuScreenClick(Sender: TObject);
+begin
+    Hide;
+    Sleep(300);
+
+
+    ConvWndForm := TConvWndForm.Create(nil);
+    try
+      ConvWndForm.Font := Font;
+      ConvWndForm.Font.Size := DefFont;
+      ConvWndForm.DefFont := DefFont;
+      ConvWndForm.Dy := DefY;
+      ConvWndForm.Dx := DefX;
+      ConvWndForm.ScaleX := ScaleX;
+      ConvWndForm.ScaleY := ScaleY;
+      ConvWndForm.ftime := False;
+
+      ConvWndForm.Execute(1);
+      ConvWndForm.ShowModal;
+    finally
+      Show;
+      ConvWndForm.Free;
+    end;
+
+end;
+
+procedure TMainForm.GetSS;
+var
+	SC_hdc: HDC;
+  i: Integer;
+  pt: TPoint;
+  monEx: TMonitorInfoEx;
+begin
+	for i := Low(arSS_HDC) to High(arSS_HDC) do
+  	DeleteDC(arSS_HDC[i]);
+
+  monEx.cbSize := SizeOf(monEx);
+
+	SetLength(arSS_HDC, 0);
+	SetLength(arSS_HDC, Screen.MonitorCount);
+	for i := Low(arSS_HDC) to High(arSS_HDC) do
+	begin
+
+		GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
+
+		SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
+		arSS_HDC[i] := CreateCompatibleDC(SC_hdc);
+		SS_bmp := CreateCompatibleBitmap(SC_hdc, monEx.rcMonitor.Width,
+			monEx.rcMonitor.Height);
+		SelectObject(arSS_HDC[i], SS_bmp);
+
+		try
+			BitBlt(arSS_HDC[i], 0, 0, monEx.rcMonitor.Width, monEx.rcMonitor.Height,
+				SC_hdc, 0, 0, SRCCOPY);
+		finally
+			DeleteObject(SS_bmp);
+			DeleteDC(SC_hdc);
+		end;
+	end;
+end;
+
 procedure TMainForm.btnForeClick(Sender: TObject);
 var
     SC_hdc: HDC;
@@ -2119,31 +2510,7 @@ begin
         else
             SelFore := False;
 
-
-
-        FillChar(monEx, SizeOf(TMonitorInfoEx), #0);
-        monEx.cbSize := SizeOf(monEx);
-
-        SetLength(arSS_HDC, 0);
-        SetLength(arSS_HDC, Screen.MonitorCount);
-        for i := Low(arSS_HDC) to High(arSS_HDC) do
-        begin
-
-
-    			GetMonitorInfo(Screen.Monitors[i].Handle, @monEx);
-
-    			SC_hdc := CreateDC('DISPLAY', monEx.szDevice, nil, nil);
-          arSS_HDC[i] := CreateCompatibleDC(SC_hdc);
-        	SS_bmp := CreateCompatibleBitmap(SC_hdc, Monex.rcMonitor.Width , monex.rcMonitor.Height);
-        	SelectObject(arSS_HDC[i], SS_bmp);
-
-          try
-            BitBlt(arSS_HDC[i], 0,0, Monex.rcMonitor.Width , monex.rcMonitor.Height, SC_hdc, 0, 0, SRCCOPY);
-          finally
-        	  DeleteObject(SS_bmp);
-            DeleteDC(SC_hdc);
-          end;
-        end;
+        GetSS;
 
 
         PickForm.ScaleX := ScaleX;
@@ -2212,13 +2579,14 @@ end;
 
 procedure  TMainForm.WMDPIChanged(var Message: TMessage);
 begin
-  scaleX := Message.WParamLo / DefX;//96.0;
-  scaleY := Message.WParamHi / DefY;//96.0;
-
-  //ResizeCtrls;
-  self.ScaleBy(OriW, CurW);
-  self.ScaleBy(DoubleToInt(OriW * ScaleX), OriW);
-  CurW := DoubleToInt(OriW * ScaleX);
+  scaleX := Message.WParamLo / DefX;
+  scaleY := Message.WParamHi / DefY;
+  if (not bFirstTime) and (cDPI <> Message.WParamLo) then
+  begin
+		self.ChangeScale(Message.WParamLo, cDPI);
+  	cDPI := Message.WParamLo;
+  	SetThumbHeight;
+  end;
 end;
 
 end.

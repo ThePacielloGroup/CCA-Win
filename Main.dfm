@@ -4,8 +4,8 @@ object MainForm: TMainForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Colour Contrast Analyser'
-  ClientHeight = 608
-  ClientWidth = 650
+  ClientHeight = 675
+  ClientWidth = 730
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
@@ -4389,8 +4389,8 @@ object MainForm: TMainForm
   TextHeight = 14
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 589
-    Width = 650
+    Top = 656
+    Width = 730
     Height = 19
     Panels = <>
     ParentFont = True
@@ -4398,8 +4398,8 @@ object MainForm: TMainForm
     UseSystemFont = False
   end
   object gbFore: TAccGroupBox
-    Left = 8
-    Top = 1
+    Left = 5
+    Top = 6
     Width = 317
     Height = 380
     Caption = 'Foreground'
@@ -4415,7 +4415,7 @@ object MainForm: TMainForm
       BevelOuter = bvNone
       ColumnCollection = <
         item
-          Value = 80.584333116292870000
+          Value = 80.584333116292850000
         end
         item
           Value = 19.415666883707140000
@@ -4471,6 +4471,7 @@ object MainForm: TMainForm
           Control = chkFGSync
           Row = 0
         end>
+      ParentBackground = False
       RowCollection = <
         item
           Value = 16.650862524577660000
@@ -4957,6 +4958,7 @@ object MainForm: TMainForm
           Control = Edit1
           Row = 1
         end>
+      ParentBackground = False
       RowCollection = <
         item
           Value = 50.000000000000000000
@@ -4982,12 +4984,14 @@ object MainForm: TMainForm
       object FJColor: TColorDrop
         AlignWithMargins = True
         Left = 1
-        Top = 28
+        Top = 26
         Width = 119
         Height = 22
         Hint = 'F9|F9 is dropdown'
         Margins.Left = 1
-        Margins.Right = 5
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         ActiveColor = clBlack
         OnChanged = FJColorChanged
         OnEnter = chkExpandEnter
@@ -5020,10 +5024,14 @@ object MainForm: TMainForm
       end
       object sbtnFore: TAccButton
         AlignWithMargins = True
-        Left = 128
-        Top = 28
-        Width = 44
-        Height = 20
+        Left = 126
+        Top = 26
+        Width = 48
+        Height = 24
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Align = alClient
         DropDownMenu = PopupMenu1
         ImageAlignment = iaCenter
@@ -5043,11 +5051,15 @@ object MainForm: TMainForm
       end
       object Edit1: TAccMaskEdit
         AlignWithMargins = True
-        Left = 178
-        Top = 28
-        Width = 119
-        Height = 20
+        Left = 176
+        Top = 26
+        Width = 123
+        Height = 24
         Hint = '|The picked colour is displayed. And, the value can be input.'
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Align = alClient
         AutoSize = False
         EditMask = '\#aaaaaa;1;_'
@@ -5066,9 +5078,9 @@ object MainForm: TMainForm
   end
   object gbResNormal: TAccGroupBox
     Left = 8
-    Top = 387
-    Width = 640
-    Height = 245
+    Top = 392
+    Width = 641
+    Height = 246
     Caption = 'Result'
     TabOrder = 2
     AccName = 'Result Group'
@@ -5312,8 +5324,8 @@ object MainForm: TMainForm
     end
   end
   object gbBack: TAccGroupBox
-    Left = 331
-    Top = 1
+    Left = 328
+    Top = 6
     Width = 317
     Height = 380
     Caption = 'Background'
@@ -5894,13 +5906,15 @@ object MainForm: TMainForm
       end
       object BColor: TColorDrop
         AlignWithMargins = True
-        Left = 2
-        Top = 28
+        Left = 4
+        Top = 27
         Width = 116
         Height = 22
         Hint = 'F10|F10 is Dropdown.'
         Margins.Left = 1
-        Margins.Right = 5
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         ActiveColor = clWhite
         OnChanged = FJColorChanged
         OnEnter = chkExpandEnter
@@ -5933,10 +5947,14 @@ object MainForm: TMainForm
       end
       object sbtnBack: TAccButton
         AlignWithMargins = True
-        Left = 127
-        Top = 28
-        Width = 45
-        Height = 20
+        Left = 125
+        Top = 26
+        Width = 49
+        Height = 24
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Align = alClient
         DropDownMenu = PopupMenu2
         ImageAlignment = iaCenter
@@ -5955,11 +5973,15 @@ object MainForm: TMainForm
       end
       object Edit2: TAccMaskEdit
         AlignWithMargins = True
-        Left = 178
-        Top = 28
-        Width = 119
-        Height = 20
+        Left = 176
+        Top = 26
+        Width = 123
+        Height = 24
         Hint = '|The picked colour is displayed. And, the value can be input.'
+        Margins.Left = 1
+        Margins.Top = 1
+        Margins.Right = 1
+        Margins.Bottom = 1
         Align = alClient
         AutoSize = False
         EditMask = '\#aaaaaa;1;_'
@@ -5982,7 +6004,7 @@ object MainForm: TMainForm
     Left = 448
     Top = 396
     Bitmap = {
-      494C010102000400E80114001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020004005C0214001400FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000500000001400000001002000000000000019
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -6351,6 +6373,60 @@ object MainForm: TMainForm
         OnMeasureItem = mnuHelpMeasureItem
       end
     end
+    object mnuFilter: TMenuItem
+      Caption = '&Colour filter'
+      OnClick = mnuFilterClick
+      object mnuFilOff: TMenuItem
+        AutoCheck = True
+        Caption = '&Off'
+        Checked = True
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilOffClick
+      end
+      object mnuFilGrey: TMenuItem
+        AutoCheck = True
+        Caption = '&Greyscale'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilGreyClick
+      end
+      object mnuFilInv: TMenuItem
+        AutoCheck = True
+        Caption = '&Invert'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilInvClick
+      end
+      object mnuFilGInv: TMenuItem
+        AutoCheck = True
+        Caption = 'G&reyscale Inverted'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilGInvClick
+      end
+      object mnuFilD: TMenuItem
+        AutoCheck = True
+        Caption = '&Deuteranopia'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilDClick
+      end
+      object mnuFilP: TMenuItem
+        AutoCheck = True
+        Caption = '&Protanopia'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilPClick
+      end
+      object mnuFilT: TMenuItem
+        AutoCheck = True
+        Caption = '&Tritanopia'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = mnuFilTClick
+      end
+    end
     object mnuHelp: TMenuItem
       Caption = '&Help'
       OnDrawItem = mnuHelpDrawItem
@@ -6378,9 +6454,10 @@ object MainForm: TMainForm
     Top = 416
   end
   object PopupMenu1: TPopupMenu
+    Images = ImageList2
     OnPopup = PopupMenu1Popup
     Left = 368
-    Top = 316
+    Top = 492
     object mnufg1px: TMenuItem
       Caption = '1pixel'
       GroupIndex = 1
@@ -6431,9 +6508,10 @@ object MainForm: TMainForm
     end
   end
   object PopupMenu2: TPopupMenu
+    Images = ImageList2
     OnPopup = PopupMenu2Popup
-    Left = 512
-    Top = 420
+    Left = 424
+    Top = 492
     object mnubg1px: TMenuItem
       Caption = '1pixel'
       GroupIndex = 1
@@ -6487,7 +6565,7 @@ object MainForm: TMainForm
     Left = 312
     Top = 408
     Bitmap = {
-      494C010101000400E80110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101010004005C0210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       00000000000000000000000000000000000000000000BFBF0000BFBF0000BFBF
       0000BFBF0000BFBF0000BFBF0000BFBF00000000000000000000000000000000

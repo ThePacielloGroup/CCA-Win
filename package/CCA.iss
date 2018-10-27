@@ -40,6 +40,7 @@ Name: "Japanese"; MessagesFile: "compiler:Languages\Japanese.isl"
 Name: "Korean"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "Russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "Spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
+Name: "Turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
 ; Remember to install 3rd party ChineseSimplified (and rename to Chinese), Hindi and Korean language files from http://www.jrsoftware.org/files/istrans/ and use Unicode InnoSetup
 
 [Files]
